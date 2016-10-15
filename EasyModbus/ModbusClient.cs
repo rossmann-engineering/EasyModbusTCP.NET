@@ -8,6 +8,8 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.IO.Ports;
+using System.Reflection;
+
 namespace EasyModbus
 {
 	/// <summary>
@@ -53,7 +55,10 @@ namespace EasyModbus
 		/// <param name="port">Listening port of the Master device (should be 502)</param>
 		public ModbusClient(string ipAddress, int port)
 		{
-			this.ipAddress = ipAddress;
+            Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
+            Console.WriteLine();
+            this.ipAddress = ipAddress;
 			this.port = port;
 		}
 
@@ -63,6 +68,9 @@ namespace EasyModbus
         /// <param name="serialPort">Serial-Port Name e.G. "COM1"</param>
         public ModbusClient(string serialPort)
         {
+            Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
+            Console.WriteLine();
             this.serialport = new SerialPort();
             serialport.PortName = serialPort;
             serialport.BaudRate = baudRate;
@@ -80,6 +88,9 @@ namespace EasyModbus
         /// </summary>
         public ModbusClient()
         {
+            Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
+            Console.WriteLine();
         }
 		
 		/// <summary>

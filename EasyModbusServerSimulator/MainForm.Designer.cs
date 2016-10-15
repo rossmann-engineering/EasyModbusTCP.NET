@@ -67,7 +67,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
@@ -492,14 +492,14 @@
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // label6
+            // lblVersion
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(88, 71);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(60, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Version 2.4";
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Location = new System.Drawing.Point(88, 71);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(60, 13);
+            this.lblVersion.TabIndex = 12;
+            this.lblVersion.Text = "Version 2.6";
             // 
             // checkBox2
             // 
@@ -686,7 +686,7 @@
             this.Controls.Add(this.checkBox4);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label5);
@@ -722,7 +722,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.form1BindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.easyModbusTCPServerBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
-    
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -766,7 +765,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox4;

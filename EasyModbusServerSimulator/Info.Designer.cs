@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Info));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
@@ -47,14 +47,14 @@
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
             // 
-            // label6
+            // lblVersion
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(87, 39);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(60, 13);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Version 2.4";
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Location = new System.Drawing.Point(87, 39);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(60, 13);
+            this.lblVersion.TabIndex = 14;
+            this.lblVersion.Text = "Version 2.4";
             // 
             // linkLabel1
             // 
@@ -93,7 +93,7 @@
             this.ClientSize = new System.Drawing.Size(287, 103);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -111,7 +111,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel linkLabel2;

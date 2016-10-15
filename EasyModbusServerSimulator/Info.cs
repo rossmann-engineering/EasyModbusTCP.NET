@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace EasyModbusServerSimulator
 {
@@ -14,6 +15,8 @@ namespace EasyModbusServerSimulator
         public Info()
         {
             InitializeComponent();
+            Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void label1_Click(object sender, EventArgs e)

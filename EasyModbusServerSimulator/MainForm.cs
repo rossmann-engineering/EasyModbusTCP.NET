@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using EasyModbus;
+using System.Reflection;
 
 namespace EasyModbusServerSimulator
 {
@@ -26,6 +27,8 @@ namespace EasyModbusServerSimulator
         public MainForm()
         {
             InitializeComponent();
+            Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             easyModbusTCPServer = new EasyModbus.ModbusServer();
             easyModbusTCPServer.Listen();
             
