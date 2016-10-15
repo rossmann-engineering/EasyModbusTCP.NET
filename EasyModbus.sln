@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyModbus", "EasyModbus\EasyModbus.csproj", "{7657FC4A-AEDF-4F17-B3E9-0D0DFB1CE23B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyModbusServerSimulator", "EasyModbusServerSimulator\EasyModbusServerSimulator.csproj", "{871BD4C1-69F0-45B9-8807-1620E6A896A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyModbusClientExample", "EasyModbusClientExample\EasyModbusClientExample.csproj", "{9412077F-7DFF-45D0-AFF9-7D5303118EA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyModbusAdvancedClient", "EasyModbusAdvancedClient\EasyModbusAdvancedClient.csproj", "{3398AAF9-F5A5-4F3B-9A02-14A6B2359DC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{AA208FA1-1496-4BBC-97D1-9F628EB4197A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7657FC4A-AEDF-4F17-B3E9-0D0DFB1CE23B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7657FC4A-AEDF-4F17-B3E9-0D0DFB1CE23B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7657FC4A-AEDF-4F17-B3E9-0D0DFB1CE23B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7657FC4A-AEDF-4F17-B3E9-0D0DFB1CE23B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{871BD4C1-69F0-45B9-8807-1620E6A896A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{871BD4C1-69F0-45B9-8807-1620E6A896A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{871BD4C1-69F0-45B9-8807-1620E6A896A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{871BD4C1-69F0-45B9-8807-1620E6A896A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9412077F-7DFF-45D0-AFF9-7D5303118EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9412077F-7DFF-45D0-AFF9-7D5303118EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9412077F-7DFF-45D0-AFF9-7D5303118EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9412077F-7DFF-45D0-AFF9-7D5303118EA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3398AAF9-F5A5-4F3B-9A02-14A6B2359DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3398AAF9-F5A5-4F3B-9A02-14A6B2359DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3398AAF9-F5A5-4F3B-9A02-14A6B2359DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3398AAF9-F5A5-4F3B-9A02-14A6B2359DC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA208FA1-1496-4BBC-97D1-9F628EB4197A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA208FA1-1496-4BBC-97D1-9F628EB4197A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA208FA1-1496-4BBC-97D1-9F628EB4197A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA208FA1-1496-4BBC-97D1-9F628EB4197A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = .
+	EndGlobalSection
+EndGlobal
