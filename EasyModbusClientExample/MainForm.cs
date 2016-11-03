@@ -218,5 +218,163 @@ namespace EasyModbusClientExample
 		{
 			modbusClient.UnitIdentifier = byte.Parse(txtSlaveAddressInput.Text);		
 		}
-	}
+
+        bool listBoxPrepareCoils = false;
+        private void btnPrepareCoils_Click(object sender, EventArgs e)
+        {
+            if (!listBoxPrepareCoils)
+            {
+                lsbAnswerFromServer.Items.Clear();
+            }
+            listBoxPrepareCoils = true;
+            listBoxPrepareRegisters = false;
+            lsbAnswerFromServer.Items.Add(txtCoilValue.Text);
+
+        }
+        bool listBoxPrepareRegisters = false;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!listBoxPrepareRegisters)
+            {
+                lsbAnswerFromServer.Items.Clear();
+            }
+            listBoxPrepareRegisters = true;
+            listBoxPrepareCoils = false;
+            lsbAnswerFromServer.Items.Add(int.Parse(txtRegisterValue.Text));
+        }
+
+        private void btnWriteSingleCoil_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!modbusClient.Connected)
+                {
+                    modbusClient.IPAddress = txtIpAddressInput.Text;
+                    modbusClient.Port = int.Parse(txtPortInput.Text);
+                    modbusClient.Connect();
+                }
+
+                bool coilsToSend = false;
+
+                coilsToSend = bool.Parse(lsbAnswerFromServer.Items[0].ToString());
+    
+
+                modbusClient.WriteSingleCoil(int.Parse(txtStartingAddressInput.Text) - 1, coilsToSend);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnWriteSingleRegister_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!modbusClient.Connected)
+                {
+                    modbusClient.IPAddress = txtIpAddressInput.Text;
+                    modbusClient.Port = int.Parse(txtPortInput.Text);
+                    modbusClient.Connect();
+                }
+
+                int registerToSend = 0;
+
+                registerToSend = int.Parse(lsbAnswerFromServer.Items[0].ToString());
+
+
+                modbusClient.WriteSingleRegister(int.Parse(txtStartingAddressInput.Text) - 1, registerToSend);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnWriteMultipleCoils_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!modbusClient.Connected)
+                {
+                    modbusClient.IPAddress = txtIpAddressInput.Text;
+                    modbusClient.Port = int.Parse(txtPortInput.Text);
+                    modbusClient.Connect();
+                }
+
+                bool[] coilsToSend = new bool[lsbAnswerFromServer.Items.Count];
+
+                for (int i = 0; i < lsbAnswerFromServer.Items.Count; i++)
+                {
+
+                    coilsToSend[i] = bool.Parse(lsbAnswerFromServer.Items[i].ToString());
+                }
+
+
+                modbusClient.WriteMultipleCoils(int.Parse(txtStartingAddressInput.Text) - 1, coilsToSend);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnWriteMultipleRegisters_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!modbusClient.Connected)
+                {
+                    modbusClient.IPAddress = txtIpAddressInput.Text;
+                    modbusClient.Port = int.Parse(txtPortInput.Text);
+                    modbusClient.Connect();
+                }
+
+                int[] registersToSend = new int[lsbAnswerFromServer.Items.Count];
+
+                for (int i = 0; i < lsbAnswerFromServer.Items.Count; i++)
+                {
+
+                    registersToSend[i] = int.Parse(lsbAnswerFromServer.Items[i].ToString());
+                }
+
+
+                modbusClient.WriteMultipleRegisters(int.Parse(txtStartingAddressInput.Text) - 1, registersToSend);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void lsbAnswerFromServer_DoubleClick(object sender, EventArgs e)
+        {
+            int rowindex = lsbAnswerFromServer.SelectedIndex;
+
+           
+
+
+
+        }
+
+        private void txtCoilValue_DoubleClick(object sender, EventArgs e)
+        {
+            if (txtCoilValue.Text.Equals("FALSE"))
+                txtCoilValue.Text = "TRUE";
+            else
+                txtCoilValue.Text = "FALSE";
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            lsbAnswerFromServer.Items.Clear();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int rowindex = lsbAnswerFromServer.SelectedIndex;
+            if(rowindex >= 0)
+                lsbAnswerFromServer.Items.RemoveAt(rowindex);
+        }
+    }
 }

@@ -48,279 +48,446 @@ namespace EasyModbusClientExample
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			this.txtIpAddressInput = new System.Windows.Forms.TextBox();
-			this.txtIpAddress = new System.Windows.Forms.Label();
-			this.txtPort = new System.Windows.Forms.Label();
-			this.txtPortInput = new System.Windows.Forms.TextBox();
-			this.btnReadCoils = new System.Windows.Forms.Button();
-			this.btnReadDiscreteInputs = new System.Windows.Forms.Button();
-			this.btnReadHoldingRegisters = new System.Windows.Forms.Button();
-			this.btnReadInputRegisters = new System.Windows.Forms.Button();
-			this.txtStartingAddressInput = new System.Windows.Forms.TextBox();
-			this.txtStartingAddress = new System.Windows.Forms.Label();
-			this.txtNumberOfValues = new System.Windows.Forms.Label();
-			this.txtNumberOfValuesInput = new System.Windows.Forms.TextBox();
-			this.lsbAnswerFromServer = new System.Windows.Forms.ListBox();
-			this.txtAnwerFromServer = new System.Windows.Forms.Label();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-			this.cbbSelctionModbus = new System.Windows.Forms.ComboBox();
-			this.txtCOMPort = new System.Windows.Forms.Label();
-			this.cbbSelectComPort = new System.Windows.Forms.ComboBox();
-			this.txtSlaveAddress = new System.Windows.Forms.Label();
-			this.txtSlaveAddressInput = new System.Windows.Forms.TextBox();
-			this.textBox1 = new System.Windows.Forms.TextBox();
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-			this.SuspendLayout();
-			// 
-			// txtIpAddressInput
-			// 
-			this.txtIpAddressInput.Location = new System.Drawing.Point(34, 55);
-			this.txtIpAddressInput.Name = "txtIpAddressInput";
-			this.txtIpAddressInput.Size = new System.Drawing.Size(118, 20);
-			this.txtIpAddressInput.TabIndex = 0;
-			this.txtIpAddressInput.Text = "127.0.0.1";
-			// 
-			// txtIpAddress
-			// 
-			this.txtIpAddress.Location = new System.Drawing.Point(34, 35);
-			this.txtIpAddress.Name = "txtIpAddress";
-			this.txtIpAddress.Size = new System.Drawing.Size(100, 14);
-			this.txtIpAddress.TabIndex = 1;
-			this.txtIpAddress.Text = "Server IP-Address";
-			// 
-			// txtPort
-			// 
-			this.txtPort.Location = new System.Drawing.Point(158, 35);
-			this.txtPort.Name = "txtPort";
-			this.txtPort.Size = new System.Drawing.Size(73, 17);
-			this.txtPort.TabIndex = 3;
-			this.txtPort.Text = "Server Port";
-			// 
-			// txtPortInput
-			// 
-			this.txtPortInput.Location = new System.Drawing.Point(158, 55);
-			this.txtPortInput.Name = "txtPortInput";
-			this.txtPortInput.Size = new System.Drawing.Size(56, 20);
-			this.txtPortInput.TabIndex = 2;
-			this.txtPortInput.Text = "502";
-			// 
-			// btnReadCoils
-			// 
-			this.btnReadCoils.Location = new System.Drawing.Point(34, 106);
-			this.btnReadCoils.Name = "btnReadCoils";
-			this.btnReadCoils.Size = new System.Drawing.Size(161, 23);
-			this.btnReadCoils.TabIndex = 5;
-			this.btnReadCoils.Text = "Read Coils - FC1";
-			this.btnReadCoils.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.btnReadCoils.UseVisualStyleBackColor = true;
-			this.btnReadCoils.Click += new System.EventHandler(this.BtnReadCoilsClick);
-			// 
-			// btnReadDiscreteInputs
-			// 
-			this.btnReadDiscreteInputs.Location = new System.Drawing.Point(34, 135);
-			this.btnReadDiscreteInputs.Name = "btnReadDiscreteInputs";
-			this.btnReadDiscreteInputs.Size = new System.Drawing.Size(161, 23);
-			this.btnReadDiscreteInputs.TabIndex = 6;
-			this.btnReadDiscreteInputs.Text = "Read Discrete Inputs - FC2";
-			this.btnReadDiscreteInputs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.btnReadDiscreteInputs.UseVisualStyleBackColor = true;
-			this.btnReadDiscreteInputs.Click += new System.EventHandler(this.btnReadDiscreteInputs_Click);
-			// 
-			// btnReadHoldingRegisters
-			// 
-			this.btnReadHoldingRegisters.Location = new System.Drawing.Point(34, 164);
-			this.btnReadHoldingRegisters.Name = "btnReadHoldingRegisters";
-			this.btnReadHoldingRegisters.Size = new System.Drawing.Size(161, 23);
-			this.btnReadHoldingRegisters.TabIndex = 7;
-			this.btnReadHoldingRegisters.Text = "Read Holding Registers - FC3";
-			this.btnReadHoldingRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.btnReadHoldingRegisters.UseVisualStyleBackColor = true;
-			this.btnReadHoldingRegisters.Click += new System.EventHandler(this.btnReadHoldingRegisters_Click);
-			// 
-			// btnReadInputRegisters
-			// 
-			this.btnReadInputRegisters.Location = new System.Drawing.Point(34, 193);
-			this.btnReadInputRegisters.Name = "btnReadInputRegisters";
-			this.btnReadInputRegisters.Size = new System.Drawing.Size(161, 23);
-			this.btnReadInputRegisters.TabIndex = 8;
-			this.btnReadInputRegisters.Text = "Read Input Registers - FC4";
-			this.btnReadInputRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			this.btnReadInputRegisters.UseVisualStyleBackColor = true;
-			this.btnReadInputRegisters.Click += new System.EventHandler(this.btnReadInputRegisters_Click);
-			// 
-			// txtStartingAddressInput
-			// 
-			this.txtStartingAddressInput.Location = new System.Drawing.Point(220, 128);
-			this.txtStartingAddressInput.Name = "txtStartingAddressInput";
-			this.txtStartingAddressInput.Size = new System.Drawing.Size(39, 20);
-			this.txtStartingAddressInput.TabIndex = 9;
-			this.txtStartingAddressInput.Text = "1";
-			// 
-			// txtStartingAddress
-			// 
-			this.txtStartingAddress.Location = new System.Drawing.Point(220, 108);
-			this.txtStartingAddress.Name = "txtStartingAddress";
-			this.txtStartingAddress.Size = new System.Drawing.Size(89, 17);
-			this.txtStartingAddress.TabIndex = 10;
-			this.txtStartingAddress.Text = "Starting Address";
-			// 
-			// txtNumberOfValues
-			// 
-			this.txtNumberOfValues.Location = new System.Drawing.Point(220, 163);
-			this.txtNumberOfValues.Name = "txtNumberOfValues";
-			this.txtNumberOfValues.Size = new System.Drawing.Size(100, 17);
-			this.txtNumberOfValues.TabIndex = 12;
-			this.txtNumberOfValues.Text = "Number of Values";
-			// 
-			// txtNumberOfValuesInput
-			// 
-			this.txtNumberOfValuesInput.Location = new System.Drawing.Point(220, 183);
-			this.txtNumberOfValuesInput.Name = "txtNumberOfValuesInput";
-			this.txtNumberOfValuesInput.Size = new System.Drawing.Size(39, 20);
-			this.txtNumberOfValuesInput.TabIndex = 11;
-			this.txtNumberOfValuesInput.Text = "1";
-			// 
-			// lsbAnswerFromServer
-			// 
-			this.lsbAnswerFromServer.FormattingEnabled = true;
-			this.lsbAnswerFromServer.Location = new System.Drawing.Point(326, 106);
-			this.lsbAnswerFromServer.Name = "lsbAnswerFromServer";
-			this.lsbAnswerFromServer.Size = new System.Drawing.Size(188, 160);
-			this.lsbAnswerFromServer.TabIndex = 13;
-			// 
-			// txtAnwerFromServer
-			// 
-			this.txtAnwerFromServer.Location = new System.Drawing.Point(323, 86);
-			this.txtAnwerFromServer.Name = "txtAnwerFromServer";
-			this.txtAnwerFromServer.Size = new System.Drawing.Size(159, 17);
-			this.txtAnwerFromServer.TabIndex = 14;
-			this.txtAnwerFromServer.Text = "Answer from Modbus-Server";
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.Image = global::EasyModbusClientExample.Properties.Resources.PLCLoggerCompact;
-			this.pictureBox1.Location = new System.Drawing.Point(449, 9);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(65, 66);
-			this.pictureBox1.TabIndex = 15;
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-			// 
-			// linkLabel1
-			// 
-			this.linkLabel1.AutoSize = true;
-			this.linkLabel1.Location = new System.Drawing.Point(278, 10);
-			this.linkLabel1.Name = "linkLabel1";
-			this.linkLabel1.Size = new System.Drawing.Size(165, 13);
-			this.linkLabel1.TabIndex = 16;
-			this.linkLabel1.TabStop = true;
-			this.linkLabel1.Text = "http://www.EasyModbusTCP.net";
-			// 
-			// cbbSelctionModbus
-			// 
-			this.cbbSelctionModbus.FormattingEnabled = true;
-			this.cbbSelctionModbus.Items.AddRange(new object[] {
-			"ModbusTCP (Ethernet)",
-			"ModbusRTU (Serial)"});
-			this.cbbSelctionModbus.Location = new System.Drawing.Point(34, 2);
-			this.cbbSelctionModbus.Name = "cbbSelctionModbus";
-			this.cbbSelctionModbus.Size = new System.Drawing.Size(180, 21);
-			this.cbbSelctionModbus.TabIndex = 17;
-			this.cbbSelctionModbus.Text = "ModbusTCP (Ethernet)";
-			this.cbbSelctionModbus.SelectedIndexChanged += new System.EventHandler(this.cbbSelctionModbus_SelectedIndexChanged);
-			// 
-			// txtCOMPort
-			// 
-			this.txtCOMPort.Location = new System.Drawing.Point(34, 35);
-			this.txtCOMPort.Name = "txtCOMPort";
-			this.txtCOMPort.Size = new System.Drawing.Size(100, 14);
-			this.txtCOMPort.TabIndex = 18;
-			this.txtCOMPort.Text = "COM-Port";
-			this.txtCOMPort.Visible = false;
-			// 
-			// cbbSelectComPort
-			// 
-			this.cbbSelectComPort.FormattingEnabled = true;
-			this.cbbSelectComPort.Items.AddRange(new object[] {
-			"COM1",
-			"COM2",
-			"COM3",
-			"COM4",
-			"COM5",
-			"COM6",
-			"COM7",
-			"COM8"});
-			this.cbbSelectComPort.Location = new System.Drawing.Point(34, 55);
-			this.cbbSelectComPort.Name = "cbbSelectComPort";
-			this.cbbSelectComPort.Size = new System.Drawing.Size(121, 21);
-			this.cbbSelectComPort.TabIndex = 19;
-			this.cbbSelectComPort.Visible = false;
-			this.cbbSelectComPort.SelectedIndexChanged += new System.EventHandler(this.cbbSelectComPort_SelectedIndexChanged);
-			// 
-			// txtSlaveAddress
-			// 
-			this.txtSlaveAddress.Location = new System.Drawing.Point(158, 35);
-			this.txtSlaveAddress.Name = "txtSlaveAddress";
-			this.txtSlaveAddress.Size = new System.Drawing.Size(84, 19);
-			this.txtSlaveAddress.TabIndex = 20;
-			this.txtSlaveAddress.Text = "Slave Address";
-			this.txtSlaveAddress.Visible = false;
-			// 
-			// txtSlaveAddressInput
-			// 
-			this.txtSlaveAddressInput.Location = new System.Drawing.Point(158, 55);
-			this.txtSlaveAddressInput.Name = "txtSlaveAddressInput";
-			this.txtSlaveAddressInput.Size = new System.Drawing.Size(56, 20);
-			this.txtSlaveAddressInput.TabIndex = 21;
-			this.txtSlaveAddressInput.Text = "1";
-			this.txtSlaveAddressInput.Visible = false;
-			this.txtSlaveAddressInput.TextChanged += new System.EventHandler(this.TxtSlaveAddressInputTextChanged);
-			// 
-			// textBox1
-			// 
-			this.textBox1.Location = new System.Drawing.Point(12, 273);
-			this.textBox1.Multiline = true;
-			this.textBox1.Name = "textBox1";
-			this.textBox1.ReadOnly = true;
-			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.textBox1.Size = new System.Drawing.Size(502, 157);
-			this.textBox1.TabIndex = 22;
-			// 
-			// MainForm
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(522, 442);
-			this.Controls.Add(this.textBox1);
-			this.Controls.Add(this.txtSlaveAddressInput);
-			this.Controls.Add(this.txtSlaveAddress);
-			this.Controls.Add(this.cbbSelectComPort);
-			this.Controls.Add(this.txtCOMPort);
-			this.Controls.Add(this.cbbSelctionModbus);
-			this.Controls.Add(this.linkLabel1);
-			this.Controls.Add(this.pictureBox1);
-			this.Controls.Add(this.txtAnwerFromServer);
-			this.Controls.Add(this.lsbAnswerFromServer);
-			this.Controls.Add(this.txtNumberOfValues);
-			this.Controls.Add(this.txtNumberOfValuesInput);
-			this.Controls.Add(this.txtStartingAddress);
-			this.Controls.Add(this.txtStartingAddressInput);
-			this.Controls.Add(this.btnReadInputRegisters);
-			this.Controls.Add(this.btnReadHoldingRegisters);
-			this.Controls.Add(this.btnReadDiscreteInputs);
-			this.Controls.Add(this.btnReadCoils);
-			this.Controls.Add(this.txtPort);
-			this.Controls.Add(this.txtPortInput);
-			this.Controls.Add(this.txtIpAddress);
-			this.Controls.Add(this.txtIpAddressInput);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "MainForm";
-			this.Text = "EasyModbus Client";
-			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.txtIpAddressInput = new System.Windows.Forms.TextBox();
+            this.txtIpAddress = new System.Windows.Forms.Label();
+            this.txtPort = new System.Windows.Forms.Label();
+            this.txtPortInput = new System.Windows.Forms.TextBox();
+            this.btnReadCoils = new System.Windows.Forms.Button();
+            this.btnReadDiscreteInputs = new System.Windows.Forms.Button();
+            this.btnReadHoldingRegisters = new System.Windows.Forms.Button();
+            this.btnReadInputRegisters = new System.Windows.Forms.Button();
+            this.txtStartingAddressInput = new System.Windows.Forms.TextBox();
+            this.txtStartingAddress = new System.Windows.Forms.Label();
+            this.txtNumberOfValues = new System.Windows.Forms.Label();
+            this.txtNumberOfValuesInput = new System.Windows.Forms.TextBox();
+            this.lsbAnswerFromServer = new System.Windows.Forms.ListBox();
+            this.txtAnwerFromServer = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.cbbSelctionModbus = new System.Windows.Forms.ComboBox();
+            this.txtCOMPort = new System.Windows.Forms.Label();
+            this.cbbSelectComPort = new System.Windows.Forms.ComboBox();
+            this.txtSlaveAddress = new System.Windows.Forms.Label();
+            this.txtSlaveAddressInput = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.btnWriteMultipleRegisters = new System.Windows.Forms.Button();
+            this.btnWriteMultipleCoils = new System.Windows.Forms.Button();
+            this.btnWriteSingleRegister = new System.Windows.Forms.Button();
+            this.btnWriteSingleCoil = new System.Windows.Forms.Button();
+            this.txtCoilValue = new System.Windows.Forms.TextBox();
+            this.txtRegisterValue = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnPrepareCoils = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // txtIpAddressInput
+            // 
+            this.txtIpAddressInput.Location = new System.Drawing.Point(34, 55);
+            this.txtIpAddressInput.Name = "txtIpAddressInput";
+            this.txtIpAddressInput.Size = new System.Drawing.Size(118, 20);
+            this.txtIpAddressInput.TabIndex = 0;
+            this.txtIpAddressInput.Text = "127.0.0.1";
+            // 
+            // txtIpAddress
+            // 
+            this.txtIpAddress.Location = new System.Drawing.Point(34, 35);
+            this.txtIpAddress.Name = "txtIpAddress";
+            this.txtIpAddress.Size = new System.Drawing.Size(100, 14);
+            this.txtIpAddress.TabIndex = 1;
+            this.txtIpAddress.Text = "Server IP-Address";
+            // 
+            // txtPort
+            // 
+            this.txtPort.Location = new System.Drawing.Point(158, 35);
+            this.txtPort.Name = "txtPort";
+            this.txtPort.Size = new System.Drawing.Size(73, 17);
+            this.txtPort.TabIndex = 3;
+            this.txtPort.Text = "Server Port";
+            // 
+            // txtPortInput
+            // 
+            this.txtPortInput.Location = new System.Drawing.Point(158, 55);
+            this.txtPortInput.Name = "txtPortInput";
+            this.txtPortInput.Size = new System.Drawing.Size(56, 20);
+            this.txtPortInput.TabIndex = 2;
+            this.txtPortInput.Text = "502";
+            // 
+            // btnReadCoils
+            // 
+            this.btnReadCoils.Location = new System.Drawing.Point(34, 106);
+            this.btnReadCoils.Name = "btnReadCoils";
+            this.btnReadCoils.Size = new System.Drawing.Size(161, 23);
+            this.btnReadCoils.TabIndex = 5;
+            this.btnReadCoils.Text = "Read Coils - FC1";
+            this.btnReadCoils.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReadCoils.UseVisualStyleBackColor = true;
+            this.btnReadCoils.Click += new System.EventHandler(this.BtnReadCoilsClick);
+            // 
+            // btnReadDiscreteInputs
+            // 
+            this.btnReadDiscreteInputs.Location = new System.Drawing.Point(34, 135);
+            this.btnReadDiscreteInputs.Name = "btnReadDiscreteInputs";
+            this.btnReadDiscreteInputs.Size = new System.Drawing.Size(161, 23);
+            this.btnReadDiscreteInputs.TabIndex = 6;
+            this.btnReadDiscreteInputs.Text = "Read Discrete Inputs - FC2";
+            this.btnReadDiscreteInputs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReadDiscreteInputs.UseVisualStyleBackColor = true;
+            this.btnReadDiscreteInputs.Click += new System.EventHandler(this.btnReadDiscreteInputs_Click);
+            // 
+            // btnReadHoldingRegisters
+            // 
+            this.btnReadHoldingRegisters.Location = new System.Drawing.Point(34, 164);
+            this.btnReadHoldingRegisters.Name = "btnReadHoldingRegisters";
+            this.btnReadHoldingRegisters.Size = new System.Drawing.Size(161, 23);
+            this.btnReadHoldingRegisters.TabIndex = 7;
+            this.btnReadHoldingRegisters.Text = "Read Holding Registers - FC3";
+            this.btnReadHoldingRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReadHoldingRegisters.UseVisualStyleBackColor = true;
+            this.btnReadHoldingRegisters.Click += new System.EventHandler(this.btnReadHoldingRegisters_Click);
+            // 
+            // btnReadInputRegisters
+            // 
+            this.btnReadInputRegisters.Location = new System.Drawing.Point(34, 193);
+            this.btnReadInputRegisters.Name = "btnReadInputRegisters";
+            this.btnReadInputRegisters.Size = new System.Drawing.Size(161, 23);
+            this.btnReadInputRegisters.TabIndex = 8;
+            this.btnReadInputRegisters.Text = "Read Input Registers - FC4";
+            this.btnReadInputRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReadInputRegisters.UseVisualStyleBackColor = true;
+            this.btnReadInputRegisters.Click += new System.EventHandler(this.btnReadInputRegisters_Click);
+            // 
+            // txtStartingAddressInput
+            // 
+            this.txtStartingAddressInput.Location = new System.Drawing.Point(220, 128);
+            this.txtStartingAddressInput.Name = "txtStartingAddressInput";
+            this.txtStartingAddressInput.Size = new System.Drawing.Size(39, 20);
+            this.txtStartingAddressInput.TabIndex = 9;
+            this.txtStartingAddressInput.Text = "1";
+            // 
+            // txtStartingAddress
+            // 
+            this.txtStartingAddress.Location = new System.Drawing.Point(220, 108);
+            this.txtStartingAddress.Name = "txtStartingAddress";
+            this.txtStartingAddress.Size = new System.Drawing.Size(89, 17);
+            this.txtStartingAddress.TabIndex = 10;
+            this.txtStartingAddress.Text = "Starting Address";
+            // 
+            // txtNumberOfValues
+            // 
+            this.txtNumberOfValues.Location = new System.Drawing.Point(220, 163);
+            this.txtNumberOfValues.Name = "txtNumberOfValues";
+            this.txtNumberOfValues.Size = new System.Drawing.Size(100, 17);
+            this.txtNumberOfValues.TabIndex = 12;
+            this.txtNumberOfValues.Text = "Number of Values";
+            // 
+            // txtNumberOfValuesInput
+            // 
+            this.txtNumberOfValuesInput.Location = new System.Drawing.Point(220, 183);
+            this.txtNumberOfValuesInput.Name = "txtNumberOfValuesInput";
+            this.txtNumberOfValuesInput.Size = new System.Drawing.Size(39, 20);
+            this.txtNumberOfValuesInput.TabIndex = 11;
+            this.txtNumberOfValuesInput.Text = "1";
+            // 
+            // lsbAnswerFromServer
+            // 
+            this.lsbAnswerFromServer.FormattingEnabled = true;
+            this.lsbAnswerFromServer.Location = new System.Drawing.Point(326, 106);
+            this.lsbAnswerFromServer.Name = "lsbAnswerFromServer";
+            this.lsbAnswerFromServer.Size = new System.Drawing.Size(188, 160);
+            this.lsbAnswerFromServer.TabIndex = 13;
+            this.lsbAnswerFromServer.DoubleClick += new System.EventHandler(this.lsbAnswerFromServer_DoubleClick);
+            // 
+            // txtAnwerFromServer
+            // 
+            this.txtAnwerFromServer.Location = new System.Drawing.Point(323, 31);
+            this.txtAnwerFromServer.Name = "txtAnwerFromServer";
+            this.txtAnwerFromServer.Size = new System.Drawing.Size(169, 17);
+            this.txtAnwerFromServer.TabIndex = 14;
+            this.txtAnwerFromServer.Text = "Answer/Request Modbus-Server";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(597, 10);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(165, 13);
+            this.linkLabel1.TabIndex = 16;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "http://www.EasyModbusTCP.net";
+            // 
+            // cbbSelctionModbus
+            // 
+            this.cbbSelctionModbus.FormattingEnabled = true;
+            this.cbbSelctionModbus.Items.AddRange(new object[] {
+            "ModbusTCP (Ethernet)",
+            "ModbusRTU (Serial)"});
+            this.cbbSelctionModbus.Location = new System.Drawing.Point(34, 2);
+            this.cbbSelctionModbus.Name = "cbbSelctionModbus";
+            this.cbbSelctionModbus.Size = new System.Drawing.Size(180, 21);
+            this.cbbSelctionModbus.TabIndex = 17;
+            this.cbbSelctionModbus.Text = "ModbusTCP (Ethernet)";
+            this.cbbSelctionModbus.SelectedIndexChanged += new System.EventHandler(this.cbbSelctionModbus_SelectedIndexChanged);
+            // 
+            // txtCOMPort
+            // 
+            this.txtCOMPort.Location = new System.Drawing.Point(34, 35);
+            this.txtCOMPort.Name = "txtCOMPort";
+            this.txtCOMPort.Size = new System.Drawing.Size(100, 14);
+            this.txtCOMPort.TabIndex = 18;
+            this.txtCOMPort.Text = "COM-Port";
+            this.txtCOMPort.Visible = false;
+            // 
+            // cbbSelectComPort
+            // 
+            this.cbbSelectComPort.FormattingEnabled = true;
+            this.cbbSelectComPort.Items.AddRange(new object[] {
+            "COM1",
+            "COM2",
+            "COM3",
+            "COM4",
+            "COM5",
+            "COM6",
+            "COM7",
+            "COM8"});
+            this.cbbSelectComPort.Location = new System.Drawing.Point(34, 55);
+            this.cbbSelectComPort.Name = "cbbSelectComPort";
+            this.cbbSelectComPort.Size = new System.Drawing.Size(121, 21);
+            this.cbbSelectComPort.TabIndex = 19;
+            this.cbbSelectComPort.Visible = false;
+            this.cbbSelectComPort.SelectedIndexChanged += new System.EventHandler(this.cbbSelectComPort_SelectedIndexChanged);
+            // 
+            // txtSlaveAddress
+            // 
+            this.txtSlaveAddress.Location = new System.Drawing.Point(158, 35);
+            this.txtSlaveAddress.Name = "txtSlaveAddress";
+            this.txtSlaveAddress.Size = new System.Drawing.Size(84, 19);
+            this.txtSlaveAddress.TabIndex = 20;
+            this.txtSlaveAddress.Text = "Slave Address";
+            this.txtSlaveAddress.Visible = false;
+            // 
+            // txtSlaveAddressInput
+            // 
+            this.txtSlaveAddressInput.Location = new System.Drawing.Point(158, 55);
+            this.txtSlaveAddressInput.Name = "txtSlaveAddressInput";
+            this.txtSlaveAddressInput.Size = new System.Drawing.Size(56, 20);
+            this.txtSlaveAddressInput.TabIndex = 21;
+            this.txtSlaveAddressInput.Text = "1";
+            this.txtSlaveAddressInput.Visible = false;
+            this.txtSlaveAddressInput.TextChanged += new System.EventHandler(this.TxtSlaveAddressInputTextChanged);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 273);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(821, 157);
+            this.textBox1.TabIndex = 22;
+            // 
+            // btnWriteMultipleRegisters
+            // 
+            this.btnWriteMultipleRegisters.Location = new System.Drawing.Point(671, 193);
+            this.btnWriteMultipleRegisters.Name = "btnWriteMultipleRegisters";
+            this.btnWriteMultipleRegisters.Size = new System.Drawing.Size(161, 23);
+            this.btnWriteMultipleRegisters.TabIndex = 30;
+            this.btnWriteMultipleRegisters.Text = "Write Multiple Registers - FC16";
+            this.btnWriteMultipleRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnWriteMultipleRegisters.UseVisualStyleBackColor = true;
+            this.btnWriteMultipleRegisters.Click += new System.EventHandler(this.btnWriteMultipleRegisters_Click);
+            // 
+            // btnWriteMultipleCoils
+            // 
+            this.btnWriteMultipleCoils.Location = new System.Drawing.Point(671, 164);
+            this.btnWriteMultipleCoils.Name = "btnWriteMultipleCoils";
+            this.btnWriteMultipleCoils.Size = new System.Drawing.Size(161, 23);
+            this.btnWriteMultipleCoils.TabIndex = 29;
+            this.btnWriteMultipleCoils.Text = "Write Multiple Coils - FC15";
+            this.btnWriteMultipleCoils.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnWriteMultipleCoils.UseVisualStyleBackColor = true;
+            this.btnWriteMultipleCoils.Click += new System.EventHandler(this.btnWriteMultipleCoils_Click);
+            // 
+            // btnWriteSingleRegister
+            // 
+            this.btnWriteSingleRegister.Location = new System.Drawing.Point(671, 135);
+            this.btnWriteSingleRegister.Name = "btnWriteSingleRegister";
+            this.btnWriteSingleRegister.Size = new System.Drawing.Size(161, 23);
+            this.btnWriteSingleRegister.TabIndex = 28;
+            this.btnWriteSingleRegister.Text = "Write Single Register - FC6";
+            this.btnWriteSingleRegister.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnWriteSingleRegister.UseVisualStyleBackColor = true;
+            this.btnWriteSingleRegister.Click += new System.EventHandler(this.btnWriteSingleRegister_Click);
+            // 
+            // btnWriteSingleCoil
+            // 
+            this.btnWriteSingleCoil.Location = new System.Drawing.Point(671, 106);
+            this.btnWriteSingleCoil.Name = "btnWriteSingleCoil";
+            this.btnWriteSingleCoil.Size = new System.Drawing.Size(161, 23);
+            this.btnWriteSingleCoil.TabIndex = 27;
+            this.btnWriteSingleCoil.Text = "Write Single Coil - FC5";
+            this.btnWriteSingleCoil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnWriteSingleCoil.UseVisualStyleBackColor = true;
+            this.btnWriteSingleCoil.Click += new System.EventHandler(this.btnWriteSingleCoil_Click);
+            // 
+            // txtCoilValue
+            // 
+            this.txtCoilValue.BackColor = System.Drawing.SystemColors.Info;
+            this.txtCoilValue.Location = new System.Drawing.Point(575, 108);
+            this.txtCoilValue.Name = "txtCoilValue";
+            this.txtCoilValue.ReadOnly = true;
+            this.txtCoilValue.Size = new System.Drawing.Size(81, 20);
+            this.txtCoilValue.TabIndex = 31;
+            this.txtCoilValue.Text = "FALSE";
+            this.txtCoilValue.DoubleClick += new System.EventHandler(this.txtCoilValue_DoubleClick);
+            // 
+            // txtRegisterValue
+            // 
+            this.txtRegisterValue.BackColor = System.Drawing.SystemColors.Info;
+            this.txtRegisterValue.Location = new System.Drawing.Point(575, 158);
+            this.txtRegisterValue.Name = "txtRegisterValue";
+            this.txtRegisterValue.Size = new System.Drawing.Size(81, 20);
+            this.txtRegisterValue.TabIndex = 32;
+            this.txtRegisterValue.Text = "0";
+            // 
+            // button2
+            // 
+            this.button2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.button2.Image = global::EasyModbusClientExample.Properties.Resources.circle_minus;
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button2.Location = new System.Drawing.Point(383, 48);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(64, 52);
+            this.button2.TabIndex = 34;
+            this.button2.Text = "clear entry";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Cursor = System.Windows.Forms.Cursors.Default;
+            this.btnClear.Image = global::EasyModbusClientExample.Properties.Resources.circle_delete1;
+            this.btnClear.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnClear.Location = new System.Drawing.Point(450, 48);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(64, 52);
+            this.btnClear.TabIndex = 33;
+            this.btnClear.Text = "clear all";
+            this.btnClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // button1
+            // 
+            this.button1.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(520, 153);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(146, 43);
+            this.button1.TabIndex = 26;
+            this.button1.Text = "Prepare Registers";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnPrepareCoils
+            // 
+            this.btnPrepareCoils.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
+            this.btnPrepareCoils.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrepareCoils.Location = new System.Drawing.Point(520, 105);
+            this.btnPrepareCoils.Name = "btnPrepareCoils";
+            this.btnPrepareCoils.Size = new System.Drawing.Size(146, 43);
+            this.btnPrepareCoils.TabIndex = 25;
+            this.btnPrepareCoils.Text = "Prepare Coils";
+            this.btnPrepareCoils.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.btnPrepareCoils.UseVisualStyleBackColor = true;
+            this.btnPrepareCoils.Click += new System.EventHandler(this.btnPrepareCoils_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::EasyModbusClientExample.Properties.Resources.PLCLoggerCompact;
+            this.pictureBox1.Location = new System.Drawing.Point(768, 9);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(65, 66);
+            this.pictureBox1.TabIndex = 15;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::EasyModbusClientExample.Properties.Resources.arrow_2;
+            this.pictureBox2.Location = new System.Drawing.Point(201, 193);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(119, 82);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 23;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::EasyModbusClientExample.Properties.Resources.arrow_1;
+            this.pictureBox3.Location = new System.Drawing.Point(520, 193);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(117, 82);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 24;
+            this.pictureBox3.TabStop = false;
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(845, 442);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.btnClear);
+            this.Controls.Add(this.txtRegisterValue);
+            this.Controls.Add(this.txtCoilValue);
+            this.Controls.Add(this.btnWriteMultipleRegisters);
+            this.Controls.Add(this.btnWriteMultipleCoils);
+            this.Controls.Add(this.btnWriteSingleRegister);
+            this.Controls.Add(this.btnWriteSingleCoil);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnPrepareCoils);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtSlaveAddressInput);
+            this.Controls.Add(this.txtSlaveAddress);
+            this.Controls.Add(this.cbbSelectComPort);
+            this.Controls.Add(this.txtCOMPort);
+            this.Controls.Add(this.cbbSelctionModbus);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.txtAnwerFromServer);
+            this.Controls.Add(this.lsbAnswerFromServer);
+            this.Controls.Add(this.txtNumberOfValues);
+            this.Controls.Add(this.txtNumberOfValuesInput);
+            this.Controls.Add(this.txtStartingAddress);
+            this.Controls.Add(this.txtStartingAddressInput);
+            this.Controls.Add(this.btnReadInputRegisters);
+            this.Controls.Add(this.btnReadHoldingRegisters);
+            this.Controls.Add(this.btnReadDiscreteInputs);
+            this.Controls.Add(this.btnReadCoils);
+            this.Controls.Add(this.txtPort);
+            this.Controls.Add(this.txtPortInput);
+            this.Controls.Add(this.txtIpAddress);
+            this.Controls.Add(this.txtIpAddressInput);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.pictureBox3);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "MainForm";
+            this.Text = "EasyModbus Client";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 
@@ -334,5 +501,17 @@ namespace EasyModbusClientExample
         private System.Windows.Forms.Label txtSlaveAddress;
         private System.Windows.Forms.TextBox txtSlaveAddressInput;
         private System.Windows.Forms.TextBox textBox1;
-	}
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Button btnPrepareCoils;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnWriteMultipleRegisters;
+        private System.Windows.Forms.Button btnWriteMultipleCoils;
+        private System.Windows.Forms.Button btnWriteSingleRegister;
+        private System.Windows.Forms.Button btnWriteSingleCoil;
+        private System.Windows.Forms.TextBox txtCoilValue;
+        private System.Windows.Forms.TextBox txtRegisterValue;
+        private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.Button button2;
+    }
 }

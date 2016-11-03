@@ -88,5 +88,23 @@
   <ItemGroup>
     <None Include="Resources\PLCLoggerCompact.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow_left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circle_delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circle_delete1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\circle_minus.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
