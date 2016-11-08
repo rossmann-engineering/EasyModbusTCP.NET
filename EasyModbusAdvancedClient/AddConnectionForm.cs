@@ -73,8 +73,27 @@ namespace EasyModbusAdvancedClient
 		}
 	}
 	
+	public enum ModbusType
+	{
+		ModbusTCP = 0,
+		ModbusRTU = 1
+	}
+	
 	public class ConnectionProperties
 	{
+		    	
+		ModbusType modbusType;
+    
+   		[Browsable(true)]                       
+   		[Category("Modbus Type")] 
+    	[Description("Modbus TCP or Modbus RTU")]      
+   		[DisplayName("Modbus Type")]       
+    	public ModbusType ModbusTypeProperty
+    	{
+        	get { return modbusType; }
+        	set { modbusType = value; }
+    	}
+		
 		string connectionName = "Connection #1"; 
     
    		[Browsable(true)]                       
@@ -86,7 +105,7 @@ namespace EasyModbusAdvancedClient
         	get { return connectionName; }
         	set { connectionName = value; }
     	}
-		
+	
 		string modbusTCPAddress = "127.0.0.1"; 
     
    		[Browsable(true)]                        

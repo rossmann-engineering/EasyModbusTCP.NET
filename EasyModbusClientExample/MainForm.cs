@@ -88,6 +88,10 @@ namespace EasyModbusClientExample
             {
                 MessageBox.Show(exc.Message,"Exception Reading values from Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+            	modbusClient.Disconnect();
+            }
         }
 
         private void btnReadDiscreteInputs_Click(object sender, EventArgs e)
@@ -110,6 +114,10 @@ namespace EasyModbusClientExample
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message, "Exception Reading values from Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+            	modbusClient.Disconnect();
             }
         }
 
@@ -138,6 +146,10 @@ namespace EasyModbusClientExample
             {
                 MessageBox.Show(exc.Message, "Exception Reading values from Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+            	modbusClient.Disconnect();
+            }
         }
 
         private void btnReadInputRegisters_Click(object sender, EventArgs e)
@@ -162,6 +174,10 @@ namespace EasyModbusClientExample
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message, "Exception Reading values from Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+            	modbusClient.Disconnect();
             }
         }
 
@@ -265,6 +281,10 @@ namespace EasyModbusClientExample
             {
                 MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+            	modbusClient.Disconnect();
+            }
         }
 
         private void btnWriteSingleRegister_Click(object sender, EventArgs e)
@@ -288,6 +308,10 @@ namespace EasyModbusClientExample
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+            	modbusClient.Disconnect();
             }
         }
 
@@ -317,6 +341,10 @@ namespace EasyModbusClientExample
             {
                 MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+            	modbusClient.Disconnect();
+            }
         }
 
         private void btnWriteMultipleRegisters_Click(object sender, EventArgs e)
@@ -344,6 +372,10 @@ namespace EasyModbusClientExample
             catch (Exception exc)
             {
                 MessageBox.Show(exc.Message, "Exception writing values to Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+             finally
+            {
+            	modbusClient.Disconnect();
             }
         }
 
