@@ -88,6 +88,9 @@
     <Compile Include="..\EasyModbus\ModbusServer.cs">
       <Link>ModbusServer.cs</Link>
     </Compile>
+    <Compile Include="..\EasyModbus\StoreLogData.cs">
+      <Link>StoreLogData.cs</Link>
+    </Compile>
     <Compile Include="Info.cs">
       <SubType>Form</SubType>
     </Compile>

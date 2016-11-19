@@ -52,6 +52,7 @@
     <Compile Include="ModbusClient.cs" />
     <Compile Include="ModbusServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StoreLogData.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

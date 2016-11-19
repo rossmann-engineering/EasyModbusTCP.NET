@@ -23,7 +23,8 @@ namespace EasyModbusClientExample
 			//
 			InitializeComponent();
 			modbusClient = new EasyModbus.ModbusClient();
-			modbusClient.receiveDataChanged += new EasyModbus.ModbusClient.ReceiveDataChanged(UpdateReceiveData);
+//          modbusClient.LogFileFilename = "logFiletxt.txt";
+            modbusClient.receiveDataChanged += new EasyModbus.ModbusClient.ReceiveDataChanged(UpdateReceiveData);
 			modbusClient.sendDataChanged += new EasyModbus.ModbusClient.SendDataChanged(UpdateSendData);
             //modbusClient.Baudrate = 9600;
             //modbusClient.UnitIdentifier = 2;

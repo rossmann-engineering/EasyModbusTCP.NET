@@ -37,7 +37,6 @@ namespace EasyModbusAdvancedClient
                 if (connectionProperties.ConnectionName == connectionProperty.ConnectionName)
                 {
                     throw new Exception("Duplicate connection Name detected");
-                    return;
                 }
             }
             connectionPropertiesList.Add(connectionProperties);
@@ -91,7 +90,7 @@ namespace EasyModbusAdvancedClient
         public void GetValues(ConnectionProperties connectionProperties, int functionPropertyID)
         {
 
-            modbusClient = connectionProperties.modbusClient;
+            modbusClient = connectionProperties.modbusClient;          
             if (!modbusClient.Connected)
             {
                 modbusClient.IPAddress = connectionProperties.ModbusTCPAddress;

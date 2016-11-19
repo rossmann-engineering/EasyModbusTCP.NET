@@ -46,6 +46,10 @@ namespace EasyModbusAdvancedClient
 			connectionProperties.CyclicFlag = easyModbusManager.connectionPropertiesList[indexToEdit].CyclicFlag;
 			connectionProperties.ModbusTCPAddress = easyModbusManager.connectionPropertiesList[indexToEdit].ModbusTCPAddress;
 			connectionProperties.Port = easyModbusManager.connectionPropertiesList[indexToEdit].Port;
+			connectionProperties.ComPort = easyModbusManager.connectionPropertiesList[indexToEdit].ComPort;		
+			connectionProperties.SlaveID = easyModbusManager.connectionPropertiesList[indexToEdit].SlaveID;		
+			connectionProperties.ModbusTypeProperty = easyModbusManager.connectionPropertiesList[indexToEdit].ModbusTypeProperty;
+			connectionProperties.modbusClient =  easyModbusManager.connectionPropertiesList[indexToEdit].modbusClient;
 			propertyGrid1.SelectedObject = connectionProperties;
 			editMode = true;
 			this.indexToEdit = indexToEdit;
@@ -61,7 +65,19 @@ namespace EasyModbusAdvancedClient
             try
             {
                 if (!editMode)
+                {
                     easyModbusManager.AddConnection(connectionProperties);
+                    if (connectionProperties.ModbusTypeProperty == ModbusType.ModbusTCP)
+                    {
+						connectionProperties.modbusClient = new EasyModbus.ModbusClient();
+						connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
+                    }
+                    else
+                    {
+                    	connectionProperties.modbusClient = new EasyModbus.ModbusClient(connectionProperties.ComPort);
+                    	connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
+                    }
+                }
                 else
                     easyModbusManager.EditConnection(connectionProperties, indexToEdit);
             }
@@ -129,6 +145,28 @@ namespace EasyModbusAdvancedClient
         	get { return port; }
         	set { port = value; }
     	}
+    	
+ 		string comPort = "COM1";   
+   		[Browsable(true)]                       
+   		[Category("Connection properties")] 
+    	[Description("Serial COM-Port")]           
+   		[DisplayName("Serial COM-Port")]       
+    	public string ComPort
+    	{
+        	get { return comPort; }
+        	set { comPort = value; }
+    	}
+    	
+ 		int slaveID = 1;   
+   		[Browsable(true)]                       
+   		[Category("Connection properties")] 
+    	[Description("Slave ID")]           
+   		[DisplayName("Slave ID")]       
+    	public int SlaveID
+    	{
+        	get { return slaveID; }
+        	set { slaveID = value; }
+    	}
     	  	    
         
 		bool cyclicFlag = false;
@@ -161,7 +199,7 @@ namespace EasyModbusAdvancedClient
         	set { functionPropertiesList = value; }
     	}	
     	
-    	public EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient();
+    	public EasyModbus.ModbusClient modbusClient;
     	public System.Threading.Timer timer;
 	}	
 }

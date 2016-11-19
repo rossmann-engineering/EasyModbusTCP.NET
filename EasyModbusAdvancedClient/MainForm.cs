@@ -95,7 +95,11 @@ namespace EasyModbusAdvancedClient
             treeView1.Nodes.Add(rootNode);
             foreach (ConnectionProperties connectionProperty in easyModbusManager.connectionPropertiesList)
             {
-            	TreeNode treeNode = new TreeNode("Connection: " + connectionProperty.ConnectionName +"; IP-Address: "+connectionProperty.ModbusTCPAddress + "; Port: "+connectionProperty.Port);
+            	TreeNode treeNode = null;
+            	if (connectionProperty.ModbusTypeProperty == ModbusType.ModbusTCP) 
+            		treeNode = new TreeNode("Modbus-TCP Connection: " + connectionProperty.ConnectionName +"; IP-Address: "+connectionProperty.ModbusTCPAddress + "; Port: "+connectionProperty.Port);
+            	else
+            		treeNode = new TreeNode("Modbus-RTU Connection: " + connectionProperty.ConnectionName +"; COM-Port: "+connectionProperty.ComPort);
             	foreach (FunctionProperties functionProperty in connectionProperty.FunctionPropertiesList)
             	{
             		treeNode.Nodes.Add("Function code: " + functionProperty.FunctionCode + "; Starting Address: "+functionProperty.StartingAdress + "; Quantity: "+functionProperty.Quantity);
@@ -571,33 +575,32 @@ namespace EasyModbusAdvancedClient
         }
 
         private bool locked;
+		object locker = new object();
 		private void GetValuesThread(object obj)
 		{
+			if (locked)
+				System.Threading.Thread.Sleep(100);
             if (!locked)
-            lock (this)
-            {
-                locked = true;
-                GetValuesThreadObject getValuesThreadObject = (GetValuesThreadObject)obj;
-                try
-                {
-                    if (getValuesThreadObject.functionPropertyIndex != 0)
-                        easyModbusManager.GetValues(getValuesThreadObject.connectionProperty, getValuesThreadObject.functionPropertyIndex);
-                    else
-                        easyModbusManager.GetValues(getValuesThreadObject.connectionProperty);
-                }
-                catch (Exception exc)
-                {
-                    getValuesThreadObject.connectionProperty.timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                    getValuesThreadObject.connectionProperty.modbusClient.Disconnect();
-                    MessageBox.Show(exc.Message, "Exception Reading values", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            locked = true;
+			lock (locker) {
+                
+				GetValuesThreadObject getValuesThreadObject = (GetValuesThreadObject)obj;
+				try {
+					if (getValuesThreadObject.functionPropertyIndex != 0)
+						easyModbusManager.GetValues(getValuesThreadObject.connectionProperty, getValuesThreadObject.functionPropertyIndex);
+					else
+						easyModbusManager.GetValues(getValuesThreadObject.connectionProperty);
+				} catch (Exception exc) {
+					getValuesThreadObject.connectionProperty.timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+					getValuesThreadObject.connectionProperty.modbusClient.Disconnect();
+					MessageBox.Show(exc.Message, "Exception Reading values", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                }
-                finally
-                {
-                    UpdateNodesConnectedStatus();
-                }
-                locked = false;
-            }
+				} finally {
+					UpdateNodesConnectedStatus();
+					locked = false;
+				}
+				locked = false;
+			}
 		}
 		
 		void StartAllJobsToolStripMenuItemClick(object sender, EventArgs e)

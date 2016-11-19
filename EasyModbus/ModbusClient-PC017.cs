@@ -18,7 +18,6 @@ namespace EasyModbus
 	public partial class ModbusClient
 	{
         public enum RegisterOrder { LowHigh = 0, HighLow = 1 };
-        private bool debug=false;
 		private TcpClient tcpClient;
 		private string ipAddress = "127.0.0.1";
 		private int port = 502;
@@ -56,7 +55,6 @@ namespace EasyModbus
 		/// <param name="port">Listening port of the Master device (should be 502)</param>
 		public ModbusClient(string ipAddress, int port)
 		{
-			if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-TCP, IPAddress: " + ipAddress + ", Port: "+port ,System.DateTime.Now);
             Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
             Console.WriteLine();
@@ -70,7 +68,6 @@ namespace EasyModbus
         /// <param name="serialPort">Serial-Port Name e.G. "COM1"</param>
         public ModbusClient(string serialPort)
         {
-        	if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-RTU, COM-Port: " + serialPort ,System.DateTime.Now);
             Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
             Console.WriteLine();
@@ -81,7 +78,9 @@ namespace EasyModbus
             serialport.StopBits = stopBits;
             serialport.WriteTimeout = 10000;
             serialport.ReadTimeout = connectTimeout;
-            serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);      
+            serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+           
+            
         }
 
         /// <summary>
@@ -89,7 +88,6 @@ namespace EasyModbus
         /// </summary>
         public ModbusClient()
         {
-        	if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-TCP" ,System.DateTime.Now);
             Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
             Console.WriteLine();
@@ -104,7 +102,6 @@ namespace EasyModbus
             {
                 if (!serialport.IsOpen)
                 {
-                	if (debug) StoreLogData.Instance.Store("Open Serial port " + serialport.PortName,System.DateTime.Now);
                     serialport.BaudRate = baudRate;
                     serialport.Parity = parity;
                     serialport.StopBits = stopBits;
@@ -118,7 +115,6 @@ namespace EasyModbus
             }
             if (!udpFlag)
             {
-            	if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress+", Port: "+port,System.DateTime.Now);
                 tcpClient = new TcpClient(ipAddress, port);
                 stream = tcpClient.GetStream();
                 stream.ReadTimeout = connectTimeout;
@@ -134,7 +130,6 @@ namespace EasyModbus
 		{
             if (!udpFlag)
             {
-            	if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress+", Port: "+port,System.DateTime.Now);
                 this.ipAddress = ipAddress;
                 this.port = port;
                 tcpClient = new TcpClient(ipAddress, port);
@@ -387,7 +382,7 @@ namespace EasyModbus
         		System.Threading.Thread.Sleep(10);
         	receiveActive = true;
         	
-        	const long ticksWait = TimeSpan.TicksPerMillisecond * 2000;//((40*10000000) / this.baudRate);
+        	long ticksWait = TimeSpan.TicksPerMillisecond * 2000;//((40*10000000) / this.baudRate);
         	
         	
         	SerialPort sp = (SerialPort)sender;
@@ -400,9 +395,10 @@ namespace EasyModbus
             readBuffer = new byte[256];
         	int numbytes=0;
             int actualPositionToRead = 0;
+            bool modbusFrameValid = false;;
             DateTime dateTimeLastRead = DateTime.Now;
             do{
-            	try {
+      
             		dateTimeLastRead = DateTime.Now;  
             		while ((sp.BytesToRead) == 0) 
             		{
@@ -420,21 +416,28 @@ namespace EasyModbus
             	
             	actualPositionToRead = actualPositionToRead + rxbytearray.Length;
             	
-            	}
-            	catch (Exception){
             	
+
+            	if (DetectValidModbusFrame(readBuffer, actualPositionToRead))
+            	{
+            		modbusFrameValid = true;
+            		break;
             	}
-            	if (DetectValidModbusFrame(readBuffer, actualPositionToRead) | bytesToRead < actualPositionToRead) break;
+				if (bytesToRead < actualPositionToRead) break;
             }
             while ((DateTime.Now.Ticks - dateTimeLastRead.Ticks) < ticksWait) ;
+            if (!modbusFrameValid) 
+            {
+            	receiveActive = false;
+            	return;
+            }
             bytesToRead = 0;
             //10.000 Ticks in 1 ms
             dataReceived = true;
             receiveActive = false;
             sp.DiscardInBuffer();
                         	receiveData = new byte[actualPositionToRead];
-            Array.Copy(readBuffer, 0, receiveData, 0, actualPositionToRead);
-            if (debug) StoreLogData.Instance.Store("Received Serial-Data: "+BitConverter.ToString(readBuffer) ,System.DateTime.Now);
+            	Array.Copy(readBuffer, 0, receiveData, 0, actualPositionToRead);
             if (receiveDataChanged != null)
             {
 
@@ -468,24 +471,14 @@ namespace EasyModbus
 		/// <returns>Boolean Array which contains the discrete Inputs</returns>
 		public bool[] ReadDiscreteInputs(int startingAddress, int quantity)
 		{
-            if (debug) StoreLogData.Instance.Store("FC2 (Read Discrete Inputs from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal ++;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
 			if (tcpClient == null & !udpFlag & serialport==null)
-			{
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
 			if (startingAddress > 65535 | quantity >2000)
-			{
-				if (debug) StoreLogData.Instance.Store("ArgumentException Throwed", System.DateTime.Now);
 				throw new ArgumentException("Starting address must be 0 - 65535; quantity must be 0 - 2000");
-			}
 			bool[] response;
 			this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
 			this.protocolIdentifier = BitConverter.GetBytes((int) 0x0000);
@@ -522,12 +515,6 @@ namespace EasyModbus
                 else
                     bytesToRead = 6 + quantity / 8;
                 serialport.Write(data, 6, 8);
-                if (debug)
-                {
-                	byte [] debugData = new byte[8];
-            		Array.Copy(data, 6, debugData, 0, 8);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                 if (sendDataChanged != null)
             	{
             		sendData = new byte[8];
@@ -562,12 +549,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length-2);
-                if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                     if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -580,44 +561,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
             }
             if (data[7] == 0x82 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x82 & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
             if (data[7] == 0x82 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x82 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
             crc = BitConverter.GetBytes(calculateCRC(data, (ushort)(data[8]+3), 6));
                 if ((crc[0] != data[data[8] + 9] | crc[1] != data[data[8] + 10]) & dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-                }
                 else if (!dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
                     throw new TimeoutException("No Response from Modbus Slave");
-                }
             }
 			response = new bool[quantity];
 			for (int i = 0; i < quantity; i++)
@@ -637,24 +599,14 @@ namespace EasyModbus
 		/// <returns>Boolean Array which contains the coils</returns>
 		public bool[] ReadCoils(int startingAddress, int quantity)
 		{
-			if (debug) StoreLogData.Instance.Store("FC1 (Read Coils from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
+                   	throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
 			if (startingAddress > 65535 | quantity >2000)
-			{
-				if (debug) StoreLogData.Instance.Store("ArgumentException Throwed", System.DateTime.Now);
 				throw new ArgumentException("Starting address must be 0 - 65535; quantity must be 0 - 2000");
-			}
 			bool[] response;
 			this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
 			this.protocolIdentifier = BitConverter.GetBytes((int) 0x0000);
@@ -690,12 +642,6 @@ namespace EasyModbus
                 else
                     bytesToRead = 6 + quantity/8;
                 serialport.Write(data, 6, 8);
-                if (debug)
-                {
-                	byte [] debugData = new byte[8];
-            		Array.Copy(data, 6, debugData, 0, 8);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                if (sendDataChanged != null)
             	{
             		sendData = new byte[8];
@@ -731,12 +677,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length-2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send MocbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                     if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -749,44 +689,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
 			}
             if (data[7] == 0x81 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x81 & data[8] == 0x02)
-           {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
             if (data[7] == 0x81 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x81 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
             crc = BitConverter.GetBytes(calculateCRC(data, (ushort)(data[8]+3), 6));
                 if ((crc[0] != data[data[8]+9] | crc[1] != data[data[8]+10]) & dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-                }
                 else if (!dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
                     throw new TimeoutException("No Response from Modbus Slave");
-                }
             }
 			response = new bool[quantity];
 			for (int i = 0; i < quantity; i++)
@@ -806,24 +727,14 @@ namespace EasyModbus
 		/// <returns>Int Array which contains the holding registers</returns>
 		public int[] ReadHoldingRegisters(int startingAddress, int quantity)
 		{
-			if (debug) StoreLogData.Instance.Store("FC3 (Read Holding Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
 			if (startingAddress > 65535 | quantity >125)
-			{
-				if (debug) StoreLogData.Instance.Store("ArgumentException Throwed", System.DateTime.Now);
 				throw new ArgumentException("Starting address must be 0 - 65535; quantity must be 0 - 125");
-			}
 			int[] response;
 			this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
 			this.protocolIdentifier = BitConverter.GetBytes((int) 0x0000);
@@ -854,12 +765,7 @@ namespace EasyModbus
                 dataReceived = false;
                 bytesToRead = 5 + 2 * quantity;
                 serialport.Write(data, 6, 8);
-                if (debug)
-                {
-                	byte [] debugData = new byte[8];
-            		Array.Copy(data, 6, debugData, 0, 8);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
+                
                if (sendDataChanged != null)
             	{
             		sendData = new byte[8];
@@ -895,12 +801,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length-2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                     if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -913,44 +813,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
 			}
             if (data[7] == 0x83 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x83 & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
+                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             if (data[7] == 0x83 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x83 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
             crc = BitConverter.GetBytes(calculateCRC(data, (ushort)(data[8]+3), 6));
                 if ((crc[0] != data[data[8]+9] | crc[1] != data[data[8]+10])& dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-                }
+                	throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
                 else if (!dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
                     throw new TimeoutException("No Response from Modbus Slave");
-                }
             }
 			response = new int[quantity];
 			for (int i = 0; i < quantity; i++)
@@ -976,24 +857,14 @@ namespace EasyModbus
 		/// <returns>Int Array which contains the input registers</returns>
 		public int[] ReadInputRegisters(int startingAddress, int quantity)
 		{
-			if (debug) StoreLogData.Instance.Store("FC4 (Read Input Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
 			if (startingAddress > 65535 | quantity >125)
-			{
-				if (debug) StoreLogData.Instance.Store("ArgumentException Throwed", System.DateTime.Now);
 				throw new ArgumentException("Starting address must be 0 - 65535; quantity must be 0 - 125");
-			}
 			int[] response;
 			this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
 			this.protocolIdentifier = BitConverter.GetBytes((int) 0x0000);
@@ -1024,12 +895,6 @@ namespace EasyModbus
                 dataReceived = false;
                 bytesToRead = 5 + 2 * quantity;
                 serialport.Write(data, 6, 8);
-                if (debug)
-                {
-                	byte [] debugData = new byte[8];
-            		Array.Copy(data, 6, debugData, 0, 8);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                if (sendDataChanged != null)
             	{
             		sendData = new byte[8];
@@ -1067,12 +932,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length-2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                      if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -1085,44 +944,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
 			}
             if (data[7] == 0x84 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x84 & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
+                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             if (data[7] == 0x84 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x84 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
             crc = BitConverter.GetBytes(calculateCRC(data, (ushort)(data[8]+3), 6));
                 if ((crc[0] != data[data[8]+9] | crc[1] != data[data[8]+10]) & dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-                }
                 else if (!dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
                     throw new TimeoutException("No Response from Modbus Slave");
-                }
             }
 			response = new int[quantity];
 			for (int i = 0; i < quantity; i++)
@@ -1148,19 +988,12 @@ namespace EasyModbus
 		/// <param name="value">Coil Value to be written</param>
         public void WriteSingleCoil(int startingAddress, bool value)
         {
-        	if (debug) StoreLogData.Instance.Store("FC5 (Write single coil to Master device), StartingAddress: "+ startingAddress+", Value: " + value, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
             byte[] coilValue = new byte[2];
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
@@ -1198,12 +1031,6 @@ namespace EasyModbus
                 dataReceived = false;
                 bytesToRead = 8;
                 serialport.Write(data, 6, 8);
-                if (debug)
-                {
-                	byte [] debugData = new byte[8];
-            		Array.Copy(data, 6, debugData, 0, 8);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                if (sendDataChanged != null)
             	{
             		sendData = new byte[8];
@@ -1237,12 +1064,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length - 2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                     if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -1255,44 +1076,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
             }
             if (data[7] == 0x85 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x85 & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
+                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             if (data[7] == 0x85 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x85 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
              crc = BitConverter.GetBytes(calculateCRC(data, 6, 6));           
              if ((crc[0] != data[12] | crc[1] != data[13]) & dataReceived)
-             {
-                	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-                }
+                throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
              else if (!dataReceived)
-             {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
-                }
+                throw new TimeoutException("No Response from Modbus Slave");
             }
         }
 
@@ -1304,19 +1106,12 @@ namespace EasyModbus
         /// <param name="value">Register Value to be written</param>
         public void WriteSingleRegister(int startingAddress, int value)
         {
-        	if (debug) StoreLogData.Instance.Store("FC6 (Write single register to Master device), StartingAddress: "+ startingAddress+", Value: " + value, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
             byte[] registerValue = new byte[2];
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
@@ -1348,12 +1143,6 @@ namespace EasyModbus
                 dataReceived = false;
                 bytesToRead = 8;
                 serialport.Write(data, 6, 8);
-                if (debug)
-                {
-                	byte [] debugData = new byte[8];
-            		Array.Copy(data, 6, debugData, 0, 8);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                if (sendDataChanged != null)
             	{
             		sendData = new byte[8];
@@ -1388,12 +1177,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length - 2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                      if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -1406,44 +1189,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
             }
             if (data[7] == 0x86 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x86 & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
+                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             if (data[7] == 0x86 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x86 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
              crc = BitConverter.GetBytes(calculateCRC(data, 6, 6));           
              if ((crc[0] != data[12] | crc[1] != data[13]) & dataReceived)
-             {
-                if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-             }
              else if (!dataReceived)
-             {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
-                }
+                throw new TimeoutException("No Response from Modbus Slave");
             }
         }
 
@@ -1454,25 +1218,15 @@ namespace EasyModbus
         /// <param name="values">Coil Values to be written</param>
         public void WriteMultipleCoils(int startingAddress, bool[] values)
         {
-        	string debugString = "";
-        	for (int i = 0; i < values.Length;i++)
-        		debugString = debugString + values[i] + " ";
-        	if (debug) StoreLogData.Instance.Store("FC15 (Write multiple coils to Master device), StartingAddress: "+ startingAddress+", Values: " + debugString, System.DateTime.Now);
             transactionIdentifierInternal++;
             byte byteCount = (byte)(values.Length/8+1);
             byte[] quantityOfOutputs = BitConverter.GetBytes((int)values.Length);
             byte singleCoilValue = 0;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
             this.length = BitConverter.GetBytes((int)(7+(values.Length/8+1)));
@@ -1516,12 +1270,6 @@ namespace EasyModbus
                 dataReceived = false;
                 bytesToRead = 8;
                 serialport.Write(data, 6, data.Length - 6);
-                if (debug)
-                {
-                	byte [] debugData = new byte[data.Length - 6];
-            		Array.Copy(data, 6, debugData, 0, data.Length - 6);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                if (sendDataChanged != null)
             	{
             		sendData = new byte[data.Length - 6];
@@ -1556,12 +1304,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length-2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                     if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -1574,44 +1316,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
             }
             if (data[7] == 0x8F & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x8F & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
+                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             if (data[7] == 0x8F & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x8F & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
              crc = BitConverter.GetBytes(calculateCRC(data, 6, 6));           
              if ((crc[0] != data[12] | crc[1] != data[13]) & dataReceived)
-             {
-                if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-             }
              else if (!dataReceived)
-              {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
-                }
+                throw new TimeoutException("No Response from Modbus Slave");
             }
         }
 
@@ -1622,24 +1345,14 @@ namespace EasyModbus
         /// <param name="values">register Values to be written</param>
         public void WriteMultipleRegisters(int startingAddress, int[] values)
         {
-        	string debugString = "";
-        	for (int i = 0; i < values.Length;i++)
-        		debugString = debugString + values[i] + " ";
-        	if (debug) StoreLogData.Instance.Store("FC16 (Write multiple Registers to Server device), StartingAddress: "+ startingAddress+", Values: " + debugString, System.DateTime.Now);
             transactionIdentifierInternal++;
             byte byteCount = (byte)(values.Length * 2);
             byte[] quantityOfOutputs = BitConverter.GetBytes((int)values.Length);
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
             this.length = BitConverter.GetBytes((int)(7+values.Length*2));
@@ -1674,12 +1387,6 @@ namespace EasyModbus
                 dataReceived = false;
                 bytesToRead = 8;
                 serialport.Write(data, 6, data.Length - 6);
-                if (debug)
-                {
-                	byte [] debugData = new byte[data.Length - 6];
-            		Array.Copy(data, 6, debugData, 0, data.Length - 6);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                if (sendDataChanged != null)
             	{
             		sendData = new byte[data.Length - 6];
@@ -1714,12 +1421,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length-2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                      if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -1732,44 +1433,25 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
             }
             if (data[7] == 0x90 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x90 & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
+                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             if (data[7] == 0x90 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x90 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             if (serialport != null)
             {
              crc = BitConverter.GetBytes(calculateCRC(data, 6, 6));           
              if ((crc[0] != data[12] | crc[1] != data[13])  &dataReceived)
-             {
-                if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-             }
              else if (!dataReceived)
-             {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
-             }
+                throw new TimeoutException("No Response from Modbus Slave");
             }
         }
 
@@ -1783,10 +1465,6 @@ namespace EasyModbus
         /// <returns>Int Array which contains the Holding registers</returns>
         public int[] ReadWriteMultipleRegisters(int startingAddressRead, int quantityRead, int startingAddressWrite, int[] values)
         {
-        	string debugString = "";
-        	for (int i = 0; i < values.Length;i++)
-        		debugString = debugString + values[i] + " ";
-        	if (debug) StoreLogData.Instance.Store("FC23 (Read and Write multiple Registers to Server device), StartingAddress Read: "+ startingAddressRead+ ", Quantity Read: "+quantityRead+", startingAddressWrite: " + startingAddressWrite +", Values: " + debugString, System.DateTime.Now);
             transactionIdentifierInternal++;
             byte [] startingAddressReadLocal = new byte[2];
 		    byte [] quantityReadLocal = new byte[2];
@@ -1795,20 +1473,11 @@ namespace EasyModbus
             byte writeByteCountLocal = 0;
             if (serialport != null)
                 if (!serialport.IsOpen)
-            	{
-            		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                     throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
-            	}
             if (tcpClient == null & !udpFlag & serialport == null)
-            {
-				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ConnectionException("connection error");
-			}
             if (startingAddressRead > 65535 | quantityRead > 125 | startingAddressWrite > 65535 | values.Length > 121)
-            {
-				if (debug) StoreLogData.Instance.Store("ArgumentException Throwed", System.DateTime.Now);
-				throw new ArgumentException("Starting address must be 0 - 65535; quantity must be 0 - 2000");
-			}
+                throw new ArgumentException("Starting address must be 0 - 65535; quantity must be 0 - 125");
             int[] response;
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
@@ -1852,12 +1521,6 @@ namespace EasyModbus
                 dataReceived = false;
                 bytesToRead = 5 + 2*quantityRead;
                 serialport.Write(data, 6, data.Length - 6);
-                if (debug)
-                {
-                	byte [] debugData = new byte[data.Length - 6];
-            		Array.Copy(data, 6, debugData, 0, data.Length - 6);
-            		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                if (sendDataChanged != null)
             	{
             		sendData = new byte[data.Length - 6];
@@ -1892,12 +1555,6 @@ namespace EasyModbus
                 else
                 {
                     stream.Write(data, 0, data.Length-2);
-                    if (debug)
-                {
-                	byte [] debugData = new byte[data.Length-2];
-            		Array.Copy(data, 0, debugData, 0, data.Length-2);
-            		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
-                }
                      if (sendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
@@ -1910,31 +1567,18 @@ namespace EasyModbus
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+            			receiveDataChanged(this);
             		}
                 }
             }
             if (data[7] == 0x97 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
             if (data[7] == 0x97 & data[8] == 0x02)
-            {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
+                 throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             if (data[7] == 0x97 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
             if (data[7] == 0x97 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
                 throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
             response = new int[quantityRead];
             for (int i = 0; i < quantityRead; i++)
             {
@@ -1956,11 +1600,14 @@ namespace EasyModbus
 		/// </summary>
 		public void Disconnect()
 		{
-			if (debug) StoreLogData.Instance.Store("Disconnect", System.DateTime.Now);
             if (serialport != null)
             {
                 if (serialport.IsOpen)
-                    serialport.Close();
+                {
+                	System.Threading.Thread CloseDown = new System.Threading.Thread(new System.Threading.ThreadStart(CloseSerialOnExit)); //close port in new thread to avoid hang
+					CloseDown.Start(); //close port in new thread to avoid hang
+                }
+                   
                 return;
             }
             if (stream != null)
@@ -1968,13 +1615,20 @@ namespace EasyModbus
             if (tcpClient != null)
 			    tcpClient.Close();		    
 		}
+		
+		/// <summary>
+        /// Close Serial connection in a sepereta Thread
+        /// </summary>
+		private void CloseSerialOnExit()
+		{
+			 serialport.Close();
+		}
 
         /// <summary>
         /// Destructor - Close connection to Master Device.
         /// </summary>
 		~ ModbusClient()
 		{
-			if (debug) StoreLogData.Instance.Store("Destructor called - automatically disconnect", System.DateTime.Now);
             if (serialport != null)
             {
                 if (serialport.IsOpen)
@@ -2158,24 +1812,5 @@ namespace EasyModbus
                 connectTimeout = value;
             }
         }
-
-        /// <summary>
-        /// Gets or Sets the Filename for the LogFile
-        /// </summary>
-        public string LogFileFilename
-        {
-            get
-            {
-                return StoreLogData.Instance.Filename;
-            }
-            set
-            {
-                StoreLogData.Instance.Filename = value;
-                if (StoreLogData.Instance.Filename != null)
-                    debug = true;
-                else
-                    debug = false;
-            }
-        }
-    }
+	}
 }
