@@ -309,6 +309,49 @@ namespace EasyModbus
             return returnValue;
         }
 
+
+        /// <summary>
+        /// Converts 16 - Bit Register values to String
+        /// </summary>
+        /// <param name="registers">Register array received via Modbus</param>
+        /// <param name="offset">First Register containing the String to convert</param>
+        /// <param name="stringLength">number of characters in String (must be even)</param>
+        /// <returns>Converted String</returns>
+        public static string ConvertRegistersToString(int[] registers, int offset, int stringLength)
+        { 
+        byte[] result = new byte[stringLength];
+        byte[] registerResult = new byte[2];
+        
+            for (int i = 0; i < stringLength/2; i++)
+            {
+                registerResult = BitConverter.GetBytes(registers[offset + i]);
+                result[i * 2] = registerResult[0];
+                result[i * 2 + 1] = registerResult[1];
+            }
+            return System.Text.Encoding.Default.GetString(result);
+        }
+
+        /// <summary>
+        /// Converts a String to 16 - Bit Registers
+        /// </summary>
+        /// <param name="registers">Register array received via Modbus</param>
+        /// <returns>Converted String</returns>
+        public static int[] ConvertStringToRegisters(string stringToConvert)
+        {
+            byte[] array = System.Text.Encoding.ASCII.GetBytes(stringToConvert);
+            int[] returnarray = new int[stringToConvert.Length / 2 + stringToConvert.Length % 2];
+            for (int i = 0; i < returnarray.Length; i++)
+            {
+                returnarray[i] = array[i * 2];
+                if (i*2 +1< array.Length)
+                {
+                    returnarray[i] = returnarray[i] | ((int)array[i * 2 + 1] << 8);
+                }
+            }
+            return returnarray;
+        }
+
+
         /// <summary>
         /// Calculates the CRC16 for Modbus-RTU
         /// </summary>

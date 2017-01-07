@@ -10,7 +10,6 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using System.IO.Ports;
 
 namespace EasyModbus
@@ -73,6 +72,8 @@ namespace EasyModbus
 
         public int NumberOfConnectedClients { get; set; }
 
+        public string ipAddress = null;
+
         public TCPHandler(int port)
         {
 
@@ -82,6 +83,16 @@ namespace EasyModbus
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
         }
 
+        public TCPHandler(string ipAddress, int port)
+        {
+            this.ipAddress = ipAddress;
+            IPAddress localAddr = IPAddress.Any;
+            server = new TcpListener(localAddr, port);
+            server.Start();
+            server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
+        }
+
+
         private void AcceptTcpClientCallback(IAsyncResult asyncResult)
         {
             TcpClient tcpClient = new TcpClient();
@@ -89,6 +100,16 @@ namespace EasyModbus
             {
                 tcpClient = server.EndAcceptTcpClient(asyncResult);
                 tcpClient.ReceiveTimeout = 4000;
+                if (ipAddress != null)
+                {
+                    string ipEndpoint = tcpClient.Client.RemoteEndPoint.ToString();
+                    ipEndpoint = ipEndpoint.Split(':')[0];
+                    if (ipEndpoint != ipAddress)
+                    {
+                        tcpClient.Client.Disconnect(false);
+                        return;
+                    }
+                }
             }
             catch (Exception) { }
             try
@@ -365,9 +386,9 @@ namespace EasyModbus
                         if (debug) StoreLogData.Instance.Store("EasyModbus RTU-Server listing for incomming data at Serial Port " + serialPort, System.DateTime.Now);
                         serialport = new SerialPort();
             			serialport.PortName = serialPort;
-            			serialport.BaudRate = this.baudrate;
-           				serialport.Parity = this.parity;
-            			serialport.StopBits = stopBits;
+                        serialport.BaudRate = this.baudrate;
+                        serialport.Parity = this.parity;
+                        serialport.StopBits = stopBits;
            				serialport.WriteTimeout = 10000;
             			serialport.ReadTimeout = 1000;
             			serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
