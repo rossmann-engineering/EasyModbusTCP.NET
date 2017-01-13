@@ -2,6 +2,8 @@
 
 Modbus TCP, Modbus UDP and Modbus RTU client/server library for .NET
 
+<a href="https://sourceforge.net/projects/easymodbustcp/files/latest/download" rel="nofollow"><img alt="Download EasyModbusTCP/UDP/RTU .NET" src="https://a.fsdn.com/con/app/sf-download-button"></a>
+
 For JAVA-Version see: https://sourceforge.net/projects/easymodbustcp-udp-java/
 
 Now available: Modbus RTU Slave for ATMEL ATMEGA microcontrollers
