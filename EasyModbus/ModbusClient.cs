@@ -1,5 +1,5 @@
 ﻿/*
- * Erstellt mit SharpDevelop.
+ * Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
  * http://www.rossmann-engineering.de
  * Datum: 16.06.2011
  * Zeit: 21:35

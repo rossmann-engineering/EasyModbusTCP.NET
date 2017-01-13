@@ -1,10 +1,8 @@
 ﻿/*
- * Created by SharpDevelop.
+ * Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
  * User: srossmann
  * Date: 26.11.2015
  * Time: 06:55
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
 using System.Drawing;

@@ -1,10 +1,8 @@
 ﻿/*
- * Created by SharpDevelop.
+ * Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
  * User: iMac
  * Date: 09.07.2016
  * Time: 12:36
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
 using System.Runtime.Serialization;

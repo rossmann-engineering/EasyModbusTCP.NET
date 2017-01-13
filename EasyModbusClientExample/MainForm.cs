@@ -1,7 +1,6 @@
 ﻿/*
- * Created by SharpDevelop.
- * User: www.rossmann-engineering.de
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ * Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+ * www.rossmann-engineering.de
  */
 using System;
 using System.Collections.Generic;

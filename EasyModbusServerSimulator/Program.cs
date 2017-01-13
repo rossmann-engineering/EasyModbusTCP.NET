@@ -1,7 +1,6 @@
 ﻿/*
- * Created by SharpDevelop.
+ * Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
  * User: www.rossmann-engineering.de 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
 using System.Windows.Forms;
