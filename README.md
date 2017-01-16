@@ -1,8 +1,8 @@
 # EasyModbusTCP.NET - <a href="EasyModbusTCP.NET">www.EasyModbusTCP.NET</a>
 
-Modbus TCP, Modbus UDP and Modbus RTU client/server library for .NET
-Industry approved!!
-Fast and secure access from PC or Embedded Systems to many PLC-Systems and other components for industry automation. 
+Modbus TCP, Modbus UDP and Modbus RTU client/server library for .NET<br>
+Industry approved!!<br>
+Fast and secure access from PC or Embedded Systems to many PLC-Systems and other components for industry automation. <br>
 Only a few lines of codes are needed to read or write data from or to a PLC. 
 
 Additional Software tools e.g. Modbus Server Simulator, makes software development fast and easy. 
