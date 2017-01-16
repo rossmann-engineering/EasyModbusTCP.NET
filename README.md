@@ -10,7 +10,6 @@ Additional Software tools e.g. Modbus Server Simulator, makes software developme
 Download Library (*.DLL) and tools: <a href="https://sourceforge.net/projects/easymodbustcp/files/latest/download" rel="nofollow"><img alt="Download EasyModbusTCP/UDP/RTU .NET" src="https://a.fsdn.com/con/app/sf-download-button"></a>
 
 <script src="https://apis.google.com/js/platform.js"></script>
-
 <div class="g-ytsubscribe" data-channelid="UCJiSrKsKot6ZFHafBtaJVlA" data-layout="default" data-count="default"></div>
 
 For JAVA-Version see: https://sourceforge.net/projects/easymodbustcp-udp-java/
