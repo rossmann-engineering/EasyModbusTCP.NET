@@ -1,6 +1,11 @@
 # EasyModbusTCP.NET - <a href="EasyModbusTCP.NET">www.EasyModbusTCP.NET</a>
 
 Modbus TCP, Modbus UDP and Modbus RTU client/server library for .NET
+Industry approved!!
+Fast and secure access from PC or Embedded Systems to many PLC-Systems and other components for industry automation. 
+Only a few lines of codes are needed to read or write data from or to a PLC. 
+
+Additional Software tools e.g. Modbus Server Simulator, makes software development fast and easy. 
 
 Download Library (*.DLL) and tools: <a href="https://sourceforge.net/projects/easymodbustcp/files/latest/download" rel="nofollow"><img alt="Download EasyModbusTCP/UDP/RTU .NET" src="https://a.fsdn.com/con/app/sf-download-button"></a>
 
