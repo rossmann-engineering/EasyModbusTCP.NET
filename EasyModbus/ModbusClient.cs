@@ -40,6 +40,7 @@ namespace EasyModbus
         private SerialPort serialport;
         private Parity parity = Parity.Even;
         private StopBits stopBits = StopBits.One;
+        private bool connected = false;
         
         public delegate void ReceiveDataChanged(object sender);
         public event ReceiveDataChanged receiveDataChanged;
@@ -47,7 +48,10 @@ namespace EasyModbus
         public delegate void SendDataChanged(object sender);
         public event SendDataChanged sendDataChanged;
 
-		NetworkStream stream;
+        public delegate void ConnectedChanged(object sender);
+        public event ConnectedChanged connectedChanged;
+
+        NetworkStream stream;
 		
 		/// <summary>
 		/// Constructor which determines the Master ip-address and the Master Port.
@@ -57,9 +61,11 @@ namespace EasyModbus
 		public ModbusClient(string ipAddress, int port)
 		{
 			if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-TCP, IPAddress: " + ipAddress + ", Port: "+port ,System.DateTime.Now);
+#if (!COMMERCIAL)
             Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
             Console.WriteLine();
+#endif
             this.ipAddress = ipAddress;
 			this.port = port;
 		}
@@ -71,9 +77,11 @@ namespace EasyModbus
         public ModbusClient(string serialPort)
         {
         	if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-RTU, COM-Port: " + serialPort ,System.DateTime.Now);
+#if (!COMMERCIAL)
             Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
             Console.WriteLine();
+#endif
             this.serialport = new SerialPort();
             serialport.PortName = serialPort;
             serialport.BaudRate = baudRate;
@@ -90,9 +98,11 @@ namespace EasyModbus
         public ModbusClient()
         {
         	if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-TCP" ,System.DateTime.Now);
+#if (!COMMERCIAL)
             Console.WriteLine("EasyModbus Client Library Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Console.WriteLine("Copyright (c) Stefan Rossmann Engineering Solutions");
             Console.WriteLine();
+#endif
         }
 		
 		/// <summary>
@@ -111,6 +121,7 @@ namespace EasyModbus
                     serialport.WriteTimeout = 10000;
                     serialport.ReadTimeout = connectTimeout;
                     serialport.Open();
+                    connected = true;
                     
                    
                 }
@@ -118,14 +129,29 @@ namespace EasyModbus
             }
             if (!udpFlag)
             {
-            	if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress+", Port: "+port,System.DateTime.Now);
-                tcpClient = new TcpClient(ipAddress, port);
+                if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port, System.DateTime.Now);
+                tcpClient = new TcpClient();
+                var result = tcpClient.BeginConnect(ipAddress, port, null, null);
+                var success = result.AsyncWaitHandle.WaitOne(connectTimeout);
+                if (!success)
+                {
+                    throw new EasyModbus.Exceptions.ConnectionException("connection timed out");
+                }
+                tcpClient.EndConnect(result);
+
+                //tcpClient = new TcpClient(ipAddress, port);
                 stream = tcpClient.GetStream();
                 stream.ReadTimeout = connectTimeout;
+                connected = true;
             }
             else
+            {
                 tcpClient = new TcpClient();
-		}
+                connected = true;
+            }
+            if (connectedChanged != null)
+                connectedChanged(this);
+        }
 		
 		/// <summary>
 		/// Establish connection to Master device in case of Modbus TCP.
@@ -134,16 +160,30 @@ namespace EasyModbus
 		{
             if (!udpFlag)
             {
-            	if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress+", Port: "+port,System.DateTime.Now);
-                this.ipAddress = ipAddress;
-                this.port = port;
-                tcpClient = new TcpClient(ipAddress, port);
+                if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port, System.DateTime.Now);
+                tcpClient = new TcpClient();
+                var result = tcpClient.BeginConnect(ipAddress, port, null, null);
+                var success = result.AsyncWaitHandle.WaitOne(connectTimeout);
+                if (!success)
+                {
+                    throw new EasyModbus.Exceptions.ConnectionException("connection timed out");
+                }
+                tcpClient.EndConnect(result);
+
+                //tcpClient = new TcpClient(ipAddress, port);
                 stream = tcpClient.GetStream();
                 stream.ReadTimeout = connectTimeout;
+                connected = true;
             }
             else
+            {
                 tcpClient = new TcpClient();
-		}
+                connected = true;
+            }
+
+            if (connectedChanged != null)
+                connectedChanged(this);
+        }
 
         /// <summary>
         /// Converts two ModbusRegisters to Float - Example: EasyModbus.ModbusClient.ConvertRegistersToFloat(modbusClient.ReadHoldingRegisters(19,2))
@@ -215,6 +255,98 @@ namespace EasyModbus
             if (registerOrder == RegisterOrder.HighLow)
                 swappedRegisters = new int[] { registers[1], registers[0] };
             return ConvertRegistersToDouble(swappedRegisters);
+        }
+
+        /// <summary>
+        /// Convert four 16 Bit Registers to 64 Bit long value Register Order "LowHigh": Reg0: Low Word.....Reg3: High Word, "HighLow": Reg0: High Word.....Reg3: Low Word
+        /// </summary>
+        /// <param name="registers">four Register values received from Modbus</param>
+        /// <returns>64 bit value</returns>
+        public static Int64 ConvertRegistersToLong(int[] registers)
+        {
+            if (registers.Length != 4)
+                throw new ArgumentException("Input Array length invalid");
+            int highRegister = registers[3];
+            int highLowRegister = registers[2];
+            int lowHighRegister = registers[1];
+            int lowRegister = registers[0];
+            byte[] highRegisterBytes = BitConverter.GetBytes(highRegister);
+            byte[] highLowRegisterBytes = BitConverter.GetBytes(highLowRegister);
+            byte[] lowHighRegisterBytes = BitConverter.GetBytes(lowHighRegister);
+            byte[] lowRegisterBytes = BitConverter.GetBytes(lowRegister);
+            byte[] longBytes = {
+                                    lowRegisterBytes[0],
+                                    lowRegisterBytes[1],
+                                    lowHighRegisterBytes[0],
+                                    lowHighRegisterBytes[1],
+                                    highLowRegisterBytes[0],
+                                    highLowRegisterBytes[1],
+                                    highRegisterBytes[0],
+                                    highRegisterBytes[1]
+                                };
+            return BitConverter.ToInt64(longBytes, 0);
+        }
+
+        /// <summary>
+        /// Convert four 16 Bit Registers to 64 Bit long value - Registers can be swapped
+        /// </summary>
+        /// <param name="registers">four Register values received from Modbus</param>
+        /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
+        /// <returns>Connected long value</returns>
+        public static Int64 ConvertRegistersToLong(int[] registers, RegisterOrder registerOrder)
+        {
+            if (registers.Length != 4)
+                throw new ArgumentException("Input Array length invalid");
+            int[] swappedRegisters = { registers[0], registers[1], registers[2], registers[3] };
+            if (registerOrder == RegisterOrder.HighLow)
+                swappedRegisters = new int[] { registers[3], registers[2], registers[1], registers[0] };
+            return ConvertRegistersToLong(swappedRegisters);
+        }
+
+        /// <summary>
+        /// Convert four 16 Bit Registers to 64 Bit double prec. value Register Order "LowHigh": Reg0: Low Word.....Reg3: High Word, "HighLow": Reg0: High Word.....Reg3: Low Word
+        /// </summary>
+        /// <param name="registers">four Register values received from Modbus</param>
+        /// <returns>64 bit value</returns>
+        public static double ConvertRegistersToDoublePrecisionFloat(int[] registers)
+        {
+            if (registers.Length != 4)
+                throw new ArgumentException("Input Array length invalid");
+            int highRegister = registers[3];
+            int highLowRegister = registers[2];
+            int lowHighRegister = registers[1];
+            int lowRegister = registers[0];
+            byte[] highRegisterBytes = BitConverter.GetBytes(highRegister);
+            byte[] highLowRegisterBytes = BitConverter.GetBytes(highLowRegister);
+            byte[] lowHighRegisterBytes = BitConverter.GetBytes(lowHighRegister);
+            byte[] lowRegisterBytes = BitConverter.GetBytes(lowRegister);
+            byte[] longBytes = {
+                                    lowRegisterBytes[0],
+                                    lowRegisterBytes[1],
+                                    lowHighRegisterBytes[0],
+                                    lowHighRegisterBytes[1],
+                                    highLowRegisterBytes[0],
+                                    highLowRegisterBytes[1],
+                                    highRegisterBytes[0],
+                                    highRegisterBytes[1]
+                                };
+            return BitConverter.ToDouble(longBytes, 0);
+        }
+
+        /// <summary>
+        /// Convert four 16 Bit Registers to 64 Bit double prec. value - Registers can be swapped
+        /// </summary>
+        /// <param name="registers">four Register values received from Modbus</param>
+        /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
+        /// <returns>Connected double prec. float value</returns>
+        public static double ConvertRegistersToDoublePrecisionFloat(int[] registers, RegisterOrder registerOrder)
+        {
+            if (registers.Length != 4)
+                throw new ArgumentException("Input Array length invalid");
+            int[] swappedRegisters = { registers[0], registers[1], registers[2], registers[3] };
+            if (registerOrder == RegisterOrder.HighLow)
+                swappedRegisters = new int[] { registers[3], registers[2], registers[1], registers[0] };
+            return ConvertRegistersToDoublePrecisionFloat(swappedRegisters);
         }
 
         /// <summary>
@@ -309,6 +441,129 @@ namespace EasyModbus
             return returnValue;
         }
 
+        /// <summary>
+        /// Converts 64 Bit Value to four ModbusRegisters
+        /// </summary>
+        /// <param name="longValue">long value which has to be converted into four registers</param>
+        /// <returns>Register values</returns>
+        public static int[] ConvertLongToTwoRegisters(Int64 longValue)
+        {
+            byte[] longBytes = BitConverter.GetBytes(longValue);
+            byte[] highRegisterBytes =
+            {
+                longBytes[6],
+                longBytes[7],
+                0,
+                0
+            };
+            byte[] highLowRegisterBytes =
+            {
+                longBytes[4],
+                longBytes[5],
+                0,
+                0
+            };
+            byte[] lowHighRegisterBytes =
+            {
+                longBytes[2],
+                longBytes[3],
+                0,
+                0
+            };
+            byte[] lowRegisterBytes =
+            {
+
+                longBytes[0],
+                longBytes[1],
+                0,
+                0
+            };
+            int[] returnValue =
+            {
+                BitConverter.ToInt32(lowRegisterBytes,0),
+                BitConverter.ToInt32(lowHighRegisterBytes,0),
+                BitConverter.ToInt32(highLowRegisterBytes,0),
+                BitConverter.ToInt32(highRegisterBytes,0)
+            };
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Converts 64 Bit Value to four ModbusRegisters - Registers can be swapped
+        /// </summary>
+        /// <param name="longValue">long value which has to be converted into four registers</param>
+        /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
+        /// <returns>Register values</returns>
+        public static int[] ConvertLongToTwoRegisters(Int64 longValue, RegisterOrder registerOrder)
+        {
+            int[] registerValues = ConvertLongToTwoRegisters(longValue);
+            int[] returnValue = registerValues;
+            if (registerOrder == RegisterOrder.HighLow)
+                returnValue = new int[] { registerValues[3], registerValues[2], registerValues[1], registerValues[0] };
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Converts 64 Bit double prec Value to four ModbusRegisters
+        /// </summary>
+        /// <param name="doubleValue">double value which has to be converted into four registers</param>
+        /// <returns>Register values</returns>
+        public static int[] ConvertDoublePrecisionFloatToTwoRegisters(double doubleValue)
+        {
+            byte[] doubleBytes = BitConverter.GetBytes(doubleValue);
+            byte[] highRegisterBytes =
+            {
+                doubleBytes[6],
+                doubleBytes[7],
+                0,
+                0
+            };
+            byte[] highLowRegisterBytes =
+            {
+                doubleBytes[4],
+                doubleBytes[5],
+                0,
+                0
+            };
+            byte[] lowHighRegisterBytes =
+            {
+                doubleBytes[2],
+                doubleBytes[3],
+                0,
+                0
+            };
+            byte[] lowRegisterBytes =
+            {
+
+                doubleBytes[0],
+                doubleBytes[1],
+                0,
+                0
+            };
+            int[] returnValue =
+            {
+                BitConverter.ToInt32(lowRegisterBytes,0),
+                BitConverter.ToInt32(lowHighRegisterBytes,0),
+                BitConverter.ToInt32(highLowRegisterBytes,0),
+                BitConverter.ToInt32(highRegisterBytes,0)
+            };
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Converts 64 Bit double prec. Value to four ModbusRegisters - Registers can be swapped
+        /// </summary>
+        /// <param name="doubleValue">double value which has to be converted into four registers</param>
+        /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
+        /// <returns>Register values</returns>
+        public static int[] ConvertDoublePrecisionFloatToTwoRegisters(double doubleValue, RegisterOrder registerOrder)
+        {
+            int[] registerValues = ConvertDoublePrecisionFloatToTwoRegisters(doubleValue);
+            int[] returnValue = registerValues;
+            if (registerOrder == RegisterOrder.HighLow)
+                returnValue = new int[] { registerValues[3], registerValues[2], registerValues[1], registerValues[0] };
+            return returnValue;
+        }
 
         /// <summary>
         /// Converts 16 - Bit Register values to String
@@ -467,7 +722,8 @@ namespace EasyModbus
             	catch (Exception){
             	
             	}
-            	if (DetectValidModbusFrame(readBuffer, actualPositionToRead) | bytesToRead < actualPositionToRead) break;
+            	if (DetectValidModbusFrame(readBuffer, actualPositionToRead) | bytesToRead < actualPositionToRead)
+                    break;
             }
             while ((DateTime.Now.Ticks - dateTimeLastRead.Ticks) < ticksWait) ;
             bytesToRead = 0;
@@ -2002,15 +2258,19 @@ namespace EasyModbus
 			if (debug) StoreLogData.Instance.Store("Disconnect", System.DateTime.Now);
             if (serialport != null)
             {
-                if (serialport.IsOpen)
+                if (serialport.IsOpen & !this.receiveActive)
                     serialport.Close();
                 return;
             }
             if (stream != null)
 			    stream.Close();
             if (tcpClient != null)
-			    tcpClient.Close();		    
-		}
+			    tcpClient.Close();
+            connected = false;
+            if (connectedChanged != null)
+                connectedChanged(this);
+
+        }
 
         /// <summary>
         /// Destructor - Close connection to Master Device.
@@ -2026,8 +2286,9 @@ namespace EasyModbus
             }
 			if (tcpClient != null & !udpFlag)
 			{
+                if (stream !=null)
 				stream.Close();
-			tcpClient.Close();
+			    tcpClient.Close();
 			}
 		}
 
@@ -2045,10 +2306,13 @@ namespace EasyModbus
 
                 if (udpFlag & tcpClient != null)
                     return true;
-				if (tcpClient == null)
-					return false;
-				else
-				return tcpClient.Connected;
+                if (tcpClient == null)
+                    return false;
+                else
+                {
+                    return tcpClient.Connected;
+
+                }
 
 			}
 		}

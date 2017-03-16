@@ -54,7 +54,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(60, 13);
             this.lblVersion.TabIndex = 14;
-            this.lblVersion.Text = "Version 2.4";
+            this.lblVersion.Text = "Version 2.9";
             // 
             // linkLabel1
             // 

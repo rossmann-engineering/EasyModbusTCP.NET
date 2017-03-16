@@ -28,7 +28,7 @@ namespace EasyModbusServerSimulator
         {
             InitializeComponent();
             Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() +"."+ Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
             easyModbusTCPServer = new EasyModbus.ModbusServer();
             
             easyModbusTCPServer.Listen();

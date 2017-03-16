@@ -64,10 +64,17 @@ namespace EasyModbus
         /// <param name="timestamp">Timestamp to add to the same Row</param>
         public void Store(String message, DateTime timestamp)
         {
-            using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter(Filename, true))
+            try
             {
-                file.WriteLine(timestamp.ToString("dd.MM.yyyy H:mm:ss.ff ") + message);
+                using (System.IO.StreamWriter file =
+                    new System.IO.StreamWriter(Filename, true))
+                {
+                    file.WriteLine(timestamp.ToString("dd.MM.yyyy H:mm:ss.ff ") + message);
+                }
+            }
+            catch (Exception e)
+            {
+
             }
         }
         
