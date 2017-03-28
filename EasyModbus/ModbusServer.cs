@@ -66,7 +66,7 @@ namespace EasyModbus
         public event NumberOfClientsChanged numberOfClientsChanged;
 
         TcpListener server = null;
-        NetworkConnectionParameter networkConnectionParameter;
+        
 
         private List<Client> tcpClientLastRequestList = new List<Client>();
 
@@ -154,6 +154,7 @@ namespace EasyModbus
 
         private void ReadCallback(IAsyncResult asyncResult)
         {
+            NetworkConnectionParameter networkConnectionParameter = new NetworkConnectionParameter();
             Client client = asyncResult.AsyncState as Client;
             client.Ticks = DateTime.Now.Ticks;
             NumberOfConnectedClients = GetAndCleanNumberOfConnectedClients(client);
@@ -289,6 +290,8 @@ namespace EasyModbus
         public bool FunctionCode16Disabled { get; set; }
         public bool FunctionCode23Disabled { get; set; }
         public bool PortChanged { get; set; }
+        object lockCoils;
+        object lockHoldingRegisters;
 
         #region events
         public delegate void CoilsChanged(int coil, int numberOfCoils);
@@ -767,7 +770,8 @@ namespace EasyModbus
                     sendData.byteCount = (byte)(receiveData.quantity / 8 + 1);
 
                 sendData.sendCoilValues = new bool[receiveData.quantity];
-                Array.Copy(coils, receiveData.startingAdress + 1, sendData.sendCoilValues, 0, receiveData.quantity);
+                lock (lockCoils)
+                    Array.Copy(coils, receiveData.startingAdress + 1, sendData.sendCoilValues, 0, receiveData.quantity);
             }
             if (true)
             {
@@ -1016,7 +1020,8 @@ namespace EasyModbus
             {
                 sendData.byteCount = (byte)(2 * receiveData.quantity);
                 sendData.sendRegisterValues = new Int16[receiveData.quantity];
-                Buffer.BlockCopy(holdingRegisters, receiveData.startingAdress * 2 + 2, sendData.sendRegisterValues, 0, receiveData.quantity * 2);
+                lock (lockHoldingRegisters)
+                    Buffer.BlockCopy(holdingRegisters, receiveData.startingAdress * 2 + 2, sendData.sendRegisterValues, 0, receiveData.quantity * 2);
             }
                 if (sendData.exceptionCode > 0)
                     sendData.length = 0x03;
@@ -1250,11 +1255,13 @@ namespace EasyModbus
             {
                 if (receiveData.receiveCoilValues[0] == 0xFF00)
                 {
-                    coils[receiveData.startingAdress + 1] = true;
+                    lock (lockCoils)
+                        coils[receiveData.startingAdress + 1] = true;
                 }
                 if (receiveData.receiveCoilValues[0] == 0x0000)
                 {
-                    coils[receiveData.startingAdress + 1] = false;
+                    lock (lockCoils)
+                        coils[receiveData.startingAdress + 1] = false;
                 }
             }
                 if (sendData.exceptionCode > 0)
@@ -1376,7 +1383,8 @@ namespace EasyModbus
             }
             if (sendData.exceptionCode == 0)
             {
-                holdingRegisters[receiveData.startingAdress + 1] = unchecked((short)receiveData.receiveRegisterValues[0]);
+                lock (lockHoldingRegisters)
+                    holdingRegisters[receiveData.startingAdress + 1] = unchecked((short)receiveData.receiveRegisterValues[0]);
             }
                 if (sendData.exceptionCode > 0)
                     sendData.length = 0x03;
@@ -1498,9 +1506,10 @@ namespace EasyModbus
             }
             if (sendData.exceptionCode == 0)
             {
-                for (int i = 0; i < receiveData.quantity; i++)
-                {
-                    int shift = i % 16;
+                lock (lockCoils)
+                    for (int i = 0; i < receiveData.quantity; i++)
+                    {
+                        int shift = i % 16;
                     /*                if ((i == receiveData.quantity - 1) & (receiveData.quantity % 2 != 0))
                                     {
                                         if (shift < 8)
@@ -1508,14 +1517,16 @@ namespace EasyModbus
                                         else
                                             shift = shift - 8;
                                     }*/
-                    int mask = 0x1;
-                    mask = mask << (shift);
-                    if ((receiveData.receiveCoilValues[i / 16] & (ushort)mask) == 0)
-                        coils[receiveData.startingAdress + i + 1] = false;
-                    else
-                        coils[receiveData.startingAdress + i + 1] = true;
+                        int mask = 0x1;
+                        mask = mask << (shift);
+                        if ((receiveData.receiveCoilValues[i / 16] & (ushort)mask) == 0)
+                        
+                            coils[receiveData.startingAdress + i + 1] = false;
+                        else
+                        
+                            coils[receiveData.startingAdress + i + 1] = true;
 
-                }
+                    }
             }
             if (sendData.exceptionCode > 0)
                 sendData.length = 0x03;
@@ -1635,10 +1646,11 @@ namespace EasyModbus
             }
             if (sendData.exceptionCode == 0)
             {
-                for (int i = 0; i < receiveData.quantity; i++)
-                {
-                    holdingRegisters[receiveData.startingAdress + i + 1] = unchecked((short)receiveData.receiveRegisterValues[i]);
-                }
+                lock (lockHoldingRegisters)
+                    for (int i = 0; i < receiveData.quantity; i++)
+                    {
+                        holdingRegisters[receiveData.startingAdress + i + 1] = unchecked((short)receiveData.receiveRegisterValues[i]);
+                    }
             }
             if (sendData.exceptionCode > 0)
                 sendData.length = 0x03;
@@ -1758,12 +1770,14 @@ namespace EasyModbus
             if (sendData.exceptionCode == 0)
             {
                 sendData.sendRegisterValues = new Int16[receiveData.quantityRead];
-                Buffer.BlockCopy(holdingRegisters, receiveData.startingAddressRead * 2 + 2, sendData.sendRegisterValues, 0, receiveData.quantityRead * 2);
+                lock (lockHoldingRegisters)
+                    Buffer.BlockCopy(holdingRegisters, receiveData.startingAddressRead * 2 + 2, sendData.sendRegisterValues, 0, receiveData.quantityRead * 2);
 
-                for (int i = 0; i < receiveData.quantityWrite; i++)
-                {
-                    holdingRegisters[receiveData.startingAddressWrite + i + 1] = unchecked((short)receiveData.receiveRegisterValues[i]);
-                }
+                lock (holdingRegisters)
+                    for (int i = 0; i < receiveData.quantityWrite; i++)
+                    {
+                        holdingRegisters[receiveData.startingAddressWrite + i + 1] = unchecked((short)receiveData.receiveRegisterValues[i]);
+                    }
                 sendData.byteCount = (byte)(2 * receiveData.quantityRead);
             }
             if (sendData.exceptionCode > 0)
