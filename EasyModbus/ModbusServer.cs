@@ -275,7 +275,6 @@ namespace EasyModbus
         private IPAddress ipAddressIn;
         private UdpClient udpClient;
         private IPEndPoint iPEndPoint;
-        private NetworkStream stream;
         private TCPHandler tcpHandler;
         Thread listenerThread;
         Thread clientConnectionThread;
