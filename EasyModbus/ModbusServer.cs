@@ -290,8 +290,8 @@ namespace EasyModbus
         public bool FunctionCode16Disabled { get; set; }
         public bool FunctionCode23Disabled { get; set; }
         public bool PortChanged { get; set; }
-        object lockCoils;
-        object lockHoldingRegisters;
+        object lockCoils = new object();
+        object lockHoldingRegisters = new object();
 
         #region events
         public delegate void CoilsChanged(int coil, int numberOfCoils);
@@ -455,168 +455,171 @@ namespace EasyModbus
             if (numberOfConnectedClientsChanged != null)
                 numberOfConnectedClientsChanged();
         }
-		#endregion
-        
+        #endregion
+
+        object lockProcessReceivedData = new object();
         #region Method ProcessReceivedData
         private void ProcessReceivedData(object networkConnectionParameter)
         {
-            Byte[] bytes = new byte[((NetworkConnectionParameter)networkConnectionParameter).bytes.Length];
-            if (debug) StoreLogData.Instance.Store("Received Data: " + BitConverter.ToString(bytes), System.DateTime.Now);
-            NetworkStream stream = ((NetworkConnectionParameter)networkConnectionParameter).stream;
-            int portIn = ((NetworkConnectionParameter)networkConnectionParameter).portIn;
-            IPAddress ipAddressIn = ((NetworkConnectionParameter)networkConnectionParameter).ipAddressIn;
-
- 
-         	Array.Copy(((NetworkConnectionParameter)networkConnectionParameter).bytes, 0, bytes, 0, ((NetworkConnectionParameter)networkConnectionParameter).bytes.Length);
-	
-            ModbusProtocol receiveDataThread = new ModbusProtocol();
-            ModbusProtocol sendDataThread = new ModbusProtocol();
-
-            try
+            lock (lockProcessReceivedData)
             {
-                UInt16[] wordData = new UInt16[1];
-                byte[] byteData = new byte[2];
-                receiveDataThread.timeStamp = DateTime.Now;
-                receiveDataThread.request = true;
-                if (!serialFlag)
+                Byte[] bytes = new byte[((NetworkConnectionParameter)networkConnectionParameter).bytes.Length];
+                if (debug) StoreLogData.Instance.Store("Received Data: " + BitConverter.ToString(bytes), System.DateTime.Now);
+                NetworkStream stream = ((NetworkConnectionParameter)networkConnectionParameter).stream;
+                int portIn = ((NetworkConnectionParameter)networkConnectionParameter).portIn;
+                IPAddress ipAddressIn = ((NetworkConnectionParameter)networkConnectionParameter).ipAddressIn;
+
+
+                Array.Copy(((NetworkConnectionParameter)networkConnectionParameter).bytes, 0, bytes, 0, ((NetworkConnectionParameter)networkConnectionParameter).bytes.Length);
+
+                ModbusProtocol receiveDataThread = new ModbusProtocol();
+                ModbusProtocol sendDataThread = new ModbusProtocol();
+
+                try
                 {
-                    //Lese Transaction identifier
-                    byteData[1] = bytes[0];
-                    byteData[0] = bytes[1];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.transactionIdentifier = wordData[0];
-
-                    //Lese Protocol identifier
-                    byteData[1] = bytes[2];
-                    byteData[0] = bytes[3];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.protocolIdentifier = wordData[0];
-
-                    //Lese length
-                    byteData[1] = bytes[4];
-                    byteData[0] = bytes[5];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.length = wordData[0];
-                }
-
-                //Lese unit identifier
-                receiveDataThread.unitIdentifier = bytes[6 - 6 * Convert.ToInt32(serialFlag)];
-                //Check UnitIdentifier
-                if ((receiveDataThread.unitIdentifier != this.unitIdentifier) & (receiveDataThread.unitIdentifier != 0))
-                    return;
-
-                // Lese function code
-                receiveDataThread.functionCode = bytes[7 - 6 * Convert.ToInt32(serialFlag)];
-
-                // Lese starting address 
-                byteData[1] = bytes[8 - 6 * Convert.ToInt32(serialFlag)];
-                byteData[0] = bytes[9 - 6 * Convert.ToInt32(serialFlag)];
-                Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                receiveDataThread.startingAdress = wordData[0];
-
-                if (receiveDataThread.functionCode <= 4)
-                {
-                    // Lese quantity
-                    byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.quantity = wordData[0];
-                }
-                if (receiveDataThread.functionCode == 5)
-                {
-                    receiveDataThread.receiveCoilValues = new ushort[1];
-                    // Lese Value
-                    byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveCoilValues, 0, 2);
-                }
-                if (receiveDataThread.functionCode == 6)
-                {
-                    receiveDataThread.receiveRegisterValues = new ushort[1];
-                    // Lese Value
-                    byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveRegisterValues, 0, 2);
-                }
-                if (receiveDataThread.functionCode == 15)
-                {
-                    // Lese quantity
-                    byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.quantity = wordData[0];
-
-                    receiveDataThread.byteCount = bytes[12 - 6 * Convert.ToInt32(serialFlag)];
-
-                    if ((receiveDataThread.byteCount % 2) != 0)
-                        receiveDataThread.receiveCoilValues = new ushort[receiveDataThread.byteCount / 2 + 1];
-                    else
-                        receiveDataThread.receiveCoilValues = new ushort[receiveDataThread.byteCount / 2];
-                    // Lese Value
-                    Buffer.BlockCopy(bytes, 13 - 6 * Convert.ToInt32(serialFlag), receiveDataThread.receiveCoilValues, 0, receiveDataThread.byteCount);
-                }
-                if (receiveDataThread.functionCode == 16)
-                {
-                    // Lese quantity
-                    byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.quantity = wordData[0];
-
-                    receiveDataThread.byteCount = bytes[12 - 6 * Convert.ToInt32(serialFlag)];
-                    receiveDataThread.receiveRegisterValues = new ushort[receiveDataThread.quantity];
-                    for (int i = 0; i < receiveDataThread.quantity; i++)
+                    UInt16[] wordData = new UInt16[1];
+                    byte[] byteData = new byte[2];
+                    receiveDataThread.timeStamp = DateTime.Now;
+                    receiveDataThread.request = true;
+                    if (!serialFlag)
                     {
-                        // Lese Value
-                        byteData[1] = bytes[13 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
-                        byteData[0] = bytes[14 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
-                        Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveRegisterValues, i * 2, 2);
+                        //Lese Transaction identifier
+                        byteData[1] = bytes[0];
+                        byteData[0] = bytes[1];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.transactionIdentifier = wordData[0];
+
+                        //Lese Protocol identifier
+                        byteData[1] = bytes[2];
+                        byteData[0] = bytes[3];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.protocolIdentifier = wordData[0];
+
+                        //Lese length
+                        byteData[1] = bytes[4];
+                        byteData[0] = bytes[5];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.length = wordData[0];
                     }
 
-                }
-                if (receiveDataThread.functionCode == 23)
-                {
-                    // Lese starting Address Read
+                    //Lese unit identifier
+                    receiveDataThread.unitIdentifier = bytes[6 - 6 * Convert.ToInt32(serialFlag)];
+                    //Check UnitIdentifier
+                    if ((receiveDataThread.unitIdentifier != this.unitIdentifier) & (receiveDataThread.unitIdentifier != 0))
+                        return;
+
+                    // Lese function code
+                    receiveDataThread.functionCode = bytes[7 - 6 * Convert.ToInt32(serialFlag)];
+
+                    // Lese starting address 
                     byteData[1] = bytes[8 - 6 * Convert.ToInt32(serialFlag)];
                     byteData[0] = bytes[9 - 6 * Convert.ToInt32(serialFlag)];
                     Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.startingAddressRead = wordData[0];
-                    // Lese quantity Read
-                    byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.quantityRead = wordData[0];
-                    // Lese starting Address Write
-                    byteData[1] = bytes[12 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[13 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.startingAddressWrite = wordData[0];
-                    // Lese quantity Write
-                    byteData[1] = bytes[14 - 6 * Convert.ToInt32(serialFlag)];
-                    byteData[0] = bytes[15 - 6 * Convert.ToInt32(serialFlag)];
-                    Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
-                    receiveDataThread.quantityWrite = wordData[0];
+                    receiveDataThread.startingAdress = wordData[0];
 
-                    receiveDataThread.byteCount = bytes[16 - 6 * Convert.ToInt32(serialFlag)];
-                    receiveDataThread.receiveRegisterValues = new ushort[receiveDataThread.quantityWrite];
-                    for (int i = 0; i < receiveDataThread.quantityWrite; i++)
+                    if (receiveDataThread.functionCode <= 4)
                     {
+                        // Lese quantity
+                        byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.quantity = wordData[0];
+                    }
+                    if (receiveDataThread.functionCode == 5)
+                    {
+                        receiveDataThread.receiveCoilValues = new ushort[1];
                         // Lese Value
-                        byteData[1] = bytes[17 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
-                        byteData[0] = bytes[18 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
-                        Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveRegisterValues, i * 2, 2);
+                        byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveCoilValues, 0, 2);
+                    }
+                    if (receiveDataThread.functionCode == 6)
+                    {
+                        receiveDataThread.receiveRegisterValues = new ushort[1];
+                        // Lese Value
+                        byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveRegisterValues, 0, 2);
+                    }
+                    if (receiveDataThread.functionCode == 15)
+                    {
+                        // Lese quantity
+                        byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.quantity = wordData[0];
+
+                        receiveDataThread.byteCount = bytes[12 - 6 * Convert.ToInt32(serialFlag)];
+
+                        if ((receiveDataThread.byteCount % 2) != 0)
+                            receiveDataThread.receiveCoilValues = new ushort[receiveDataThread.byteCount / 2 + 1];
+                        else
+                            receiveDataThread.receiveCoilValues = new ushort[receiveDataThread.byteCount / 2];
+                        // Lese Value
+                        Buffer.BlockCopy(bytes, 13 - 6 * Convert.ToInt32(serialFlag), receiveDataThread.receiveCoilValues, 0, receiveDataThread.byteCount);
+                    }
+                    if (receiveDataThread.functionCode == 16)
+                    {
+                        // Lese quantity
+                        byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.quantity = wordData[0];
+
+                        receiveDataThread.byteCount = bytes[12 - 6 * Convert.ToInt32(serialFlag)];
+                        receiveDataThread.receiveRegisterValues = new ushort[receiveDataThread.quantity];
+                        for (int i = 0; i < receiveDataThread.quantity; i++)
+                        {
+                            // Lese Value
+                            byteData[1] = bytes[13 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
+                            byteData[0] = bytes[14 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
+                            Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveRegisterValues, i * 2, 2);
+                        }
+
+                    }
+                    if (receiveDataThread.functionCode == 23)
+                    {
+                        // Lese starting Address Read
+                        byteData[1] = bytes[8 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[9 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.startingAddressRead = wordData[0];
+                        // Lese quantity Read
+                        byteData[1] = bytes[10 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[11 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.quantityRead = wordData[0];
+                        // Lese starting Address Write
+                        byteData[1] = bytes[12 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[13 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.startingAddressWrite = wordData[0];
+                        // Lese quantity Write
+                        byteData[1] = bytes[14 - 6 * Convert.ToInt32(serialFlag)];
+                        byteData[0] = bytes[15 - 6 * Convert.ToInt32(serialFlag)];
+                        Buffer.BlockCopy(byteData, 0, wordData, 0, 2);
+                        receiveDataThread.quantityWrite = wordData[0];
+
+                        receiveDataThread.byteCount = bytes[16 - 6 * Convert.ToInt32(serialFlag)];
+                        receiveDataThread.receiveRegisterValues = new ushort[receiveDataThread.quantityWrite];
+                        for (int i = 0; i < receiveDataThread.quantityWrite; i++)
+                        {
+                            // Lese Value
+                            byteData[1] = bytes[17 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
+                            byteData[0] = bytes[18 + i * 2 - 6 * Convert.ToInt32(serialFlag)];
+                            Buffer.BlockCopy(byteData, 0, receiveDataThread.receiveRegisterValues, i * 2, 2);
+                        }
                     }
                 }
-            }
-            catch (Exception exc)
-            { }
-            this.CreateAnswer(receiveDataThread, sendDataThread, stream, portIn, ipAddressIn);
+                catch (Exception exc)
+                { }
+                this.CreateAnswer(receiveDataThread, sendDataThread, stream, portIn, ipAddressIn);
                 //this.sendAnswer();
                 this.CreateLogData(receiveDataThread, sendDataThread);
 
                 if (logDataChanged != null)
                     logDataChanged();
-
+            }
         }
         #endregion
          
