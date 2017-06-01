@@ -12,6 +12,8 @@ Download Library (*.DLL) and tools: <a href="https://sourceforge.net/projects/ea
 <script src="https://apis.google.com/js/platform.js"></script>
 <div class="g-ytsubscribe" data-channelid="UCJiSrKsKot6ZFHafBtaJVlA" data-layout="default" data-count="default"></div>
 
+<a href="www.easymodbustcp.net>"Implementation Guide and Codesamples: www.easymodbustcp.net</a>
+
 For JAVA-Version see: https://sourceforge.net/projects/easymodbustcp-udp-java/
 
 Now available: Modbus RTU Slave for ATMEL ATMEGA microcontrollers
