@@ -5,7 +5,7 @@ Industry approved!!<br>
 Fast and secure access from PC or Embedded Systems to many PLC-Systems and other components for industry automation. <br>
 Only a few lines of codes are needed to read or write data from or to a PLC. 
 
-<h1><a href="http://www.easymodbustcp.net">Implementation Guide and Codesamples: www.easymodbustcp.net</a></h1>
+<h2><a href="http://www.easymodbustcp.net">Implementation Guide and Codesamples: www.easymodbustcp.net</a></h2>
 
 Additional Software tools e.g. Modbus Server Simulator, makes software development fast and easy. 
 
