@@ -5,12 +5,14 @@ Industry approved!!<br>
 Fast and secure access from PC or Embedded Systems to many PLC-Systems and other components for industry automation. <br>
 Only a few lines of codes are needed to read or write data from or to a PLC. 
 
+<h2><a href="http://www.easymodbustcp.net">Implementation Guide and Codesamples: www.easymodbustcp.net</a></h2>
+
 Additional Software tools e.g. Modbus Server Simulator, makes software development fast and easy. 
 
 Download Library (*.DLL) and tools: <a href="https://sourceforge.net/projects/easymodbustcp/files/latest/download" rel="nofollow"><img alt="Download EasyModbusTCP/UDP/RTU .NET" src="https://a.fsdn.com/con/app/sf-download-button"></a>
 
-<script src="https://apis.google.com/js/platform.js"></script>
-<div class="g-ytsubscribe" data-channelid="UCJiSrKsKot6ZFHafBtaJVlA" data-layout="default" data-count="default"></div>
+
+
 
 For JAVA-Version see: https://sourceforge.net/projects/easymodbustcp-udp-java/
 
