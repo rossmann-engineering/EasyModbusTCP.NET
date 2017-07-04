@@ -42,22 +42,28 @@ namespace ConsoleApplication1
             while (true)
             {
                 modbusClient.Connect();
+
                 //      Console.WriteLine("Execute FC5");
                 //      modbusClient.WriteSingleCoil(0, true);
                 //      Console.WriteLine("Execute FC6");
                 //      modbusClient.WriteSingleRegister(0, 1234);
                 //      Console.WriteLine("Execute FC15");
                 //      modbusClient.WriteMultipleCoils(0, new bool[] { true, false, true, false, true, false, true });
-                Console.WriteLine("Execute FC16");
-                modbusClient.WriteMultipleRegisters(0, EasyModbus.ModbusClient.ConvertStringToRegisters("hallo2"));
-                modbusClient.Disconnect();
-                System.Threading.Thread.Sleep(100);
-                modbusClient.Connect();
+                //Console.WriteLine("Execute FC16");
+                //modbusClient.WriteMultipleRegisters(0, EasyModbus.ModbusClient.ConvertStringToRegisters("hallo2"));
+                //modbusClient.Disconnect();
+                //System.Threading.Thread.Sleep(100);
+                //modbusClient.Connect();
 
-                Console.WriteLine("Execute FC3");
-                Console.WriteLine("Value of Holding Register 1000: " + modbusClient.ReadHoldingRegisters(1000, 1)[0]);
+                //Console.WriteLine("Execute FC3");
+                //Console.WriteLine("Value of Holding Register 1000: " + modbusClient.ReadHoldingRegisters(1000, 1)[0]);
+
+                Console.WriteLine("Read and Publish Input Registers");
+                modbusClient.ReadInputRegisters(0, 10, "www.mqtt-dashboard.com");
+                modbusClient.ReadHoldingRegisters(0, 10, "www.mqtt-dashboard.com");
+
                 modbusClient.Disconnect();
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(1000);
             }
     Console.ReadKey();
         }

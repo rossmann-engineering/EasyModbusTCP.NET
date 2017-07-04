@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{613A173A-77E1-46A1-9668-93A67BD558D5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ConsoleApplication1</RootNamespace>
+    <AssemblyName>ConsoleApplication1</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SSL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\EasyModbus\EasyModbus2Mqtt.cs">
+      <Link>EasyModbus2Mqtt.cs</Link>
+    </Compile>
+    <Compile Include="..\..\EasyModbus\Exceptions\Exceptions.cs">
+      <Link>Exceptions\Exceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\EasyModbus\ModbusClient.cs">
+      <Link>ModbusClient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\EasyModbus\StoreLogData.cs">
+      <Link>StoreLogData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Exceptions\MqttClientException.cs">
+      <Link>M2Mqtt\Exceptions\MqttClientException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Exceptions\MqttCommunicationException.cs">
+      <Link>M2Mqtt\Exceptions\MqttCommunicationException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Exceptions\MqttConnectionException.cs">
+      <Link>M2Mqtt\Exceptions\MqttConnectionException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Exceptions\MqttTimeoutException.cs">
+      <Link>M2Mqtt\Exceptions\MqttTimeoutException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\IMqttNetworkChannel.cs">
+      <Link>M2Mqtt\IMqttNetworkChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Internal\InternalEvent.cs">
+      <Link>M2Mqtt\Internal\InternalEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Internal\MsgInternalEvent.cs">
+      <Link>M2Mqtt\Internal\MsgInternalEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Internal\MsgPublishedInternalEvent.cs">
+      <Link>M2Mqtt\Internal\MsgPublishedInternalEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgBase.cs">
+      <Link>M2Mqtt\Messages\MqttMsgBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgConnack.cs">
+      <Link>M2Mqtt\Messages\MqttMsgConnack.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgConnect.cs">
+      <Link>M2Mqtt\Messages\MqttMsgConnect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgConnectEventArgs.cs">
+      <Link>M2Mqtt\Messages\MqttMsgConnectEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgContext.cs">
+      <Link>M2Mqtt\Messages\MqttMsgContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgDisconnect.cs">
+      <Link>M2Mqtt\Messages\MqttMsgDisconnect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPingReq.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPingReq.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPingResp.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPingResp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPuback.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPuback.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPubcomp.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPubcomp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPublish.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPublish.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPublishedEventArgs.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPublishedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPublishEventArgs.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPublishEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPubrec.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPubrec.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgPubrel.cs">
+      <Link>M2Mqtt\Messages\MqttMsgPubrel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgSuback.cs">
+      <Link>M2Mqtt\Messages\MqttMsgSuback.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgSubscribe.cs">
+      <Link>M2Mqtt\Messages\MqttMsgSubscribe.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgSubscribedEventArgs.cs">
+      <Link>M2Mqtt\Messages\MqttMsgSubscribedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgSubscribeEventArgs.cs">
+      <Link>M2Mqtt\Messages\MqttMsgSubscribeEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgUnsuback.cs">
+      <Link>M2Mqtt\Messages\MqttMsgUnsuback.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgUnsubscribe.cs">
+      <Link>M2Mqtt\Messages\MqttMsgUnsubscribe.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgUnsubscribedEventArgs.cs">
+      <Link>M2Mqtt\Messages\MqttMsgUnsubscribedEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Messages\MqttMsgUnsubscribeEventArgs.cs">
+      <Link>M2Mqtt\Messages\MqttMsgUnsubscribeEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\MqttClient.cs">
+      <Link>M2Mqtt\MqttClient.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\MqttSecurity.cs">
+      <Link>M2Mqtt\MqttSecurity.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\MqttSettings.cs">
+      <Link>M2Mqtt\MqttSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Net\Fx.cs">
+      <Link>M2Mqtt\Net\Fx.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Net\MqttNetworkChannel.cs">
+      <Link>M2Mqtt\Net\MqttNetworkChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Session\MqttBrokerSession.cs">
+      <Link>M2Mqtt\Session\MqttBrokerSession.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Session\MqttClientSession.cs">
+      <Link>M2Mqtt\Session\MqttClientSession.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Session\MqttSession.cs">
+      <Link>M2Mqtt\Session\MqttSession.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Utility\QueueExtension.cs">
+      <Link>M2Mqtt\Utility\QueueExtension.cs</Link>
+    </Compile>
+    <Compile Include="..\..\paho.mqtt.m2mqtt-master\M2Mqtt\Utility\Trace.cs">
+      <Link>M2Mqtt\Utility\Trace.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

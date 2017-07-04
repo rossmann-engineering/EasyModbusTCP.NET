@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M2Mqtt.Net", "M2Mqtt\M2Mqtt.Net.csproj", "{A11AEF5A-B246-4FE8-8330-06DB73CC8074}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mqtt", "ConsoleApplication1\Mqtt.csproj", "{A4CBEE7D-43E9-4897-A68C-C2D1A52BAC90}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11AEF5A-B246-4FE8-8330-06DB73CC8074}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4CBEE7D-43E9-4897-A68C-C2D1A52BAC90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4CBEE7D-43E9-4897-A68C-C2D1A52BAC90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4CBEE7D-43E9-4897-A68C-C2D1A52BAC90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4CBEE7D-43E9-4897-A68C-C2D1A52BAC90}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

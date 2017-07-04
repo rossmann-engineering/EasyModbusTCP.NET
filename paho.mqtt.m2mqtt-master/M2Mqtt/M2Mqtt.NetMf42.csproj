@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyName>M2Mqtt.NetMf</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>uPLibrary.Networking.M2Mqtt</RootNamespace>
+    <ProjectTypeGuids>{b69e3092-b931-443c-abe7-7e7b65f2a37f};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F733523A-F14E-4F5A-9E7C-085CA80F52B1}</ProjectGuid>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <NetMfTargetsBaseDir Condition="'$(NetMfTargetsBaseDir)'==''">$(MSBuildExtensionsPath32)\Microsoft\.NET Micro Framework\</NetMfTargetsBaseDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\M2Mqtt.NetMf42\</OutputPath>
+    <DefineConstants>DEBUG;TRACE,MF_FRAMEWORK_VERSION_V4_2,SSL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\M2Mqtt.NetMf42\</OutputPath>
+    <DefineConstants>TRACE,MF_FRAMEWORK_VERSION_V4_2,SSL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
+  <ItemGroup>
+    <Compile Include="Exceptions\MqttClientException.cs" />
+    <Compile Include="Exceptions\MqttCommunicationException.cs" />
+    <Compile Include="Exceptions\MqttConnectionException.cs" />
+    <Compile Include="Exceptions\MqttTimeoutException.cs" />
+    <Compile Include="IMqttNetworkChannel.cs" />
+    <Compile Include="Internal\InternalEvent.cs" />
+    <Compile Include="Internal\MsgInternalEvent.cs" />
+    <Compile Include="Internal\MsgPublishedInternalEvent.cs" />
+    <Compile Include="Messages\MqttMsgBase.cs" />
+    <Compile Include="Messages\MqttMsgConnack.cs" />
+    <Compile Include="Messages\MqttMsgConnect.cs" />
+    <Compile Include="Messages\MqttMsgConnectEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgContext.cs" />
+    <Compile Include="Messages\MqttMsgDisconnect.cs" />
+    <Compile Include="Messages\MqttMsgPingReq.cs" />
+    <Compile Include="Messages\MqttMsgPingResp.cs" />
+    <Compile Include="Messages\MqttMsgPuback.cs" />
+    <Compile Include="Messages\MqttMsgPubcomp.cs" />
+    <Compile Include="Messages\MqttMsgPublish.cs" />
+    <Compile Include="Messages\MqttMsgPublishedEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgPublishEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgPubrec.cs" />
+    <Compile Include="Messages\MqttMsgPubrel.cs" />
+    <Compile Include="Messages\MqttMsgSuback.cs" />
+    <Compile Include="Messages\MqttMsgSubscribe.cs" />
+    <Compile Include="Messages\MqttMsgSubscribedEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgSubscribeEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgUnsuback.cs" />
+    <Compile Include="Messages\MqttMsgUnsubscribe.cs" />
+    <Compile Include="Messages\MqttMsgUnsubscribedEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgUnsubscribeEventArgs.cs" />
+    <Compile Include="MqttClient.cs" />
+    <Compile Include="MqttSecurity.cs" />
+    <Compile Include="Net\Fx.cs" />
+    <Compile Include="Net\MqttNetworkChannel.cs" />
+    <Compile Include="MqttSettings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Session\MqttBrokerSession.cs" />
+    <Compile Include="Session\MqttClientSession.cs" />
+    <Compile Include="Session\MqttSession.cs" />
+    <Compile Include="Utility\Trace.cs" />
+    <Compile Include="Utility\QueueExtension.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.SPOT.Native">
+    </Reference>
+    <Reference Include="Microsoft.SPOT.Net.Security" />
+    <Reference Include="Microsoft.SPOT.Time" />
+    <Reference Include="System" />
+    <Reference Include="System.Net.Security" />
+  </ItemGroup>
+</Project>

@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO.Ports;
 using System.Reflection;
+using System.Text;
 
 namespace EasyModbus
 {
@@ -36,12 +37,13 @@ namespace EasyModbus
         private int baudRate = 9600;
         private int connectTimeout = 1000;
         public byte[] receiveData;
-        public byte[] sendData;   
+        public byte[] sendData; 
         private SerialPort serialport;
         private Parity parity = Parity.Even;
         private StopBits stopBits = StopBits.One;
         private bool connected = false;
-        
+        string mqttRootTopic = "easymodbusclient";
+
         public delegate void ReceiveDataChanged(object sender);
         public event ReceiveDataChanged receiveDataChanged;
         
@@ -757,15 +759,31 @@ namespace EasyModbus
                 	return false;
             return true;
         }
-        
 
-		/// <summary>
-		/// Read Discrete Inputs from Master device (FC2).
-		/// </summary>
-		/// <param name="startingAddress">First discrete input to be read</param>
-		/// <param name="quantity">Number of discrete Inputs to be read</param>
-		/// <returns>Boolean Array which contains the discrete Inputs</returns>
-		public bool[] ReadDiscreteInputs(int startingAddress, int quantity)
+        public bool[] ReadDiscreteInputs(int startingAddress, int quantity, string mqttBrokerAddress)
+        {
+            bool[] returnValue = this.ReadDiscreteInputs(startingAddress, quantity);
+            string[] topic = new string[returnValue.Length];
+            string[] payload = new string[returnValue.Length];
+            for (int i = 0; i < returnValue.Length; i++)
+            {
+                topic[i] = mqttRootTopic+"/discreteinputs/" + (i+startingAddress).ToString();
+                payload[i] = returnValue[i].ToString();
+            }
+            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
+            
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Read Discrete Inputs from Master device (FC2).
+        /// </summary>
+        /// <param name="startingAddress">First discrete input to be read</param>
+        /// <param name="quantity">Number of discrete Inputs to be read</param>
+        /// <returns>Boolean Array which contains the discrete Inputs</returns>
+        public bool[] ReadDiscreteInputs(int startingAddress, int quantity)
 		{
             if (debug) StoreLogData.Instance.Store("FC2 (Read Discrete Inputs from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal ++;
@@ -927,14 +945,31 @@ namespace EasyModbus
 			}    		
     		return (response);
 		}
-		
-		/// <summary>
-		/// Read Coils from Master device (FC1).
-		/// </summary>
-		/// <param name="startingAddress">First coil to be read</param>
-		/// <param name="quantity">Numer of coils to be read</param>
-		/// <returns>Boolean Array which contains the coils</returns>
-		public bool[] ReadCoils(int startingAddress, int quantity)
+
+        public bool[] ReadCoils(int startingAddress, int quantity, string mqttBrokerAddress)
+        {
+            bool[] returnValue = this.ReadCoils(startingAddress, quantity);
+            string[] topic = new string[returnValue.Length];
+            string[] payload = new string[returnValue.Length];
+            for (int i = 0; i < returnValue.Length; i++)
+            {
+                topic[i] = mqttRootTopic+"/coils/" + (i + startingAddress).ToString();
+                payload[i] = returnValue[i].ToString();
+            }
+            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
+
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Read Coils from Master device (FC1).
+        /// </summary>
+        /// <param name="startingAddress">First coil to be read</param>
+        /// <param name="quantity">Numer of coils to be read</param>
+        /// <returns>Boolean Array which contains the coils</returns>
+        public bool[] ReadCoils(int startingAddress, int quantity)
 		{
 			if (debug) StoreLogData.Instance.Store("FC1 (Read Coils from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
@@ -1095,15 +1130,32 @@ namespace EasyModbus
 				response[i] = Convert.ToBoolean((intData & mask)/mask);
 			}   		
     		return (response);
-		}		
-		
-		/// <summary>
-		/// Read Holding Registers from Master device (FC3).
-		/// </summary>
-		/// <param name="startingAddress">First holding register to be read</param>
-		/// <param name="quantity">Number of holding registers to be read</param>
-		/// <returns>Int Array which contains the holding registers</returns>
-		public int[] ReadHoldingRegisters(int startingAddress, int quantity)
+		}
+
+        public int[] ReadHoldingRegisters(int startingAddress, int quantity, string mqttBrokerAddress)
+        {
+            int[] returnValue = this.ReadHoldingRegisters(startingAddress, quantity);
+            string[] topic = new string[returnValue.Length];
+            string[] payload = new string[returnValue.Length];
+            for (int i = 0; i < returnValue.Length; i++)
+            {
+                topic[i] = mqttRootTopic+"/holdingregisters/" + (i + startingAddress).ToString();
+                payload[i] = returnValue[i].ToString();
+            }
+            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
+
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Read Holding Registers from Master device (FC3).
+        /// </summary>
+        /// <param name="startingAddress">First holding register to be read</param>
+        /// <param name="quantity">Number of holding registers to be read</param>
+        /// <returns>Int Array which contains the holding registers</returns>
+        public int[] ReadHoldingRegisters(int startingAddress, int quantity)
 		{
 			if (debug) StoreLogData.Instance.Store("FC3 (Read Holding Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
@@ -1265,15 +1317,32 @@ namespace EasyModbus
 				response[i] = BitConverter.ToInt16(data,(9+i*2));
 			}			
     		return (response);			
-		}		
-		
-		/// <summary>
-		/// Read Input Registers from Master device (FC4).
-		/// </summary>
-		/// <param name="startingAddress">First input register to be read</param>
-		/// <param name="quantity">Number of input registers to be read</param>
-		/// <returns>Int Array which contains the input registers</returns>
-		public int[] ReadInputRegisters(int startingAddress, int quantity)
+		}
+
+        public int[] ReadInputRegisters(int startingAddress, int quantity, string mqttBrokerAddress)
+        {
+            int[] returnValue = this.ReadInputRegisters(startingAddress, quantity);
+            string[] topic = new string[returnValue.Length];
+            string[] payload = new string[returnValue.Length];
+            for (int i = 0; i < returnValue.Length; i++)
+            {
+                topic[i] = mqttRootTopic+"/inputregisters/" + (i + startingAddress).ToString();
+                payload[i] = returnValue[i].ToString();
+            }
+            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
+
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Read Input Registers from Master device (FC4).
+        /// </summary>
+        /// <param name="startingAddress">First input register to be read</param>
+        /// <param name="quantity">Number of input registers to be read</param>
+        /// <returns>Int Array which contains the input registers</returns>
+        public int[] ReadInputRegisters(int startingAddress, int quantity)
 		{
 			if (debug) StoreLogData.Instance.Store("FC4 (Read Input Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
@@ -1758,7 +1827,7 @@ namespace EasyModbus
         		debugString = debugString + values[i] + " ";
         	if (debug) StoreLogData.Instance.Store("FC15 (Write multiple coils to Master device), StartingAddress: "+ startingAddress+", Values: " + debugString, System.DateTime.Now);
             transactionIdentifierInternal++;
-            byte byteCount = (byte)(values.Length/8+1);
+            byte byteCount = (byte)((values.Length % 8 != 0 ? values.Length / 8 + 1: (values.Length / 8)));
             byte[] quantityOfOutputs = BitConverter.GetBytes((int)values.Length);
             byte singleCoilValue = 0;
             if (serialport != null)
@@ -1774,11 +1843,13 @@ namespace EasyModbus
 			}
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
-            this.length = BitConverter.GetBytes((int)(7+(values.Length/8+1)));
+            this.length = BitConverter.GetBytes((int)(7+(byteCount)));
             this.functionCode = 0x0F;
             this.startingAddress = BitConverter.GetBytes(startingAddress);
 
-            Byte[] data = new byte[14 +2 + values.Length/8];
+
+
+            Byte[] data = new byte[14 +2 + (values.Length % 8 != 0 ? values.Length/8 : (values.Length / 8)-1)];
             data[0] = this.transactionIdentifier[1];
             data[1] = this.transactionIdentifier[0];
             data[2] = this.protocolIdentifier[1];
@@ -2463,6 +2534,23 @@ namespace EasyModbus
             set
             {
                 connectTimeout = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or Sets the serial Port
+        /// </summary>
+        public string SerialPort
+        {
+            get
+            {
+
+                return serialport.PortName;
+            }
+            set
+            {
+                this.serialport = new SerialPort();
+                this.serialport.PortName = value;
             }
         }
 

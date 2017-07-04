@@ -1,0 +1,115 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{194FEA1B-E67F-4FC0-AC47-CD71F7F060CC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>uPLibrary.Networking.M2Mqtt</RootNamespace>
+    <AssemblyName>M2Mqtt.NetCf35</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>WindowsCE</PlatformFamilyName>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+    <OSVersion>5.0</OSVersion>
+    <DeployDirSuffix>M2MqttNetCf35</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows CE</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\M2Mqtt.NetCf35\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WindowsCE,COMPACT_FRAMEWORK</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\M2Mqtt.NetCf35\</OutputPath>
+    <DefineConstants>TRACE;WindowsCE,COMPACT_FRAMEWORK</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exceptions\MqttClientException.cs" />
+    <Compile Include="Exceptions\MqttCommunicationException.cs" />
+    <Compile Include="Exceptions\MqttConnectionException.cs" />
+    <Compile Include="Exceptions\MqttTimeoutException.cs" />
+    <Compile Include="IMqttNetworkChannel.cs" />
+    <Compile Include="Internal\InternalEvent.cs" />
+    <Compile Include="Internal\MsgInternalEvent.cs" />
+    <Compile Include="Internal\MsgPublishedInternalEvent.cs" />
+    <Compile Include="Messages\MqttMsgBase.cs" />
+    <Compile Include="Messages\MqttMsgConnack.cs" />
+    <Compile Include="Messages\MqttMsgConnect.cs" />
+    <Compile Include="Messages\MqttMsgConnectEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgContext.cs" />
+    <Compile Include="Messages\MqttMsgDisconnect.cs" />
+    <Compile Include="Messages\MqttMsgPingReq.cs" />
+    <Compile Include="Messages\MqttMsgPingResp.cs" />
+    <Compile Include="Messages\MqttMsgPuback.cs" />
+    <Compile Include="Messages\MqttMsgPubcomp.cs" />
+    <Compile Include="Messages\MqttMsgPublish.cs" />
+    <Compile Include="Messages\MqttMsgPublishedEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgPublishEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgPubrec.cs" />
+    <Compile Include="Messages\MqttMsgPubrel.cs" />
+    <Compile Include="Messages\MqttMsgSuback.cs" />
+    <Compile Include="Messages\MqttMsgSubscribe.cs" />
+    <Compile Include="Messages\MqttMsgSubscribedEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgSubscribeEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgUnsuback.cs" />
+    <Compile Include="Messages\MqttMsgUnsubscribe.cs" />
+    <Compile Include="Messages\MqttMsgUnsubscribedEventArgs.cs" />
+    <Compile Include="Messages\MqttMsgUnsubscribeEventArgs.cs" />
+    <Compile Include="MqttClient.cs" />
+    <Compile Include="MqttSecurity.cs" />
+    <Compile Include="Net\Fx.cs" />
+    <Compile Include="Net\MqttNetworkChannel.cs" />
+    <Compile Include="MqttSettings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Session\MqttBrokerSession.cs" />
+    <Compile Include="Session\MqttClientSession.cs" />
+    <Compile Include="Session\MqttSession.cs" />
+    <Compile Include="Utility\Trace.cs" />
+    <Compile Include="Utility\QueueExtension.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

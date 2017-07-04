@@ -291,6 +291,7 @@ namespace EasyModbus
         public bool PortChanged { get; set; }
         object lockCoils = new object();
         object lockHoldingRegisters = new object();
+        private volatile bool shouldStop;
 
         #region events
         public delegate void CoilsChanged(int coil, int numberOfCoils);
@@ -319,11 +320,13 @@ namespace EasyModbus
         	{
         		if (serialport.IsOpen)
         			serialport.Close();
-        	}
+                shouldStop = true;
+            }
             try
             {
                 tcpHandler.Disconnect();
-                listenerThread.Abort();               
+                listenerThread.Abort();
+                
             }
             catch (Exception) { }
             listenerThread.Join();
@@ -352,8 +355,24 @@ namespace EasyModbus
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 tcpHandler.numberOfClientsChanged += new TCPHandler.NumberOfClientsChanged(numberOfClientsChanged);
             }
+            if (serialFlag)
+            {
+                if (serialport == null)
+                {
+                    if (debug) StoreLogData.Instance.Store("EasyModbus RTU-Server listing for incomming data at Serial Port " + serialPort, System.DateTime.Now);
+                    serialport = new SerialPort();
+                    serialport.PortName = serialPort;
+                    serialport.BaudRate = this.baudrate;
+                    serialport.Parity = this.parity;
+                    serialport.StopBits = stopBits;
+                    serialport.WriteTimeout = 10000;
+                    serialport.ReadTimeout = 1000;
+                    serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+                    serialport.Open();
+                }
+            }
             else
-               while (true)
+               while (!shouldStop)
                {
             	if (udpFlag)
             	{
@@ -384,32 +403,7 @@ namespace EasyModbus
                     {                       
                     }    
             	}
-            	if (serialFlag)
-            	{
-            		if (serialport == null)
-            		{
-                        if (debug) StoreLogData.Instance.Store("EasyModbus RTU-Server listing for incomming data at Serial Port " + serialPort, System.DateTime.Now);
-                        serialport = new SerialPort();
-            			serialport.PortName = serialPort;
-                        serialport.BaudRate = this.baudrate;
-                        serialport.Parity = this.parity;
-                        serialport.StopBits = stopBits;
-           				serialport.WriteTimeout = 10000;
-            			serialport.ReadTimeout = 1000;
-            			serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-            			serialport.Open();
-            		}
-            		if (dataReceived)
-            		{
-            			NetworkConnectionParameter networkConnectionParameter = new NetworkConnectionParameter();
-                        networkConnectionParameter.bytes = readBuffer;
-            			ParameterizedThreadStart pts = new ParameterizedThreadStart(this.ProcessReceivedData);
-                        Thread processDataThread = new Thread(pts);
-                        processDataThread.Start(networkConnectionParameter);
-                        dataReceived = false;
-            		}
-            				
-            	}
+
                 }
         }
     
@@ -441,6 +435,14 @@ namespace EasyModbus
                 
                 dataReceived = true;
                 nextSign= 0;
+
+                    NetworkConnectionParameter networkConnectionParameter = new NetworkConnectionParameter();
+                    networkConnectionParameter.bytes = readBuffer;
+                    ParameterizedThreadStart pts = new ParameterizedThreadStart(this.ProcessReceivedData);
+                    Thread processDataThread = new Thread(pts);
+                    processDataThread.Start(networkConnectionParameter);
+                    dataReceived = false;
+                
             }
             else
                 dataReceived = false;
@@ -2076,6 +2078,10 @@ namespace EasyModbus
             set
             {
                 serialPort = value;
+                if (serialPort != null)
+                    serialFlag = true;
+                else
+                    serialFlag = false;
             }
         }
 

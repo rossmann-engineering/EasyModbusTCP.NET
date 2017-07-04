@@ -19,9 +19,14 @@ namespace ServerApplication
         public void startServer()
         {
             EasyModbus.ModbusServer modbusServer = new EasyModbus.ModbusServer();
+            modbusServer.SerialPort = "COM3";
+            modbusServer.UnitIdentifier = 1;
+            modbusServer.Baudrate = 9600;
+            
             modbusServer.Listen();
-            modbusServer.coilsChanged += new EasyModbus.ModbusServer.CoilsChanged(holdingRegistersChanged);
+            modbusServer.holdingRegistersChanged += new EasyModbus.ModbusServer.HoldingRegistersChanged(holdingRegistersChanged);
             Console.ReadKey();
+            modbusServer.StopListening();
         }
 
         public void holdingRegistersChanged(int startingAddress, int quantity)

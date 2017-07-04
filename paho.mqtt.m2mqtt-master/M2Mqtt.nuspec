@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>M2Mqtt</id>
+        <version>4.3.0.0</version>
+        <title>M2Mqtt - MQTT Client Library for .Net and WinRT</title>
+        <authors>Paolo Patierno</authors>
+        <owners>Paolo Patierno</owners>
+        <licenseUrl>https://github.com/ppatierno/m2mqtt/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/ppatierno/m2mqtt</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/ppatierno/m2mqtt/master/images/M2Mqtt_Short_Logo.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>M2Mqtt is a MQTT client available for all .Net platform (.Net Framework, .Net Compact Framework and .Net Micro Framework) and WinRT platform (Windows 8.1 and Windows Phone 8.1) for M2M communication.</description>
+        <summary>M2Mqtt is a MQTT client available for all .Net platform (.Net Framework, .Net Compact Framework and .Net Micro Framework) and WinRT platform (Windows 8.1 and Windows Phone 8.1) for M2M communication.</summary>
+        <releaseNotes>Added SSL/TLS client authentication</releaseNotes>
+        <copyright>Paolo Patierno Copyright 2015</copyright>
+        <tags>m2m mqtt queue messaging internetofthings iot cloud netmf embedded micro netduino micro-framework hardware winrt windows8 windows8.1 windowsphone windowsphone8.1 gadgeteer</tags>
+    </metadata>
+    <files>
+		<file src="bin\Release\M2Mqtt.Net\*.*" target="lib\net45" />
+		<file src="bin\Release\M2Mqtt.NetCf39\*.*" target="lib\net39-cf" />
+		<file src="bin\Release\M2Mqtt.NetMf42\*.*" target="lib\netmf42" />
+		<file src="bin\Release\M2Mqtt.NetMf42\le\*.p*" target="lib\netmf42\le" />
+		<file src="bin\Release\M2Mqtt.NetMf42\be\*.p*" target="lib\netmf42\be" />
+		<file src="bin\Release\M2Mqtt.NetMf43\*.*" target="lib\netmf43" />
+		<file src="bin\Release\M2Mqtt.NetMf43\le\*.p*" target="lib\netmf43\le" />
+		<file src="bin\Release\M2Mqtt.NetMf43\be\*.p*" target="lib\netmf43\be" />
+		<file src="bin\Release\M2Mqtt.WinRT\*.*" target="lib\win81" />
+        <file src="bin\Release\M2Mqtt.WinRT\*.*" target="lib\wpa81" />
+	</files>
+</package>
