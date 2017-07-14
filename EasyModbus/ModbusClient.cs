@@ -152,7 +152,14 @@ namespace EasyModbus
                 connected = true;
             }
             if (connectedChanged != null)
-                connectedChanged(this);
+                try
+                {
+                    connectedChanged(this);
+                }
+                catch
+                {
+
+                }
         }
 		
 		/// <summary>
@@ -760,6 +767,16 @@ namespace EasyModbus
             return true;
         }
 
+        /// <summary>
+        /// Read Discrete Inputs from Server device (FC2) and publishes the values to a MQTT-Broker.
+        /// The Topic will be easymodbusclient/discreteinputs/'address' e.g. easymodbusclient/discreteinputs/0 for address "0".
+        /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
+        /// 'MqttRootTopic' Default is 'easymodbusclient'
+        /// </summary>
+        /// <param name="startingAddress">First discrete input to read</param>
+        /// <param name="quantity">Number of discrete Inputs to read</param>
+        /// <param name="mqttBrokerAddress">Broker address 8the values will be published to</param>
+        /// <returns>Boolean Array which contains the discrete Inputs</returns>
         public bool[] ReadDiscreteInputs(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             bool[] returnValue = this.ReadDiscreteInputs(startingAddress, quantity);
@@ -772,16 +789,16 @@ namespace EasyModbus
             }
             EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
             easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
-            
-
+    
             return returnValue;
         }
 
+
         /// <summary>
-        /// Read Discrete Inputs from Master device (FC2).
+        /// Read Discrete Inputs from Server device (FC2).
         /// </summary>
-        /// <param name="startingAddress">First discrete input to be read</param>
-        /// <param name="quantity">Number of discrete Inputs to be read</param>
+        /// <param name="startingAddress">First discrete input to read</param>
+        /// <param name="quantity">Number of discrete Inputs to read</param>
         /// <returns>Boolean Array which contains the discrete Inputs</returns>
         public bool[] ReadDiscreteInputs(int startingAddress, int quantity)
 		{
@@ -946,6 +963,16 @@ namespace EasyModbus
     		return (response);
 		}
 
+        /// <summary>
+        /// Read coils from Server device (FC1) and publishes the values to a MQTT-Broker.
+        /// The Topic will be easymodbusclient/coils/'address' e.g. easymodbusclient/coils/0 for address "0".
+        /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
+        /// 'MqttRootTopic' Default is 'easymodbusclient'
+        /// </summary>
+        /// <param name="startingAddress">First coil to read</param>
+        /// <param name="quantity">Number of coils to read</param>
+        /// <param name="mqttBrokerAddress">Broker address 8the values will be published to</param>
+        /// <returns>Boolean Array which contains the coild</returns>
         public bool[] ReadCoils(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             bool[] returnValue = this.ReadCoils(startingAddress, quantity);
@@ -964,10 +991,10 @@ namespace EasyModbus
         }
 
         /// <summary>
-        /// Read Coils from Master device (FC1).
+        /// Read Coils from Server device (FC1).
         /// </summary>
-        /// <param name="startingAddress">First coil to be read</param>
-        /// <param name="quantity">Numer of coils to be read</param>
+        /// <param name="startingAddress">First coil to read</param>
+        /// <param name="quantity">Numer of coils to read</param>
         /// <returns>Boolean Array which contains the coils</returns>
         public bool[] ReadCoils(int startingAddress, int quantity)
 		{
@@ -1132,6 +1159,16 @@ namespace EasyModbus
     		return (response);
 		}
 
+        /// <summary>
+        /// Read Holding Registers from Server device (FC3) and publishes the values to a MQTT-Broker.
+        /// The Topic will be easymodbusclient/holdingregisters/'address' e.g. easymodbusclient/holdingregisters/0 for address "0".
+        /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
+        /// 'MqttRootTopic' Default is 'easymodbusclient'
+        /// </summary>
+        /// <param name="startingAddress">First Holding Register to read</param>
+        /// <param name="quantity">Number of Holding Registers to read</param>
+        /// <param name="mqttBrokerAddress">Broker address the values will be published to</param>
+        /// <returns>Boolean Array which contains the Holding Registers</returns>
         public int[] ReadHoldingRegisters(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             int[] returnValue = this.ReadHoldingRegisters(startingAddress, quantity);
@@ -1144,8 +1181,6 @@ namespace EasyModbus
             }
             EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
             easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
-
-
             return returnValue;
         }
 
@@ -1319,6 +1354,16 @@ namespace EasyModbus
     		return (response);			
 		}
 
+        /// <summary>
+        /// Read Input Registers from Server device (FC4) and publishes the values to a MQTT-Broker.
+        /// The Topic will be easymodbusclient/inputregisters/'address' e.g. easymodbusclient/inputregisters/0 for address "0".
+        /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
+        /// 'MqttRootTopic' Default is 'easymodbusclient'
+        /// </summary>
+        /// <param name="startingAddress">First Input Register to read</param>
+        /// <param name="quantity">Number of Input Registers to read</param>
+        /// <param name="mqttBrokerAddress">Broker address 8the values will be published to</param>
+        /// <returns>Boolean Array which contains the Input Registers</returns>
         public int[] ReadInputRegisters(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             int[] returnValue = this.ReadInputRegisters(startingAddress, quantity);
@@ -2381,7 +2426,7 @@ namespace EasyModbus
                     return false;
                 else
                 {
-                    return tcpClient.Connected;
+                    return connected;
 
                 }
 
@@ -2572,5 +2617,21 @@ namespace EasyModbus
                     debug = false;
             }
         }
+
+        /// <summary>
+        /// Gets or Sets the Mqtt Root Topic
+        /// </summary>
+        public string MqttRootTopic
+        {
+            get
+            {
+                return this.mqttRootTopic;
+            }
+            set
+            {
+                this.mqttRootTopic = value;
+            }
+        }
+
     }
 }
