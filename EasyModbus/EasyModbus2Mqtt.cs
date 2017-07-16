@@ -19,7 +19,9 @@ namespace EasyModbus
         string mqttRootTopic = "easymodbusclient";
         uPLibrary.Networking.M2Mqtt.MqttClient mqttClient;
         public bool AutomaticReconnect { get; set; } = true;
-        
+        public string MqttUserName { get; set; }
+        public string MqttPassword { get; set; }
+
 
         public EasyModbus2Mqtt()
         {
@@ -123,9 +125,20 @@ namespace EasyModbus
             mqttClient = new uPLibrary.Networking.M2Mqtt.MqttClient(mqttBrokerAddress,mqttBrokerPort,false,null,null, uPLibrary.Networking.M2Mqtt.MqttSslProtocols.None);
      
             string clientID = new Guid().ToString();
-            mqttClient.Connect(clientID);
-            if (!modbusClient.Connected)
-                modbusClient.Connect();
+            try
+            {
+                if (MqttUserName == null || MqttPassword == null)
+                    mqttClient.Connect(clientID);
+                else
+                    mqttClient.Connect(clientID, MqttUserName, MqttPassword);
+                if (!modbusClient.Connected)
+                    modbusClient.Connect();
+            }
+            catch (Exception exc)
+            {
+                if (!this.AutomaticReconnect)
+                    throw exc;
+            }
             for (int i = 0; i < readOrders.Count; i++)
             {
                 readOrders[i].thread = new System.Threading.Thread(new ParameterizedThreadStart(ProcessData));
@@ -144,7 +157,13 @@ namespace EasyModbus
             mqttClient = new uPLibrary.Networking.M2Mqtt.MqttClient(mqttBrokerAddress, mqttBrokerPort, false, null, null, uPLibrary.Networking.M2Mqtt.MqttSslProtocols.None);
             string clientID = Guid.NewGuid().ToString();
             if (!mqttClient.IsConnected)
-                mqttClient.Connect(clientID);
+            {
+                if (MqttUserName == null || MqttPassword == null)
+                    mqttClient.Connect(clientID);
+                else
+                    mqttClient.Connect(clientID, MqttUserName, MqttPassword);
+            }
+                
             for (int i = 0; i < payload.Length; i++)
                 mqttClient.Publish(topic[i], Encoding.UTF8.GetBytes(payload[i]), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
          
@@ -163,7 +182,23 @@ namespace EasyModbus
         {
             while (!shouldStop)
             {
-
+                try
+                {
+                    if (!mqttClient.IsConnected)
+                    {
+                        mqttClient = new uPLibrary.Networking.M2Mqtt.MqttClient(mqttBrokerAddress, mqttBrokerPort, false, null, null, uPLibrary.Networking.M2Mqtt.MqttSslProtocols.None);
+                        string clientID = Guid.NewGuid().ToString();
+                        if (MqttUserName == null || MqttPassword == null)
+                            mqttClient.Connect(clientID);
+                        else
+                            mqttClient.Connect(clientID, MqttUserName, MqttPassword);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    if (!this.AutomaticReconnect)
+                        throw exc;
+                }
                 ReadOrder readOrder = (ReadOrder)param;
                 lock (lockProcessData)
                 {

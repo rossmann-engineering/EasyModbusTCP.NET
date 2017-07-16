@@ -43,6 +43,9 @@ namespace EasyModbus
         private StopBits stopBits = StopBits.One;
         private bool connected = false;
         string mqttRootTopic = "easymodbusclient";
+        public string MqttUserName { get; set; }
+        public string MqttPassword { get; set; }
+        public int MqttBrokerPort = 1883;
 
         public delegate void ReceiveDataChanged(object sender);
         public event ReceiveDataChanged receiveDataChanged;
@@ -771,11 +774,13 @@ namespace EasyModbus
         /// Read Discrete Inputs from Server device (FC2) and publishes the values to a MQTT-Broker.
         /// The Topic will be easymodbusclient/discreteinputs/'address' e.g. easymodbusclient/discreteinputs/0 for address "0".
         /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
+        /// By default we are using the Standard-Port 1883. This Port can be changed using the Property "MqttBrokerPort"
+        /// A Username and Passowrd can be provided using the Properties "MqttUserName" and "MqttPassword"
         /// 'MqttRootTopic' Default is 'easymodbusclient'
         /// </summary>
         /// <param name="startingAddress">First discrete input to read</param>
         /// <param name="quantity">Number of discrete Inputs to read</param>
-        /// <param name="mqttBrokerAddress">Broker address 8the values will be published to</param>
+        /// <param name="mqttBrokerAddress">Broker address the values will be published to</param>
         /// <returns>Boolean Array which contains the discrete Inputs</returns>
         public bool[] ReadDiscreteInputs(int startingAddress, int quantity, string mqttBrokerAddress)
         {
@@ -788,6 +793,9 @@ namespace EasyModbus
                 payload[i] = returnValue[i].ToString();
             }
             EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+            easyModbus2Mqtt.MqttUserName = this.MqttUserName;
+            easyModbus2Mqtt.MqttPassword = this.MqttPassword;
             easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
     
             return returnValue;
@@ -968,6 +976,8 @@ namespace EasyModbus
         /// The Topic will be easymodbusclient/coils/'address' e.g. easymodbusclient/coils/0 for address "0".
         /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
         /// 'MqttRootTopic' Default is 'easymodbusclient'
+        /// By default we are using the Standard-Port 1883. This Port can be changed using the Property "MqttBrokerPort"
+        /// A Username and Passowrd can be provided using the Properties "MqttUserName" and "MqttPassword"
         /// </summary>
         /// <param name="startingAddress">First coil to read</param>
         /// <param name="quantity">Number of coils to read</param>
@@ -984,6 +994,9 @@ namespace EasyModbus
                 payload[i] = returnValue[i].ToString();
             }
             EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+            easyModbus2Mqtt.MqttUserName = this.MqttUserName;
+            easyModbus2Mqtt.MqttPassword = this.MqttPassword;
             easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
 
 
@@ -1164,6 +1177,8 @@ namespace EasyModbus
         /// The Topic will be easymodbusclient/holdingregisters/'address' e.g. easymodbusclient/holdingregisters/0 for address "0".
         /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
         /// 'MqttRootTopic' Default is 'easymodbusclient'
+        /// By default we are using the Standard-Port 1883. This Port can be changed using the Property "MqttBrokerPort"
+        /// A Username and Passowrd can be provided using the Properties "MqttUserName" and "MqttPassword"
         /// </summary>
         /// <param name="startingAddress">First Holding Register to read</param>
         /// <param name="quantity">Number of Holding Registers to read</param>
@@ -1180,6 +1195,9 @@ namespace EasyModbus
                 payload[i] = returnValue[i].ToString();
             }
             EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+            easyModbus2Mqtt.MqttUserName = this.MqttUserName;
+            easyModbus2Mqtt.MqttPassword = this.MqttPassword;
             easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
             return returnValue;
         }
@@ -1359,6 +1377,8 @@ namespace EasyModbus
         /// The Topic will be easymodbusclient/inputregisters/'address' e.g. easymodbusclient/inputregisters/0 for address "0".
         /// Note that the Address that will be publishes is "0"-Based. The Root topic can be changed using the Parameter
         /// 'MqttRootTopic' Default is 'easymodbusclient'
+        /// By default we are using the Standard-Port 1883. This Port can be changed using the Property "MqttBrokerPort"
+        /// A Username and Passowrd can be provided using the Properties "MqttUserName" and "MqttPassword"
         /// </summary>
         /// <param name="startingAddress">First Input Register to read</param>
         /// <param name="quantity">Number of Input Registers to read</param>
@@ -1375,6 +1395,9 @@ namespace EasyModbus
                 payload[i] = returnValue[i].ToString();
             }
             EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+            easyModbus2Mqtt.MqttUserName = this.MqttUserName;
+            easyModbus2Mqtt.MqttPassword = this.MqttPassword;
             easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
 
 
