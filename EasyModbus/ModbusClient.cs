@@ -10,6 +10,7 @@ using System.Net;
 using System.IO.Ports;
 using System.Reflection;
 using System.Text;
+using System.Collections.Generic;
 
 namespace EasyModbus
 {
@@ -42,9 +43,17 @@ namespace EasyModbus
         private Parity parity = Parity.Even;
         private StopBits stopBits = StopBits.One;
         private bool connected = false;
+        private bool[] mqttCoilsOldValues;
+        private bool[] mqttDiscreteInputsOldValues;
+        private int[] mqttInputRegistersOldValues;
+        private int[] mqttHoldingRegistersOldValues;
+        private EasyModbus2Mqtt easyModbus2Mqtt;
+
         string mqttRootTopic = "easymodbusclient";
         public string MqttUserName { get; set; }
         public string MqttPassword { get; set; }
+        public bool MqttPushOnChange { get; set; } = true;
+
         public int MqttBrokerPort = 1883;
 
         public delegate void ReceiveDataChanged(object sender);
@@ -785,18 +794,26 @@ namespace EasyModbus
         public bool[] ReadDiscreteInputs(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             bool[] returnValue = this.ReadDiscreteInputs(startingAddress, quantity);
-            string[] topic = new string[returnValue.Length];
-            string[] payload = new string[returnValue.Length];
+            List<String> topic = new List<String>();
+            List<String> payload = new List<String>();
+            if (MqttPushOnChange && mqttDiscreteInputsOldValues == null)
+                mqttDiscreteInputsOldValues = new bool[65535];
             for (int i = 0; i < returnValue.Length; i++)
             {
-                topic[i] = mqttRootTopic+"/discreteinputs/" + (i+startingAddress).ToString();
-                payload[i] = returnValue[i].ToString();
+                if (mqttDiscreteInputsOldValues == null ? true : (mqttDiscreteInputsOldValues[i] != returnValue[i]))
+                {
+                    topic.Add(mqttRootTopic + "/discreteinputs/" + (i + startingAddress).ToString());
+                    payload.Add(returnValue[i].ToString());
+                    mqttDiscreteInputsOldValues[i] = returnValue[i];
+                }
+
             }
-            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
+            if (easyModbus2Mqtt == null)
+                easyModbus2Mqtt = new EasyModbus2Mqtt();
             easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
-            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
+            easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
     
             return returnValue;
         }
@@ -986,18 +1003,24 @@ namespace EasyModbus
         public bool[] ReadCoils(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             bool[] returnValue = this.ReadCoils(startingAddress, quantity);
-            string[] topic = new string[returnValue.Length];
-            string[] payload = new string[returnValue.Length];
+            List<String> topic = new List<String>();
+            List<String> payload = new List<String>();
+            if (MqttPushOnChange && mqttCoilsOldValues == null)
+                mqttCoilsOldValues = new bool[65535];
             for (int i = 0; i < returnValue.Length; i++)
             {
-                topic[i] = mqttRootTopic+"/coils/" + (i + startingAddress).ToString();
-                payload[i] = returnValue[i].ToString();
+                if (mqttCoilsOldValues == null ? true : (mqttCoilsOldValues[i] != returnValue[i]))
+                {
+                    topic.Add(mqttRootTopic + "/coils/" + (i + startingAddress).ToString());
+                    payload.Add(returnValue[i].ToString());
+                    mqttCoilsOldValues[i] = returnValue[i];
+                }
             }
-            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
-            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+            if (easyModbus2Mqtt == null)
+                easyModbus2Mqtt = new EasyModbus2Mqtt(); easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
-            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
+            easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
 
 
             return returnValue;
@@ -1187,18 +1210,24 @@ namespace EasyModbus
         public int[] ReadHoldingRegisters(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             int[] returnValue = this.ReadHoldingRegisters(startingAddress, quantity);
-            string[] topic = new string[returnValue.Length];
-            string[] payload = new string[returnValue.Length];
+            List<String> topic = new List<String>();
+            List<String> payload = new List<String>();
+            if (MqttPushOnChange && mqttHoldingRegistersOldValues == null)
+                mqttHoldingRegistersOldValues = new int[65535];
             for (int i = 0; i < returnValue.Length; i++)
             {
-                topic[i] = mqttRootTopic+"/holdingregisters/" + (i + startingAddress).ToString();
-                payload[i] = returnValue[i].ToString();
+                if (mqttHoldingRegistersOldValues == null ? true : (mqttHoldingRegistersOldValues[i] != returnValue[i]))
+                {
+                    topic.Add(mqttRootTopic + "/holdingregisters/" + (i + startingAddress).ToString());
+                    payload.Add(returnValue[i].ToString());
+                    mqttHoldingRegistersOldValues[i] = returnValue[i];
+                }
             }
-            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
-            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+            if (easyModbus2Mqtt == null)
+                easyModbus2Mqtt = new EasyModbus2Mqtt(); easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
-            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
+            easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
             return returnValue;
         }
 
@@ -1387,20 +1416,24 @@ namespace EasyModbus
         public int[] ReadInputRegisters(int startingAddress, int quantity, string mqttBrokerAddress)
         {
             int[] returnValue = this.ReadInputRegisters(startingAddress, quantity);
-            string[] topic = new string[returnValue.Length];
-            string[] payload = new string[returnValue.Length];
+            List<String> topic = new List<String>();
+            List<String> payload = new List<String>();
+            if (MqttPushOnChange && mqttInputRegistersOldValues == null)
+                mqttInputRegistersOldValues = new int[65535];
             for (int i = 0; i < returnValue.Length; i++)
             {
-                topic[i] = mqttRootTopic+"/inputregisters/" + (i + startingAddress).ToString();
-                payload[i] = returnValue[i].ToString();
+                if (mqttInputRegistersOldValues == null ? true : (mqttInputRegistersOldValues[i] != returnValue[i]))
+                {
+                    topic.Add(mqttRootTopic + "/inputregisters/" + (i + startingAddress).ToString());
+                    payload.Add(returnValue[i].ToString());
+                    mqttInputRegistersOldValues[i] = returnValue[i];
+                }
             }
-            EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
-            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+            if (easyModbus2Mqtt == null)
+                easyModbus2Mqtt = new EasyModbus2Mqtt(); easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
-            easyModbus2Mqtt.publish(topic, payload, mqttBrokerAddress);
-
-
+            easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
             return returnValue;
         }
 

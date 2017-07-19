@@ -38,10 +38,10 @@ namespace ConsoleApplication1
             EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient("127.0.0.1", 502);
             modbusClient.ConnectionTimeout = 5000;
             modbusClient.LogFileFilename = "logData.txt";
-            
+            modbusClient.Connect();
             while (true)
             {
-                modbusClient.Connect();
+                
 
                 //      Console.WriteLine("Execute FC5");
                 //      modbusClient.WriteSingleCoil(0, true);
@@ -62,10 +62,11 @@ namespace ConsoleApplication1
                 modbusClient.ReadInputRegisters(0, 10, "www.mqtt-dashboard.com");
                 modbusClient.ReadHoldingRegisters(0, 10, "www.mqtt-dashboard.com");
 
-                modbusClient.Disconnect();
+                
                 System.Threading.Thread.Sleep(1000);
             }
-    Console.ReadKey();
+            modbusClient.Disconnect();
+            Console.ReadKey();
         }
     }
 }

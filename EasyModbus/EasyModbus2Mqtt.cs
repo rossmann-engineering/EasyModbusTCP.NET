@@ -169,6 +169,12 @@ namespace EasyModbus
          
         }
 
+        public void Disconnect()
+        {
+            mqttClient.Disconnect();
+        }
+
+
         public void stop()
         {
             modbusClient.Disconnect();
