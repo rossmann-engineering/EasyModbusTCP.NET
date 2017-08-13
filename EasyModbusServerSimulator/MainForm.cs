@@ -32,7 +32,7 @@ namespace EasyModbusServerSimulator
             easyModbusTCPServer = new EasyModbus.ModbusServer();
             
             easyModbusTCPServer.Listen();
-            
+
             
             easyModbusTCPServer.coilsChanged += new ModbusServer.CoilsChanged(CoilsChanged);
             easyModbusTCPServer.holdingRegistersChanged += new ModbusServer.HoldingRegistersChanged(HoldingRegistersChanged);
@@ -663,7 +663,34 @@ namespace EasyModbusServerSimulator
             propertryForm.SettingsChangedEvent += new PropertyForm.settingsChangedEvent(SettingsChanged);
             propertryForm.Show();
         }
+        int topic = 0;
+        private void cbEnableWebView_CheckedChanged(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+            topic = rnd.Next(0, 99999);
+            easyModbusTCPServer.MqttRootTopic = "easymodbusserver/"+ topic;
+            if (cbEnableWebView.Checked)
+            {
+                easyModbusTCPServer.DeleteRetainedMessages(easyModbusTCPServer.MqttRootTopic);
+                easyModbusTCPServer.MqttBrokerAddress = "www.mqtt-dashboard.com";
+                linkLabel2.Text = "http://www.easymodbustcp.net/webview/easymodbuswebview.html ?topic=" + topic;
+                linkLabel2.Visible = true;
+                label6.Visible = true;
 
 
+            }
+
+            else
+            {
+                easyModbusTCPServer.MqttBrokerAddress = null;
+                linkLabel2.Visible = false;
+                label6.Visible = false;
+            }
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://www.easymodbustcp.net/webview/easymodbuswebview.html ?topic=" + topic);
+        }
     }
 }

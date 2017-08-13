@@ -34,10 +34,13 @@ namespace ConsoleApplication1
                       for (int i = 0; i < 15; i++)
                       Console.WriteLine(bufferout[i].ToString());
                       serialport.Write("ddddddddd");*/
-            //EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient("COM4");
-            EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient("127.0.0.1", 502);
+            EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient("COM3");
+            modbusClient.SerialPort = "COM3";
+            //EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient("127.0.0.1", 502);
             modbusClient.ConnectionTimeout = 5000;
-            modbusClient.LogFileFilename = "logData.txt";
+            modbusClient.LogFileFilename = "test.txt";
+            modbusClient.UnitIdentifier = 0xF7;
+            
             modbusClient.Connect();
             while (true)
             {
@@ -59,11 +62,12 @@ namespace ConsoleApplication1
                 //Console.WriteLine("Value of Holding Register 1000: " + modbusClient.ReadHoldingRegisters(1000, 1)[0]);
 
                 Console.WriteLine("Read and Publish Input Registers");
-                modbusClient.ReadInputRegisters(0, 10, "www.mqtt-dashboard.com");
-                modbusClient.ReadHoldingRegisters(0, 10, "www.mqtt-dashboard.com");
+                modbusClient.WriteSingleRegister(60, 1234);
+                int[] holdingRegister = modbusClient.ReadHoldingRegisters(60, 2);
+                //Console.WriteLine(holdingRegister[0]);
 
                 
-                System.Threading.Thread.Sleep(1000);
+               // System.Threading.Thread.Sleep(1000);
             }
             modbusClient.Disconnect();
             Console.ReadKey();

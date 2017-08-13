@@ -87,6 +87,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cbEnableWebView = new System.Windows.Forms.CheckBox();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -670,11 +673,48 @@
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
+            // cbEnableWebView
+            // 
+            this.cbEnableWebView.AutoSize = true;
+            this.cbEnableWebView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbEnableWebView.Location = new System.Drawing.Point(335, 337);
+            this.cbEnableWebView.Name = "cbEnableWebView";
+            this.cbEnableWebView.Size = new System.Drawing.Size(149, 20);
+            this.cbEnableWebView.TabIndex = 25;
+            this.cbEnableWebView.Text = "Enable Web View";
+            this.cbEnableWebView.UseVisualStyleBackColor = true;
+            this.cbEnableWebView.CheckedChanged += new System.EventHandler(this.cbEnableWebView_CheckedChanged);
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(116, 547);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(55, 13);
+            this.linkLabel2.TabIndex = 26;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "linkLabel2";
+            this.linkLabel2.Visible = false;
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 547);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(95, 13);
+            this.label6.TabIndex = 27;
+            this.label6.Text = "Webview-address:";
+            this.label6.Visible = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(897, 570);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.linkLabel2);
+            this.Controls.Add(this.cbEnableWebView);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.checkBox10);
             this.Controls.Add(this.btnProperties);
@@ -722,6 +762,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.form1BindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.easyModbusTCPServerBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
+           // ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -782,7 +823,9 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
-
+        private System.Windows.Forms.CheckBox cbEnableWebView;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.Label label6;
     }
 }
 
