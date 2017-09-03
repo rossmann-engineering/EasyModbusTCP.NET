@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.IO.Ports;
+using System.Diagnostics;
 
 namespace EasyModbus
 {
@@ -47,6 +48,9 @@ namespace EasyModbus
             if (readOrder.Scale != null)
                 if (readOrder.Scale.Length != readOrder.Quantity)
                     throw new ArgumentOutOfRangeException("Size of the Scale array must mach with quantity");
+            if (readOrder.Retain != null)
+                if (readOrder.Retain.Length != readOrder.Quantity)
+                    throw new ArgumentOutOfRangeException("Size of the Retain array must mach with quantity");
             if (readOrder.CylceTime == 0)
                 readOrder.CylceTime = 500;
             if (readOrder.Topic == null)
@@ -124,6 +128,7 @@ namespace EasyModbus
             readOrder.StartingAddress = startingAddress;
             readOrder.CylceTime = cycleTime;
             readOrder.Topic = topic;
+            readOrder.Retain = new bool[quantity];
             this.AddReadOrder(readOrder);
         }
 
@@ -176,7 +181,7 @@ namespace EasyModbus
             }
                 
             for (int i = 0; i < payload.Length; i++)
-                mqttClient.Publish(topic[i], Encoding.UTF8.GetBytes(payload[i]), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+                mqttClient.Publish(topic[i], Encoding.UTF8.GetBytes(payload[i]), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, RetainMessages);
          
         }
 
@@ -198,7 +203,7 @@ namespace EasyModbus
                 if (payload != null)
                     mqttClient.Publish(topic, Encoding.UTF8.GetBytes(payload), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, RetainMessages);
                 else
-                    mqttClient.Publish(topic, null, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, RetainMessages);
+                    mqttClient.Publish(topic, new byte[0], 0, RetainMessages);
         }
 
         public void Disconnect()
@@ -248,9 +253,9 @@ namespace EasyModbus
                             for (int i = 0; i < value.Length; i++)
                             {
                                 if (readOrder.oldvalue[i] == null)
-                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                 else if ((bool)readOrder.oldvalue[i] != value[i])
-                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                 readOrder.oldvalue[i] = value[i];
                             }
 
@@ -261,9 +266,9 @@ namespace EasyModbus
                             for (int i = 0; i < value.Length; i++)
                             {
                                 if (readOrder.oldvalue[i] == null)
-                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                 else if ((bool)readOrder.oldvalue[i] != value[i])
-                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], Encoding.UTF8.GetBytes(value[i].ToString()), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                 readOrder.oldvalue[i] = value[i];
                             }
                         }
@@ -275,12 +280,12 @@ namespace EasyModbus
                                 float scale = readOrder.Scale != null ? (readOrder.Scale[i] == 0) ? 1 : readOrder.Scale[i] : 1;
                                 if (readOrder.oldvalue[i] == null)
                                 {
-                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale) + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale) + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                     readOrder.oldvalue[i] = value[i];
                                 }
                                 else if (((int)readOrder.oldvalue[i] != value[i]) && (readOrder.Hysteresis != null ? ((value[i] < (int)readOrder.oldvalue[i] - (int)readOrder.Hysteresis[i]) | (value[i] > (int)readOrder.oldvalue[i] + (int)readOrder.Hysteresis[i])) : true))
                                 {
-                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString() + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString() + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                     readOrder.oldvalue[i] = value[i];
                                 }
                             }
@@ -294,12 +299,12 @@ namespace EasyModbus
                                 float scale = readOrder.Scale != null ? (readOrder.Scale[i] == 0) ? 1 : readOrder.Scale[i] : 1;
                                 if (readOrder.oldvalue[i] == null)
                                 {
-                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString() + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString() + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                     readOrder.oldvalue[i] = value[i];
                                 }
                                 else if (((int)readOrder.oldvalue[i] != value[i]) && (readOrder.Hysteresis != null ? ((value[i] < (int)readOrder.oldvalue[i] - (int)readOrder.Hysteresis[i]) | (value[i] > (int)readOrder.oldvalue[i] + (int)readOrder.Hysteresis[i])) : true))
                                 {
-                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString() + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, readOrder.Retain[i]);
+                                    mqttClient.Publish(readOrder.Topic[i], (readOrder.Unit == null ? Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString()) : Encoding.UTF8.GetBytes(((float)value[i] * scale).ToString() + " " + readOrder.Unit[i])), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, (readOrder.Retain != null) ? readOrder.Retain[i] : false);
                                     readOrder.oldvalue[i] = value[i];
                                 }
                             }
@@ -311,6 +316,8 @@ namespace EasyModbus
                         Thread.Sleep(2000);
                         if (!AutomaticReconnect)
                             throw exc;
+                        Debug.WriteLine(exc.StackTrace);
+
                         if (!modbusClient.Connected)
                         {
                             try

@@ -48,7 +48,9 @@ namespace EasyModbus
         private int[] mqttInputRegistersOldValues;
         private int[] mqttHoldingRegistersOldValues;
         private EasyModbus2Mqtt easyModbus2Mqtt;
-
+        private bool mqttRetainMessages;
+        public int NumberOfRetries { get; set; } = 3;
+        private int countRetries = 0;
         string mqttRootTopic = "easymodbusclient";
         public string MqttUserName { get; set; }
         public string MqttPassword { get; set; }
@@ -103,6 +105,7 @@ namespace EasyModbus
             serialport.StopBits = stopBits;
             serialport.WriteTimeout = 10000;
             serialport.ReadTimeout = connectTimeout;
+           
             serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);      
         }
 
@@ -139,6 +142,15 @@ namespace EasyModbus
                     
                    
                 }
+                if (connectedChanged != null)
+                    try
+                    {
+                        connectedChanged(this);
+                    }
+                    catch
+                    {
+
+                    }
                 return;
             }
             if (!udpFlag)
@@ -375,7 +387,7 @@ namespace EasyModbus
         /// </summary>
         /// <param name="floatValue">Float value which has to be converted into two registers</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertFloatToTwoRegisters(float floatValue)
+        public static int[] ConvertFloatToRegisters(float floatValue)
         {
             byte[] floatBytes = BitConverter.GetBytes(floatValue);
             byte[] highRegisterBytes = 
@@ -407,9 +419,9 @@ namespace EasyModbus
         /// <param name="floatValue">Float value which has to be converted into two registers</param>
         /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertFloatToTwoRegisters(float floatValue, RegisterOrder registerOrder)
+        public static int[] ConvertFloatToRegisters(float floatValue, RegisterOrder registerOrder)
         {
-            int[] registerValues = ConvertFloatToTwoRegisters(floatValue);
+            int[] registerValues = ConvertFloatToRegisters(floatValue);
             int[] returnValue = registerValues;
             if (registerOrder == RegisterOrder.HighLow)
                 returnValue = new Int32[] { registerValues[1], registerValues[0] };
@@ -421,7 +433,7 @@ namespace EasyModbus
         /// </summary>
         /// <param name="intValue">Int value which has to be converted into two registers</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertIntToTwoRegisters(Int32 intValue)
+        public static int[] ConvertIntToRegisters(Int32 intValue)
         {
             byte[] doubleBytes = BitConverter.GetBytes(intValue);
             byte[] highRegisterBytes = 
@@ -453,9 +465,9 @@ namespace EasyModbus
         /// <param name="intValue">Double value which has to be converted into two registers</param>
         /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertDoubleToTwoRegisters(Int32 intValue, RegisterOrder registerOrder)
+        public static int[] ConvertIntToRegisters(Int32 intValue, RegisterOrder registerOrder)
         {
-            int[] registerValues = ConvertIntToTwoRegisters(intValue);
+            int[] registerValues = ConvertIntToRegisters(intValue);
             int[] returnValue = registerValues;
             if (registerOrder == RegisterOrder.HighLow)
                 returnValue = new Int32[] { registerValues[1], registerValues[0] };
@@ -467,7 +479,7 @@ namespace EasyModbus
         /// </summary>
         /// <param name="longValue">long value which has to be converted into four registers</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertLongToTwoRegisters(Int64 longValue)
+        public static int[] ConvertLongToRegisters(Int64 longValue)
         {
             byte[] longBytes = BitConverter.GetBytes(longValue);
             byte[] highRegisterBytes =
@@ -515,9 +527,9 @@ namespace EasyModbus
         /// <param name="longValue">long value which has to be converted into four registers</param>
         /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertLongToTwoRegisters(Int64 longValue, RegisterOrder registerOrder)
+        public static int[] ConvertLongToRegisters(Int64 longValue, RegisterOrder registerOrder)
         {
-            int[] registerValues = ConvertLongToTwoRegisters(longValue);
+            int[] registerValues = ConvertLongToRegisters(longValue);
             int[] returnValue = registerValues;
             if (registerOrder == RegisterOrder.HighLow)
                 returnValue = new int[] { registerValues[3], registerValues[2], registerValues[1], registerValues[0] };
@@ -529,7 +541,7 @@ namespace EasyModbus
         /// </summary>
         /// <param name="doubleValue">double value which has to be converted into four registers</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertDoubleToTwoRegisters(double doubleValue)
+        public static int[] ConvertDoubleToRegisters(double doubleValue)
         {
             byte[] doubleBytes = BitConverter.GetBytes(doubleValue);
             byte[] highRegisterBytes =
@@ -577,9 +589,9 @@ namespace EasyModbus
         /// <param name="doubleValue">double value which has to be converted into four registers</param>
         /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
         /// <returns>Register values</returns>
-        public static int[] ConvertDoubleToTwoRegisters(double doubleValue, RegisterOrder registerOrder)
+        public static int[] ConvertDoubleToRegisters(double doubleValue, RegisterOrder registerOrder)
         {
-            int[] registerValues = ConvertDoubleToTwoRegisters(doubleValue);
+            int[] registerValues = ConvertDoubleToRegisters(doubleValue);
             int[] returnValue = registerValues;
             if (registerOrder == RegisterOrder.HighLow)
                 returnValue = new int[] { registerValues[3], registerValues[2], registerValues[1], registerValues[0] };
@@ -685,9 +697,12 @@ namespace EasyModbus
             while (usDataLen>0) 
             {
                 usDataLen--;
-                uIndex = uchCRCLo ^ data[i+startByte]; 
-                uchCRCLo = (byte) (uchCRCHi ^ auchCRCHi[uIndex]) ; 
-                uchCRCHi = auchCRCLo[uIndex] ;
+                if ((i + startByte) < data.Length)
+                {
+                    uIndex = uchCRCLo ^ data[i + startByte];
+                    uchCRCLo = (byte)(uchCRCHi ^ auchCRCHi[uIndex]);
+                    uchCRCHi = auchCRCLo[uIndex];
+                }
                 i++;
             }
             return (UInt16)((UInt16)uchCRCHi << 8 | uchCRCLo);           
@@ -697,6 +712,53 @@ namespace EasyModbus
         private bool receiveActive = false;
         private byte[] readBuffer = new byte[256];
         private int bytesToRead = 0;
+        private int actualPositionToRead = 0;
+        DateTime dateTimeLastRead;
+/*
+        private void DataReceivedHandler(object sender,
+                        SerialDataReceivedEventArgs e)
+        {
+            long ticksWait = TimeSpan.TicksPerMillisecond * 2000;
+            SerialPort sp = (SerialPort)sender;
+            
+            if (bytesToRead == 0 || sp.BytesToRead == 0)
+            {
+                actualPositionToRead = 0;
+                sp.DiscardInBuffer();
+                dataReceived = false;
+                receiveActive = false;
+                return;
+            }
+
+            if (actualPositionToRead == 0 && !dataReceived)
+                readBuffer = new byte[256];
+
+            //if ((DateTime.Now.Ticks - dateTimeLastRead.Ticks) > ticksWait)
+            //{
+            //    readBuffer = new byte[256];
+            //    actualPositionToRead = 0;
+            //}
+            int numberOfBytesInBuffer = sp.BytesToRead;
+            sp.Read(readBuffer, actualPositionToRead, ((numberOfBytesInBuffer + actualPositionToRead) > readBuffer.Length) ? 0 : numberOfBytesInBuffer);
+            actualPositionToRead = actualPositionToRead + numberOfBytesInBuffer;
+            //sp.DiscardInBuffer();
+            //if (DetectValidModbusFrame(readBuffer, (actualPositionToRead < readBuffer.Length) ? actualPositionToRead : readBuffer.Length) | bytesToRead <= actualPositionToRead)
+            if (actualPositionToRead >= bytesToRead)
+            {
+
+                    dataReceived = true;
+                    bytesToRead = 0;
+                    actualPositionToRead = 0;
+                    if (debug) StoreLogData.Instance.Store("Received Serial-Data: " + BitConverter.ToString(readBuffer), System.DateTime.Now);
+
+            }
+
+
+            //dateTimeLastRead = DateTime.Now;
+        }
+ */       
+
+        
         private void DataReceivedHandler(object sender,
                         SerialDataReceivedEventArgs e)
         {
@@ -726,7 +788,7 @@ namespace EasyModbus
             		dateTimeLastRead = DateTime.Now;  
             		while ((sp.BytesToRead) == 0) 
             		{
-            			System.Threading.Thread.Sleep(1);
+            			System.Threading.Thread.Sleep(10);
             			if  ((DateTime.Now.Ticks - dateTimeLastRead.Ticks) > ticksWait) 
             				break;
             		}
@@ -735,8 +797,8 @@ namespace EasyModbus
             	
             	byte[] rxbytearray = new byte[numbytes];
             	sp.Read(rxbytearray, 0, numbytes);
-            
-            	Array.Copy(rxbytearray,0, readBuffer,actualPositionToRead, (actualPositionToRead + rxbytearray.Length) <= bytesToRead ? rxbytearray.Length : bytesToRead - actualPositionToRead); 
+                    if (debug) StoreLogData.Instance.Store("Received Serial-Data: " + BitConverter.ToString(rxbytearray), System.DateTime.Now);
+                    Array.Copy(rxbytearray,0, readBuffer,actualPositionToRead, (actualPositionToRead + rxbytearray.Length) <= bytesToRead ? rxbytearray.Length : bytesToRead - actualPositionToRead); 
             	
             	actualPositionToRead = actualPositionToRead + rxbytearray.Length;
             	
@@ -744,28 +806,38 @@ namespace EasyModbus
             	catch (Exception){
             	
             	}
-            	if (DetectValidModbusFrame(readBuffer, actualPositionToRead) | bytesToRead <= actualPositionToRead)
+
+                if (bytesToRead <= actualPositionToRead)
+                    break;
+
+            	if (DetectValidModbusFrame(readBuffer, (actualPositionToRead < readBuffer.Length) ? actualPositionToRead : readBuffer.Length) | bytesToRead <= actualPositionToRead)
                     break;
             }
             while ((DateTime.Now.Ticks - dateTimeLastRead.Ticks) < ticksWait) ;
-            bytesToRead = 0;
+            
             //10.000 Ticks in 1 ms
+
+            receiveData = new byte[actualPositionToRead];
+            Array.Copy(readBuffer, 0, receiveData, 0, (actualPositionToRead < readBuffer.Length) ? actualPositionToRead: readBuffer.Length);
+            if (debug) StoreLogData.Instance.Store("Received Serial-Data: "+BitConverter.ToString(readBuffer) ,System.DateTime.Now);
+            bytesToRead = 0;
+
+
+         
+            
             dataReceived = true;
             receiveActive = false;
-            sp.DiscardInBuffer();
-            receiveData = new byte[actualPositionToRead];
-            Array.Copy(readBuffer, 0, receiveData, 0, actualPositionToRead);
-            if (debug) StoreLogData.Instance.Store("Received Serial-Data: "+BitConverter.ToString(readBuffer) ,System.DateTime.Now);
+            serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             if (receiveDataChanged != null)
             {
 
-            	receiveDataChanged(this);
-            	
+                receiveDataChanged(this);
+
             }
-         
-            serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            
+            //sp.DiscardInBuffer();
         }
-        
+
         public static bool DetectValidModbusFrame(byte[] readBuffer, int length)
         {
         	// minimum length 6 bytes
@@ -816,6 +888,7 @@ namespace EasyModbus
             easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
+            easyModbus2Mqtt.RetainMessages = this.mqttRetainMessages;
             easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
     
             return returnValue;
@@ -883,6 +956,7 @@ namespace EasyModbus
                     bytesToRead = 5 + quantity / 8;
                 else
                     bytesToRead = 6 + quantity / 8;
+ //               serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -895,9 +969,14 @@ namespace EasyModbus
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
             		sendDataChanged(this);
-            	}
+                    
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
+
+
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -908,6 +987,8 @@ namespace EasyModbus
                 }
                 if (receivedUnitIdentifier != this.unitIdentifier)
                 	data = new byte[2100];
+                else
+                    countRetries = 0;
             }
             else if (tcpClient.Client.Connected | udpFlag)
             {
@@ -973,12 +1054,30 @@ namespace EasyModbus
                 if ((crc[0] != data[data[8] + 9] | crc[1] != data[data[8] + 10]) & dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadDiscreteInputs(startingAddress, quantity);
+                    }
                 }
                 else if (!dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadDiscreteInputs(startingAddress, quantity);
+                    }
                 }
             }
 			response = new bool[quantity];
@@ -1005,6 +1104,7 @@ namespace EasyModbus
         /// <returns>Boolean Array which contains the coild</returns>
         public bool[] ReadCoils(int startingAddress, int quantity, string mqttBrokerAddress)
         {
+            
             bool[] returnValue = this.ReadCoils(startingAddress, quantity);
             List<String> topic = new List<String>();
             List<String> payload = new List<String>();
@@ -1020,9 +1120,11 @@ namespace EasyModbus
                 }
             }
             if (easyModbus2Mqtt == null)
-                easyModbus2Mqtt = new EasyModbus2Mqtt(); easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+                easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
+            easyModbus2Mqtt.RetainMessages = this.mqttRetainMessages;
             easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
 
 
@@ -1037,7 +1139,7 @@ namespace EasyModbus
         /// <returns>Boolean Array which contains the coils</returns>
         public bool[] ReadCoils(int startingAddress, int quantity)
 		{
-			if (debug) StoreLogData.Instance.Store("FC1 (Read Coils from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
+            if (debug) StoreLogData.Instance.Store("FC1 (Read Coils from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
@@ -1089,6 +1191,7 @@ namespace EasyModbus
                     bytesToRead = 5 + quantity/8;
                 else
                     bytesToRead = 6 + quantity/8;
+ //               serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1101,7 +1204,10 @@ namespace EasyModbus
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
             		sendDataChanged(this);
-            	}
+                    
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -1115,6 +1221,8 @@ namespace EasyModbus
                 }
                 if (receivedUnitIdentifier != this.unitIdentifier)
                 	data = new byte[2100];
+                else
+                    countRetries = 0;
             }
 			else if (tcpClient.Client.Connected | udpFlag)
 			{
@@ -1142,7 +1250,8 @@ namespace EasyModbus
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
             			sendDataChanged(this);
-            		}
+                        
+                    }
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
                     if (receiveDataChanged != null)
@@ -1180,12 +1289,30 @@ namespace EasyModbus
                 if ((crc[0] != data[data[8]+9] | crc[1] != data[data[8]+10]) & dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadCoils(startingAddress, quantity);
+                    }
                 }
                 else if (!dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadCoils(startingAddress, quantity);
+                    }
                 }
             }
 			response = new bool[quantity];
@@ -1227,9 +1354,11 @@ namespace EasyModbus
                 }
             }
             if (easyModbus2Mqtt == null)
-                easyModbus2Mqtt = new EasyModbus2Mqtt(); easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+                easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
+            easyModbus2Mqtt.RetainMessages = this.mqttRetainMessages;
             easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
             return returnValue;
         }
@@ -1242,7 +1371,7 @@ namespace EasyModbus
         /// <returns>Int Array which contains the holding registers</returns>
         public int[] ReadHoldingRegisters(int startingAddress, int quantity)
 		{
-			if (debug) StoreLogData.Instance.Store("FC3 (Read Holding Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
+            if (debug) StoreLogData.Instance.Store("FC3 (Read Holding Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
@@ -1289,6 +1418,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 5 + 2 * quantity;
+//                serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1301,7 +1431,11 @@ namespace EasyModbus
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
             		sendDataChanged(this);
-            	}
+                    
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
+                
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -1315,6 +1449,8 @@ namespace EasyModbus
                 }
                 if (receivedUnitIdentifier != this.unitIdentifier)
                 	data = new byte[2100];
+                else
+                    countRetries = 0;
             }
 			else if (tcpClient.Client.Connected | udpFlag)
 			{
@@ -1342,7 +1478,8 @@ namespace EasyModbus
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
             			sendDataChanged(this);
-            		}
+                       
+                    }
                     data = new Byte[256];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
                     if (receiveDataChanged != null)
@@ -1380,12 +1517,32 @@ namespace EasyModbus
                 if ((crc[0] != data[data[8]+9] | crc[1] != data[data[8]+10])& dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadHoldingRegisters(startingAddress, quantity);
+                    }
                 }
                 else if (!dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadHoldingRegisters(startingAddress, quantity);
+                    }
+                    
+
                 }
             }
 			response = new int[quantity];
@@ -1433,9 +1590,11 @@ namespace EasyModbus
                 }
             }
             if (easyModbus2Mqtt == null)
-                easyModbus2Mqtt = new EasyModbus2Mqtt(); easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
+                easyModbus2Mqtt = new EasyModbus2Mqtt();
+            easyModbus2Mqtt.MqttBrokerPort = this.MqttBrokerPort;
             easyModbus2Mqtt.MqttUserName = this.MqttUserName;
             easyModbus2Mqtt.MqttPassword = this.MqttPassword;
+            easyModbus2Mqtt.RetainMessages = this.mqttRetainMessages;
             easyModbus2Mqtt.publish(topic.ToArray(), payload.ToArray(), mqttBrokerAddress);
             return returnValue;
         }
@@ -1448,7 +1607,8 @@ namespace EasyModbus
         /// <returns>Int Array which contains the input registers</returns>
         public int[] ReadInputRegisters(int startingAddress, int quantity)
 		{
-			if (debug) StoreLogData.Instance.Store("FC4 (Read Input Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
+            
+            if (debug) StoreLogData.Instance.Store("FC4 (Read Input Registers from Master device), StartingAddress: "+ startingAddress+", Quantity: " +quantity, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
@@ -1495,6 +1655,9 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 5 + 2 * quantity;
+
+
+ //               serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1507,7 +1670,10 @@ namespace EasyModbus
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
             		sendDataChanged(this);
-            	}
+                    
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 
@@ -1521,8 +1687,9 @@ namespace EasyModbus
                 }
                
                 if (receivedUnitIdentifier != this.unitIdentifier)
-              	 	data = new byte[2100];                     
-                
+              	 	data = new byte[2100];   
+                else
+                    countRetries = 0;
             }
 			else if (tcpClient.Client.Connected | udpFlag)
 			{
@@ -1588,12 +1755,32 @@ namespace EasyModbus
                 if ((crc[0] != data[data[8]+9] | crc[1] != data[data[8]+10]) & dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadInputRegisters(startingAddress, quantity);
+                    }
                 }
                 else if (!dataReceived)
                 {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+                        
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadInputRegisters(startingAddress, quantity);
+                    }
+                    
                 }
             }
 			response = new int[quantity];
@@ -1620,7 +1807,8 @@ namespace EasyModbus
 		/// <param name="value">Coil Value to be written</param>
         public void WriteSingleCoil(int startingAddress, bool value)
         {
-        	if (debug) StoreLogData.Instance.Store("FC5 (Write single coil to Master device), StartingAddress: "+ startingAddress+", Value: " + value, System.DateTime.Now);
+           
+            if (debug) StoreLogData.Instance.Store("FC5 (Write single coil to Master device), StartingAddress: "+ startingAddress+", Value: " + value, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
@@ -1669,6 +1857,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
+ //               serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1681,7 +1870,10 @@ namespace EasyModbus
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
             		sendDataChanged(this);
-            	}               
+                   
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -1691,6 +1883,7 @@ namespace EasyModbus
                 	data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
+                    countRetries = 0;
                 }
               
             }
@@ -1720,7 +1913,8 @@ namespace EasyModbus
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
             			sendDataChanged(this);
-            		}                    
+                       
+                    }                    
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
                     if (receiveDataChanged != null)
@@ -1758,12 +1952,31 @@ namespace EasyModbus
              if ((crc[0] != data[12] | crc[1] != data[13]) & dataReceived)
              {
                 	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteSingleCoil(startingAddress, value);
+                    }
                 }
              else if (!dataReceived)
              {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteSingleCoil(startingAddress, value);
+                    }
                 }
             }
         }
@@ -1776,7 +1989,7 @@ namespace EasyModbus
         /// <param name="value">Register Value to be written</param>
         public void WriteSingleRegister(int startingAddress, int value)
         {
-        	if (debug) StoreLogData.Instance.Store("FC6 (Write single register to Master device), StartingAddress: "+ startingAddress+", Value: " + value, System.DateTime.Now);
+            if (debug) StoreLogData.Instance.Store("FC6 (Write single register to Master device), StartingAddress: "+ startingAddress+", Value: " + value, System.DateTime.Now);
             transactionIdentifierInternal++;
             if (serialport != null)
                 if (!serialport.IsOpen)
@@ -1819,6 +2032,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
+//                serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1831,7 +2045,10 @@ namespace EasyModbus
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
             		sendDataChanged(this);
-            	}                
+                    
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -1843,7 +2060,9 @@ namespace EasyModbus
                 	receivedUnitIdentifier = data[6];
                 }
                 if (receivedUnitIdentifier != this.unitIdentifier)
-                	data = new byte[2100];                
+                	data = new byte[2100];   
+                else
+                    countRetries = 0;
             }
             else if (tcpClient.Client.Connected | udpFlag)
             {
@@ -1871,7 +2090,8 @@ namespace EasyModbus
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
             			sendDataChanged(this);
-            		}                   
+                        
+                    }                   
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
                     if (receiveDataChanged != null)
@@ -1909,12 +2129,31 @@ namespace EasyModbus
              if ((crc[0] != data[12] | crc[1] != data[13]) & dataReceived)
              {
                 if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-             }
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteSingleRegister(startingAddress, value);
+                    }
+                }
              else if (!dataReceived)
              {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteSingleRegister(startingAddress, value);
+                    }
                 }
             }
         }
@@ -1926,7 +2165,7 @@ namespace EasyModbus
         /// <param name="values">Coil Values to be written</param>
         public void WriteMultipleCoils(int startingAddress, bool[] values)
         {
-        	string debugString = "";
+            string debugString = "";
         	for (int i = 0; i < values.Length;i++)
         		debugString = debugString + values[i] + " ";
         	if (debug) StoreLogData.Instance.Store("FC15 (Write multiple coils to Master device), StartingAddress: "+ startingAddress+", Values: " + debugString, System.DateTime.Now);
@@ -1989,6 +2228,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
+ //               serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, data.Length - 6);
                 if (debug)
                 {
@@ -2001,7 +2241,10 @@ namespace EasyModbus
             		sendData = new byte[data.Length - 6];
             		Array.Copy(data, 6, sendData, 0, data.Length - 6);
             		sendDataChanged(this);
-            	}               
+                    
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -2013,7 +2256,9 @@ namespace EasyModbus
                 	receivedUnitIdentifier = data[6];
                 }
                 if (receivedUnitIdentifier != this.unitIdentifier)
-                	data = new byte[2100];                
+                	data = new byte[2100];     
+                else
+                    countRetries = 0;
             }
             else if (tcpClient.Client.Connected | udpFlag)
             {
@@ -2041,7 +2286,8 @@ namespace EasyModbus
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
             			sendDataChanged(this);
-            		}                    
+                        
+                    }                    
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
                     if (receiveDataChanged != null)
@@ -2079,12 +2325,31 @@ namespace EasyModbus
              if ((crc[0] != data[12] | crc[1] != data[13]) & dataReceived)
              {
                 if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-             }
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteMultipleCoils(startingAddress, values);
+                    }
+                }
              else if (!dataReceived)
               {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteMultipleCoils(startingAddress, values);
+                    }
                 }
             }
         }
@@ -2096,7 +2361,7 @@ namespace EasyModbus
         /// <param name="values">register Values to be written</param>
         public void WriteMultipleRegisters(int startingAddress, int[] values)
         {
-        	string debugString = "";
+            string debugString = "";
         	for (int i = 0; i < values.Length;i++)
         		debugString = debugString + values[i] + " ";
         	if (debug) StoreLogData.Instance.Store("FC16 (Write multiple Registers to Server device), StartingAddress: "+ startingAddress+", Values: " + debugString, System.DateTime.Now);
@@ -2147,7 +2412,9 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
+//                serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, data.Length - 6);
+
                 if (debug)
                 {
                 	byte [] debugData = new byte[data.Length - 6];
@@ -2159,7 +2426,10 @@ namespace EasyModbus
             		sendData = new byte[data.Length - 6];
             		Array.Copy(data, 6, sendData, 0, data.Length - 6);
             		sendDataChanged(this);
-            	}                      
+                   
+                }
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -2171,7 +2441,9 @@ namespace EasyModbus
                 	receivedUnitIdentifier = data[6];
                 }
                 if (receivedUnitIdentifier != this.unitIdentifier)
-                	data = new byte[2100];               
+                	data = new byte[2100];    
+                else
+                    countRetries = 0;
             }
             else if (tcpClient.Client.Connected | udpFlag)
             {
@@ -2237,13 +2509,32 @@ namespace EasyModbus
              if ((crc[0] != data[12] | crc[1] != data[13])  &dataReceived)
              {
                 if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-             }
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteMultipleRegisters(startingAddress, values);
+                    }
+                }
              else if (!dataReceived)
              {
                 	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    throw new TimeoutException("No Response from Modbus Slave");
-             }
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+
+                    }
+                    else
+                    {
+                        countRetries++;
+                        WriteMultipleRegisters(startingAddress, values);
+                    }
+                }
             }
         }
 
@@ -2257,7 +2548,8 @@ namespace EasyModbus
         /// <returns>Int Array which contains the Holding registers</returns>
         public int[] ReadWriteMultipleRegisters(int startingAddressRead, int quantityRead, int startingAddressWrite, int[] values)
         {
-        	string debugString = "";
+
+            string debugString = "";
         	for (int i = 0; i < values.Length;i++)
         		debugString = debugString + values[i] + " ";
         	if (debug) StoreLogData.Instance.Store("FC23 (Read and Write multiple Registers to Server device), StartingAddress Read: "+ startingAddressRead+ ", Quantity Read: "+quantityRead+", startingAddressWrite: " + startingAddressWrite +", Values: " + debugString, System.DateTime.Now);
@@ -2325,6 +2617,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 5 + 2*quantityRead;
+ //               serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, data.Length - 6);
                 if (debug)
                 {
@@ -2337,7 +2630,9 @@ namespace EasyModbus
             		sendData = new byte[data.Length - 6];
             		Array.Copy(data, 6, sendData, 0, data.Length - 6);
             		sendDataChanged(this);
-            	}                      
+            	}
+                data = new byte[2100];
+                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
@@ -2350,6 +2645,8 @@ namespace EasyModbus
                 }
                 if (receivedUnitIdentifier != this.unitIdentifier)
               	 	data = new byte[2100];               
+                else
+                    countRetries = 0;
             }
             else if (tcpClient.Client.Connected | udpFlag)
             {
@@ -2377,7 +2674,8 @@ namespace EasyModbus
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
             			sendDataChanged(this);
-            		}                   
+                        
+                    }                   
                     data = new Byte[2100];
                      int NumberOfBytes = stream.Read(data, 0, data.Length);
                     if (receiveDataChanged != null)
@@ -2435,6 +2733,8 @@ namespace EasyModbus
             {
                 if (serialport.IsOpen & !this.receiveActive)
                     serialport.Close();
+                if (connectedChanged != null)
+                    connectedChanged(this);
                 return;
             }
             if (stream != null)
@@ -2653,6 +2953,11 @@ namespace EasyModbus
             }
             set
             {
+                if (value == null)
+                {
+                    serialport = null;
+                    return;
+                }
                 if (serialport != null)
                     serialport.Close();
                 this.serialport = new SerialPort();
@@ -2697,6 +3002,21 @@ namespace EasyModbus
             set
             {
                 this.mqttRootTopic = value;
+            }
+        }
+
+        /// <summary>
+        /// Disables or Enables to Retain the Messages in the Broker - default is false (Enabled)
+        /// </summary>
+        public bool MqttRetainMessages
+        {
+            get
+            {
+                return this.mqttRetainMessages;
+            }
+            set
+            {
+                this.mqttRetainMessages = value;
             }
         }
 

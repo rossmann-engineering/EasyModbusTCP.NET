@@ -19,13 +19,12 @@ namespace ServerApplication
         public void startServer()
         {
             EasyModbus.ModbusServer modbusServer = new EasyModbus.ModbusServer();
-            modbusServer.SerialPort = "COM3";
-            modbusServer.UnitIdentifier = 1;
-            modbusServer.Baudrate = 9600;
-            
+            modbusServer.MqttRootTopic = "examplemodbusserver";
+            modbusServer.MqttBrokerAddress = "www.mqtt-dashboard.com";
             modbusServer.Listen();
             modbusServer.holdingRegistersChanged += new EasyModbus.ModbusServer.HoldingRegistersChanged(holdingRegistersChanged);
             Console.ReadKey();
+            
             modbusServer.StopListening();
         }
 

@@ -76,7 +76,6 @@ namespace EasyModbus
 
         public TCPHandler(int port)
         {
-
             IPAddress localAddr = IPAddress.Any;
             server = new TcpListener(localAddr, port);
             server.Start();
@@ -306,6 +305,7 @@ namespace EasyModbus
             inputRegisters = new InputRegisters(this);
             coils = new Coils(this);
             discreteInputs = new DiscreteInputs(this);
+            easyModbus2Mqtt.MqttBrokerAddress = null;
 
         }
 

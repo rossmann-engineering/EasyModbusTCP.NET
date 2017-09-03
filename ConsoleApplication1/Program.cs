@@ -1,4 +1,4 @@
-﻿using System;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,16 +35,15 @@ namespace ConsoleApplication1
                       Console.WriteLine(bufferout[i].ToString());
                       serialport.Write("ddddddddd");*/
             EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient("COM3");
-            modbusClient.SerialPort = "COM3";
+            modbusClient.Baudrate = 19200;
+            //modbusClient.SerialPort = "COM3";
             //EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient("127.0.0.1", 502);
-            modbusClient.ConnectionTimeout = 5000;
-            modbusClient.LogFileFilename = "test.txt";
-            modbusClient.UnitIdentifier = 0xF7;
-            
+            //modbusClient.LogFileFilename = "logfile.txt";
+            modbusClient.UnitIdentifier = 247;
             modbusClient.Connect();
             while (true)
             {
-                
+
 
                 //      Console.WriteLine("Execute FC5");
                 //      modbusClient.WriteSingleCoil(0, true);
@@ -61,16 +60,21 @@ namespace ConsoleApplication1
                 //Console.WriteLine("Execute FC3");
                 //Console.WriteLine("Value of Holding Register 1000: " + modbusClient.ReadHoldingRegisters(1000, 1)[0]);
 
-                Console.WriteLine("Read and Publish Input Registers");
-                modbusClient.WriteSingleRegister(60, 1234);
-                int[] holdingRegister = modbusClient.ReadHoldingRegisters(60, 2);
-                //Console.WriteLine(holdingRegister[0]);
+                DateTime datetimeStart = DateTime.Now;
+                for (int i = 1; i < 125; i++)
+                {
+                    modbusClient.WriteSingleRegister(i,i);
+                    Console.WriteLine(modbusClient.ReadInputRegisters(i, 125)[0]);
+                }
+                DateTime datetimeEnd = DateTime.Now;
 
-                
-               // System.Threading.Thread.Sleep(1000);
+                Console.WriteLine("Time elapsed: " + (datetimeEnd - datetimeStart));
+
+                // System.Threading.Thread.Sleep(1000);
             }
             modbusClient.Disconnect();
             Console.ReadKey();
         }
     }
 }
+                                                                                                                                                                                                                    

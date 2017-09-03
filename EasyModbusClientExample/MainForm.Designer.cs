@@ -544,6 +544,7 @@ namespace EasyModbusClientExample
             this.txtBaudrate.TabIndex = 53;
             this.txtBaudrate.Text = "9600";
             this.txtBaudrate.Visible = false;
+            this.txtBaudrate.TextChanged += new System.EventHandler(this.txtBaudrate_TextChanged);
             // 
             // lblBaudrate
             // 
