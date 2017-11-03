@@ -371,7 +371,7 @@ namespace EasyModbus
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 tcpHandler.numberOfClientsChanged += new TCPHandler.NumberOfClientsChanged(numberOfClientsChanged);
             }
-            if (serialFlag)
+            else if (serialFlag)
             {
                 if (serialport == null)
                 {

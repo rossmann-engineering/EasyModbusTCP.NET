@@ -56,7 +56,7 @@ namespace EasyModbus
         public string MqttPassword { get; set; }
         public bool MqttPushOnChange { get; set; } = true;
 
-        public int MqttBrokerPort = 1883;
+        public int MqttBrokerPort { get; set; } = 1883;
 
         public delegate void ReceiveDataChanged(object sender);
         public event ReceiveDataChanged receiveDataChanged;
@@ -797,8 +797,7 @@ namespace EasyModbus
             	
             	byte[] rxbytearray = new byte[numbytes];
             	sp.Read(rxbytearray, 0, numbytes);
-                    if (debug) StoreLogData.Instance.Store("Received Serial-Data: " + BitConverter.ToString(rxbytearray), System.DateTime.Now);
-                    Array.Copy(rxbytearray,0, readBuffer,actualPositionToRead, (actualPositionToRead + rxbytearray.Length) <= bytesToRead ? rxbytearray.Length : bytesToRead - actualPositionToRead); 
+                Array.Copy(rxbytearray,0, readBuffer,actualPositionToRead, (actualPositionToRead + rxbytearray.Length) <= bytesToRead ? rxbytearray.Length : bytesToRead - actualPositionToRead); 
             	
             	actualPositionToRead = actualPositionToRead + rxbytearray.Length;
             	
