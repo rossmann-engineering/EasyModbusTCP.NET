@@ -9,7 +9,7 @@ Only a few lines of codes are needed to read or write data from or to a PLC.
 
 Additional Software tools e.g. Modbus Server Simulator, makes software development fast and easy. 
 
-Download Library (*.DLL) and tools: <a href="https://sourceforge.net/projects/easymodbustcp/files/latest/download" rel="nofollow"><img alt="Download EasyModbusTCP/UDP/RTU .NET" src="https://a.fsdn.com/con/app/sf-download-button"></a>
+Download Library (*.DLL) from NuGet or from: <a href="https://sourceforge.net/projects/easymodbustcp/files/latest/download" rel="nofollow"><img alt="Download EasyModbusTCP/UDP/RTU .NET" src="https://a.fsdn.com/con/app/sf-download-button"></a>
 
 
 
