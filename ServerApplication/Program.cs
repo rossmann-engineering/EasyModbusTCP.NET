@@ -22,7 +22,7 @@ namespace ServerApplication
             modbusServer.MqttRootTopic = "examplemodbusserver";
             modbusServer.MqttBrokerAddress = "www.mqtt-dashboard.com";
             modbusServer.Listen();
-            modbusServer.holdingRegistersChanged += new EasyModbus.ModbusServer.HoldingRegistersChanged(holdingRegistersChanged);
+            modbusServer.HoldingRegistersChanged += new EasyModbus.ModbusServer.HoldingRegistersChangedHandler(holdingRegistersChanged);
             Console.ReadKey();
             
             modbusServer.StopListening();
