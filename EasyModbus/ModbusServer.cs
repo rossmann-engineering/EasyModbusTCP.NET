@@ -322,17 +322,17 @@ namespace EasyModbus
         }
 
         #region events
-        public delegate void CoilsChanged(int coil, int numberOfCoils);
-        public event CoilsChanged coilsChanged;
+        public delegate void CoilsChangedHandler(int coil, int numberOfCoils);
+        public event CoilsChangedHandler CoilsChanged;
 
-        public delegate void HoldingRegistersChanged(int register, int numberOfRegisters);
-        public event HoldingRegistersChanged holdingRegistersChanged;
+        public delegate void HoldingRegistersChangedHandler(int register, int numberOfRegisters);
+        public event HoldingRegistersChangedHandler HoldingRegistersChanged;
 
-        public delegate void NumberOfConnectedClientsChanged();
-        public event NumberOfConnectedClientsChanged numberOfConnectedClientsChanged;
+        public delegate void NumberOfConnectedClientsChangedHandler();
+        public event NumberOfConnectedClientsChangedHandler NumberOfConnectedClientsChanged;
 
-        public delegate void LogDataChanged();
-        public event LogDataChanged logDataChanged;
+        public delegate void LogDataChangedHandler();
+        public event LogDataChangedHandler LogDataChanged;
         #endregion
 
         public void Listen()
@@ -481,8 +481,8 @@ namespace EasyModbus
         private void numberOfClientsChanged()
         {
             numberOfConnections = tcpHandler.NumberOfConnectedClients;
-            if (numberOfConnectedClientsChanged != null)
-                numberOfConnectedClientsChanged();
+            if (NumberOfConnectedClientsChanged != null)
+                NumberOfConnectedClientsChanged();
         }
         #endregion
 
@@ -646,8 +646,8 @@ namespace EasyModbus
                 //this.sendAnswer();
                 this.CreateLogData(receiveDataThread, sendDataThread);
 
-                if (logDataChanged != null)
-                    logDataChanged();
+                if (LogDataChanged != null)
+                    LogDataChanged();
             }
         }
         #endregion
@@ -1386,8 +1386,8 @@ namespace EasyModbus
                     }
                 }
                 catch (Exception) { }
-                if (coilsChanged != null)
-                    coilsChanged(receiveData.startingAdress+1, 1);
+                if (CoilsChanged != null)
+                    CoilsChanged(receiveData.startingAdress+1, 1);
             }
         }
 
@@ -1509,8 +1509,8 @@ namespace EasyModbus
                     }
                 }
                 catch (Exception) { }
-                if (holdingRegistersChanged != null)
-                    holdingRegistersChanged(receiveData.startingAdress+1, 1);
+                if (HoldingRegistersChanged != null)
+                    HoldingRegistersChanged(receiveData.startingAdress+1, 1);
             }
         }
 
@@ -1649,8 +1649,8 @@ namespace EasyModbus
                     }
                 }
                 catch (Exception) { }
-                if (coilsChanged != null)
-                    coilsChanged(receiveData.startingAdress+1, receiveData.quantity);
+                if (CoilsChanged != null)
+                    CoilsChanged(receiveData.startingAdress+1, receiveData.quantity);
             }
         }
 
@@ -1773,8 +1773,8 @@ namespace EasyModbus
                     }
                     }
                 catch (Exception) { }
-                if (holdingRegistersChanged != null)
-                    holdingRegistersChanged(receiveData.startingAdress+1, receiveData.quantity);
+                if (HoldingRegistersChanged != null)
+                    HoldingRegistersChanged(receiveData.startingAdress+1, receiveData.quantity);
             }
         }
 
@@ -1904,8 +1904,8 @@ namespace EasyModbus
                     }
                 }
                 catch (Exception) { }
-                if (holdingRegistersChanged != null)
-                    holdingRegistersChanged(receiveData.startingAddressWrite+1, receiveData.quantityWrite);
+                if (HoldingRegistersChanged != null)
+                    HoldingRegistersChanged(receiveData.startingAddressWrite+1, receiveData.quantityWrite);
             }
         }
 

@@ -70,14 +70,14 @@ namespace EasyModbus
 
         public int MqttBrokerPort { get; set; } = 1883;
 
-        public delegate void ReceiveDataChanged(object sender);
-        public event ReceiveDataChanged receiveDataChanged;
+        public delegate void ReceiveDataChangedHandler(object sender);
+        public event ReceiveDataChangedHandler ReceiveDataChanged;
         
-        public delegate void SendDataChanged(object sender);
-        public event SendDataChanged sendDataChanged;
+        public delegate void SendDataChangedHandler(object sender);
+        public event SendDataChangedHandler SendDataChanged;
 
-        public delegate void ConnectedChanged(object sender);
-        public event ConnectedChanged connectedChanged;
+        public delegate void ConnectedChangedHandler(object sender);
+        public event ConnectedChangedHandler ConnectedChanged;
 
         NetworkStream stream;
 		
@@ -154,10 +154,10 @@ namespace EasyModbus
                     
                    
                 }
-                if (connectedChanged != null)
+                if (ConnectedChanged != null)
                     try
                     {
-                        connectedChanged(this);
+                        ConnectedChanged(this);
                     }
                     catch
                     {
@@ -187,10 +187,10 @@ namespace EasyModbus
                 tcpClient = new TcpClient();
                 connected = true;
             }
-            if (connectedChanged != null)
+            if (ConnectedChanged != null)
                 try
                 {
-                    connectedChanged(this);
+                    ConnectedChanged(this);
                 }
                 catch
                 {
@@ -226,8 +226,8 @@ namespace EasyModbus
                 connected = true;
             }
 
-            if (connectedChanged != null)
-                connectedChanged(this);
+            if (ConnectedChanged != null)
+                ConnectedChanged(this);
         }
 
         /// <summary>
@@ -839,10 +839,10 @@ namespace EasyModbus
             dataReceived = true;
             receiveActive = false;
             serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-            if (receiveDataChanged != null)
+            if (ReceiveDataChanged != null)
             {
 
-                receiveDataChanged(this);
+                ReceiveDataChanged(this);
 
             }
             
@@ -975,11 +975,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, 8);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                if (sendDataChanged != null)
+                if (SendDataChanged != null)
             	{
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                     
                 }
                 data = new byte[2100];
@@ -1022,20 +1022,20 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                    if (sendDataChanged != null)
+                    if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
             		}
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
             }
@@ -1210,11 +1210,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, 8);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                     
                 }
                 data = new byte[2100];
@@ -1256,21 +1256,21 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send MocbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                    if (sendDataChanged != null)
+                    if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
                         
                     }
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
 			}
@@ -1437,11 +1437,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, 8);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                     
                 }
                 data = new byte[2100];
@@ -1484,21 +1484,21 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                    if (sendDataChanged != null)
+                    if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
                        
                     }
                     data = new Byte[256];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
 			}
@@ -1676,11 +1676,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, 8);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                     
                 }
                 data = new byte[2100];
@@ -1723,20 +1723,20 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                     if (sendDataChanged != null)
+                     if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
             		}
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
 			}
@@ -1876,11 +1876,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, 8);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                    
                 }
                 data = new byte[2100];
@@ -1919,21 +1919,21 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                    if (sendDataChanged != null)
+                    if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
                        
                     }                    
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
             }
@@ -2051,11 +2051,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, 8);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[8];
             		Array.Copy(data, 6, sendData, 0, 8);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                     
                 }
                 data = new byte[2100];
@@ -2096,21 +2096,21 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                     if (sendDataChanged != null)
+                     if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
                         
                     }                   
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
             }
@@ -2247,11 +2247,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, data.Length - 6);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[data.Length - 6];
             		Array.Copy(data, 6, sendData, 0, data.Length - 6);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                     
                 }
                 data = new byte[2100];
@@ -2292,21 +2292,21 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                    if (sendDataChanged != null)
+                    if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
                         
                     }                    
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
             }
@@ -2432,11 +2432,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, data.Length - 6);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[data.Length - 6];
             		Array.Copy(data, 6, sendData, 0, data.Length - 6);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
                    
                 }
                 data = new byte[2100];
@@ -2477,20 +2477,20 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                     if (sendDataChanged != null)
+                     if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
             		}                   
                     data = new Byte[2100];
                     int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
             }
@@ -2636,11 +2636,11 @@ namespace EasyModbus
             		Array.Copy(data, 6, debugData, 0, data.Length - 6);
             		if (debug) StoreLogData.Instance.Store("Send Serial-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-               if (sendDataChanged != null)
+               if (SendDataChanged != null)
             	{
             		sendData = new byte[data.Length - 6];
             		Array.Copy(data, 6, sendData, 0, data.Length - 6);
-            		sendDataChanged(this);
+            		SendDataChanged(this);
             	}
                 data = new byte[2100];
                 readBuffer = new byte[256];
@@ -2680,21 +2680,21 @@ namespace EasyModbus
             		Array.Copy(data, 0, debugData, 0, data.Length-2);
             		if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: "+BitConverter.ToString(debugData) ,System.DateTime.Now);          		
                 }
-                     if (sendDataChanged != null)
+                     if (SendDataChanged != null)
             		{
             			sendData = new byte[data.Length-2];
             			Array.Copy(data, 0, sendData, 0, data.Length-2);
-            			sendDataChanged(this);
+            			SendDataChanged(this);
                         
                     }                   
                     data = new Byte[2100];
                      int NumberOfBytes = stream.Read(data, 0, data.Length);
-                    if (receiveDataChanged != null)
+                    if (ReceiveDataChanged != null)
             		{
             			receiveData = new byte[NumberOfBytes];
             			Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
-                        receiveDataChanged(this);
+                        ReceiveDataChanged(this);
             		}
                 }
             }
@@ -2744,8 +2744,8 @@ namespace EasyModbus
             {
                 if (serialport.IsOpen & !this.receiveActive)
                     serialport.Close();
-                if (connectedChanged != null)
-                    connectedChanged(this);
+                if (ConnectedChanged != null)
+                    ConnectedChanged(this);
                 return;
             }
             if (stream != null)
@@ -2753,8 +2753,8 @@ namespace EasyModbus
             if (tcpClient != null)
 			    tcpClient.Close();
             connected = false;
-            if (connectedChanged != null)
-                connectedChanged(this);
+            if (ConnectedChanged != null)
+                ConnectedChanged(this);
 
         }
 
