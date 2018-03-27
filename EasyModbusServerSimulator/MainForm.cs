@@ -34,10 +34,10 @@ namespace EasyModbusServerSimulator
             easyModbusTCPServer.Listen();
 
             
-            easyModbusTCPServer.coilsChanged += new ModbusServer.CoilsChanged(CoilsChanged);
-            easyModbusTCPServer.holdingRegistersChanged += new ModbusServer.HoldingRegistersChanged(HoldingRegistersChanged);
-            easyModbusTCPServer.numberOfConnectedClientsChanged += new ModbusServer.NumberOfConnectedClientsChanged(NumberOfConnectionsChanged);
-            easyModbusTCPServer.logDataChanged += new ModbusServer.LogDataChanged(LogDataChanged);    
+            easyModbusTCPServer.CoilsChanged += new ModbusServer.CoilsChangedHandler(CoilsChanged);
+            easyModbusTCPServer.HoldingRegistersChanged += new ModbusServer.HoldingRegistersChangedHandler(HoldingRegistersChanged);
+            easyModbusTCPServer.NumberOfConnectedClientsChanged += new ModbusServer.NumberOfConnectedClientsChangedHandler(NumberOfConnectionsChanged);
+            easyModbusTCPServer.LogDataChanged += new ModbusServer.LogDataChangedHandler(LogDataChanged);    
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
