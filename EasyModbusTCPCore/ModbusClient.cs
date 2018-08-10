@@ -74,7 +74,7 @@ namespace EasyModbus
 		/// <summary>
 		/// Establish connection to Master device in case of Modbus TCP. Opens COM-Port in case of Modbus RTU
 		/// </summary>
-		public async Task Connect()
+		public async Task ConnectAsync()
 		{
 
             if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port, System.DateTime.Now);
@@ -92,7 +92,7 @@ namespace EasyModbus
 		/// <summary>
 		/// Establish connection to Master device in case of Modbus TCP.
 		/// </summary>
-		public async Task Connect(string ipAddress, int port)
+		public async Task ConnectAsync(string ipAddress, int port)
 		{
  
                 if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port, System.DateTime.Now);
