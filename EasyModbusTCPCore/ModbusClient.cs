@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace EasyModbus
 {
 	/// <summary>
-	/// Implements a ModbusClient.
+	/// Implements a ModbusClient
 	/// </summary>
 	public partial class ModbusClient
 	{
