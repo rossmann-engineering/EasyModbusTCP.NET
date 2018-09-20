@@ -303,21 +303,16 @@ namespace EasyModbus
         public bool PortChanged { get; set; }
         object lockCoils = new object();
         object lockHoldingRegisters = new object();
-        internal object lockMQTT = new object();
         private volatile bool shouldStop;
         
-        internal EasyModbus2Mqtt easyModbus2Mqtt = new EasyModbus2Mqtt();
 
 
         public ModbusServer()
         {
-            easyModbus2Mqtt.MqttRootTopic = "easymodbusserver";
-            easyModbus2Mqtt.RetainMessages = true;
             holdingRegisters = new HoldingRegisters(this);
             inputRegisters = new InputRegisters(this);
             coils = new Coils(this);
             discreteInputs = new DiscreteInputs(this);
-            easyModbus2Mqtt.MqttBrokerAddress = null;
 
         }
 
@@ -2006,12 +2001,6 @@ namespace EasyModbus
 
         }
 
-        public void DeleteRetainedMessages(string topic)
-        {
-            if (MqttBrokerAddress != null)
-                easyModbus2Mqtt.publish(topic, null, MqttBrokerAddress);
-
-        }
 
 
         public int NumberOfConnections
@@ -2154,105 +2143,12 @@ namespace EasyModbus
             }
         }
 
-        /// <summary>
-        /// Gets or Sets the Mqtt Broker Address
-        /// </summary>
-        public string MqttBrokerAddress
-        {
-            get
-            {
-                return easyModbus2Mqtt.MqttBrokerAddress;
-            }
-            set
-            {
-                easyModbus2Mqtt.MqttBrokerAddress = value;
 
-               
-                
-            }
-        }
 
-        /// <summary>
-        /// Gets or Sets the Mqtt Root Topic - Standard is "easymodbusserver"
-        /// </summary>
-        public string MqttRootTopic
-        {
-            get
-            {
-                return easyModbus2Mqtt.MqttRootTopic;
-            }
-            set
-            {
-                easyModbus2Mqtt.MqttRootTopic = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or Sets the Username for the MQTT-Broker (if nessesary) default is "null"
-        /// </summary>
-        public string MqttUserName
-        {
-            get
-            {
-                return easyModbus2Mqtt.MqttUserName;
-            }
-            set
-            {
-                easyModbus2Mqtt.MqttUserName = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or Sets the Password for the MQTT-Broker (if nessesary) default is "null"
-        /// </summary>
-        public string MqttPassword
-        {
-            get
-            {
-                return easyModbus2Mqtt.MqttPassword;
-            }
-            set
-            {
-                easyModbus2Mqtt.MqttPassword = value;
-            }
-        }
-
-        /// <summary>
-        /// Disables or Enables to Retain the Messages in the Broker - default is TRUE (Enabled)
-        /// </summary>
-        public bool MqttRetainMessages
-        {
-            get
-            {
-                return easyModbus2Mqtt.RetainMessages;
-            }
-            set
-            {
-                easyModbus2Mqtt.RetainMessages = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or Sets the MQTT Broker Port (Standard is 1883)
-        /// </summary>
-        public int MqttBrokerPort
-        {
-            get
-            {
-                return easyModbus2Mqtt.MqttBrokerPort;
-            }
-            set
-            {
-                easyModbus2Mqtt.MqttBrokerPort = value;
-            }
-        }
-
-    }
 
     public class HoldingRegisters
     {
         public Int16[] localArray = new Int16[65535];
-        private Int16[] mqttHoldingRegistersOldValues = new Int16[65535];
         ModbusServer modbusServer;
      
         public HoldingRegisters(EasyModbus.ModbusServer modbusServer)
@@ -2266,30 +2162,7 @@ namespace EasyModbus
             set
             {              
                 this.localArray[x] = value;
-                if (modbusServer.MqttBrokerAddress != null)
-                    if (localArray[x] != mqttHoldingRegistersOldValues[x])
-                    {                        
-                        
-                        ParameterizedThreadStart pts = new ParameterizedThreadStart(this.DoWork);
-                        Thread thread = new Thread(pts);
-                        thread.Start(x);
-                    }
-                mqttHoldingRegistersOldValues[x] = localArray[x];
-            }
-        }
-
-        private void DoWork(Object parameter)
-        {
-            lock (modbusServer.lockMQTT)
-            {
-                //ToSend contains the Array elements to publish
-                int toSend = (int) parameter;
-                try
-                {
-                    modbusServer.easyModbus2Mqtt.publish(modbusServer.MqttRootTopic + "/holdingregisters" + toSend, localArray[toSend].ToString(), modbusServer.MqttBrokerAddress);
-                }
-                catch (Exception) { }
-                Thread.Sleep(100);             
+                
             }
         }
     }
@@ -2297,7 +2170,6 @@ namespace EasyModbus
     public class InputRegisters
     {
         public Int16[] localArray = new Int16[65535];
-        private Int16[] mqttInputRegistersOldValues = new Int16[65535];
         ModbusServer modbusServer;
 
         public InputRegisters(EasyModbus.ModbusServer modbusServer)
@@ -2311,30 +2183,7 @@ namespace EasyModbus
             set
             {
                 this.localArray[x] = value;
-                if (modbusServer.MqttBrokerAddress != null)
-                    if (localArray[x] != mqttInputRegistersOldValues[x])
-                    {
-                        mqttInputRegistersOldValues[x] = localArray[x];
-                        ParameterizedThreadStart pts = new ParameterizedThreadStart(this.DoWork);
-                        Thread thread = new Thread(pts);
-                        thread.Start(x);
-                    }
-            }
-        }
 
-        private void DoWork(Object parameter)
-        {
-            lock (modbusServer.lockMQTT)
-            {
-                //ToSend contains the Array elements to publish
-                int toSend = (int)parameter;
-                try
-                {
-                    modbusServer.easyModbus2Mqtt.publish(modbusServer.MqttRootTopic + "/inputregisters" + toSend, localArray[toSend].ToString(), modbusServer.MqttBrokerAddress);
-                }
-                catch (Exception) { }
-
-                Thread.Sleep(100);
             }
         }
     }
@@ -2342,7 +2191,6 @@ namespace EasyModbus
     public class Coils
     {
         public bool[] localArray = new bool[65535];
-        private bool[] mqttCoilsOldValues = new bool[65535];
         ModbusServer modbusServer;
 
         public Coils(EasyModbus.ModbusServer modbusServer)
@@ -2356,30 +2204,7 @@ namespace EasyModbus
             set
             {
                 this.localArray[x] = value;
-                if (modbusServer.MqttBrokerAddress != null)
-                    if (localArray[x] != mqttCoilsOldValues[x])
-                    {
-                        mqttCoilsOldValues[x] = localArray[x];
-                        ParameterizedThreadStart pts = new ParameterizedThreadStart(this.DoWork);
-                        Thread thread = new Thread(pts);
-                        thread.Start(x);
-                    }
-            }
-        }
-
-        private void DoWork(Object parameter)
-        {
-            lock (modbusServer.lockMQTT)
-            {
-                //ToSend contains the Array elements to publish
-                int toSend = (int)parameter;
-                try
-                {
-                    modbusServer.easyModbus2Mqtt.publish(modbusServer.MqttRootTopic + "/coils" + toSend, localArray[toSend].ToString(), modbusServer.MqttBrokerAddress);
-                }
-                catch (Exception) { }
-
-                Thread.Sleep(100);
+            
             }
         }
     }
@@ -2387,7 +2212,6 @@ namespace EasyModbus
     public class DiscreteInputs
     {
         public bool[] localArray = new bool[65535];
-        private bool[] mqttDiscreteInputsOldValues = new bool[65535];
         ModbusServer modbusServer;
 
         public DiscreteInputs(EasyModbus.ModbusServer modbusServer)
@@ -2401,30 +2225,11 @@ namespace EasyModbus
             set
             {
                 this.localArray[x] = value;
-                if (modbusServer.MqttBrokerAddress != null)
-                    if (localArray[x] != mqttDiscreteInputsOldValues[x])
-                    {
-                        mqttDiscreteInputsOldValues[x] = localArray[x];
-                        ParameterizedThreadStart pts = new ParameterizedThreadStart(this.DoWork);
-                        Thread thread = new Thread(pts);
-                        thread.Start(x);
-                    }
+              
             }
         }
 
-        private void DoWork(Object parameter)
-        {
-            lock (modbusServer.lockMQTT)
-            {
-                //ToSend contains the Array elements to publish
-                int toSend = (int)parameter;
-                try
-                { 
-                    modbusServer.easyModbus2Mqtt.publish(modbusServer.MqttRootTopic + "/discreteinputs" + toSend, localArray[toSend].ToString(), modbusServer.MqttBrokerAddress);
-                }
-                catch (Exception) { }
-                Thread.Sleep(100);
-            }
+      
         }
     }
 }

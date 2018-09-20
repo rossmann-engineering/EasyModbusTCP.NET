@@ -73,7 +73,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(158, 13);
             this.label1.TabIndex = 15;
-            this.label1.Text = "(c) Rossmann-Engineering 2016";
+            this.label1.Text = "(c) Rossmann-Engineering 2018";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // linkLabel2

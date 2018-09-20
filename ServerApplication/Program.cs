@@ -19,8 +19,6 @@ namespace ServerApplication
         public void startServer()
         {
             EasyModbus.ModbusServer modbusServer = new EasyModbus.ModbusServer();
-            modbusServer.MqttRootTopic = "examplemodbusserver";
-            modbusServer.MqttBrokerAddress = "www.mqtt-dashboard.com";
             modbusServer.Listen();
             modbusServer.HoldingRegistersChanged += new EasyModbus.ModbusServer.HoldingRegistersChangedHandler(holdingRegistersChanged);
             Console.ReadKey();
