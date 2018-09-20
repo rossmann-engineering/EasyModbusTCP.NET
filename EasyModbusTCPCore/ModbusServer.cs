@@ -254,7 +254,6 @@ namespace EasyModbus
         public bool PortChanged { get; set; }
         object lockCoils = new object();
         object lockHoldingRegisters = new object();
-        internal object lockMQTT = new object();
         private volatile bool shouldStop;
         
 
@@ -1667,7 +1666,6 @@ namespace EasyModbus
     public class HoldingRegisters
     {
         public Int16[] localArray = new Int16[65535];
-        private Int16[] mqttHoldingRegistersOldValues = new Int16[65535];
         ModbusServer modbusServer;
      
         public HoldingRegisters(EasyModbus.ModbusServer modbusServer)
@@ -1689,7 +1687,6 @@ namespace EasyModbus
     public class InputRegisters
     {
         public Int16[] localArray = new Int16[65535];
-        private Int16[] mqttInputRegistersOldValues = new Int16[65535];
         ModbusServer modbusServer;
 
         public InputRegisters(EasyModbus.ModbusServer modbusServer)
@@ -1712,7 +1709,6 @@ namespace EasyModbus
     public class Coils
     {
         public bool[] localArray = new bool[65535];
-        private bool[] mqttCoilsOldValues = new bool[65535];
         ModbusServer modbusServer;
 
         public Coils(EasyModbus.ModbusServer modbusServer)
@@ -1735,7 +1731,6 @@ namespace EasyModbus
     public class DiscreteInputs
     {
         public bool[] localArray = new bool[65535];
-        private bool[] mqttDiscreteInputsOldValues = new bool[65535];
         ModbusServer modbusServer;
 
         public DiscreteInputs(EasyModbus.ModbusServer modbusServer)
