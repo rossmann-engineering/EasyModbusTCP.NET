@@ -138,7 +138,7 @@ namespace EasyModbus
         {
             lock (this)
             {
-                int i = 0;
+                /*int i = 0;*/
                 bool objetExists = false;
                 foreach (Client clientLoop in tcpClientLastRequestList)
                 {
@@ -266,7 +266,7 @@ namespace EasyModbus
     {
         private bool debug = false;
         Int32 port = 502;
-        ModbusProtocol receiveData;
+        /*ModbusProtocol receiveData;*/
         ModbusProtocol sendData =  new ModbusProtocol();
         Byte[] bytes = new Byte[2100];
         //public Int16[] _holdingRegisters = new Int16[65535];
@@ -289,7 +289,7 @@ namespace EasyModbus
         private IPEndPoint iPEndPoint;
         private TCPHandler tcpHandler;
         Thread listenerThread;
-        Thread clientConnectionThread;
+        private Thread clientConnectionThread;
         private ModbusProtocol[] modbusLogData = new ModbusProtocol[100];
         public bool FunctionCode1Disabled {get; set;}
         public bool FunctionCode2Disabled { get; set; }

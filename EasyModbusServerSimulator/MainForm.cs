@@ -19,9 +19,7 @@ namespace EasyModbusServerSimulator
         private UInt16 startingAddressHoldingRegisters = 1;
         private UInt16 startingAddressInputRegisters = 1;
         private bool showProtocolInformations = true;
-        private bool preventInvokeDiscreteInputs = false;
         private bool preventInvokeCoils = false;
-        private bool preventInvokeInputRegisters = false;
         private bool preventInvokeHoldingRegisters = false;
 
         public MainForm()
