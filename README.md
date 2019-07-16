@@ -1,4 +1,4 @@
-# EasyModbusTCP.NET - <a href="EasyModbusTCP.NET">www.EasyModbusTCP.NET</a>
+# EasyModbusTCP.NET - <a href="http://www.EasyModbusTCP.NET">www.EasyModbusTCP.NET</a>
 
 Modbus TCP, Modbus UDP and Modbus RTU client/server library for .NET<br>
 Industry approved!!<br>
