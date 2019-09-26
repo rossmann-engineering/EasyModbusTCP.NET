@@ -23,6 +23,7 @@ using System.IO.Ports;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace EasyModbus
 {
@@ -2835,6 +2836,215 @@ namespace EasyModbus
                 else
                     debug = false;
             }
+        }
+
+        public string ReadProductCode()
+        {
+            const int NO_BYTES_READ_PRODUCTCODE = 19;
+            const int PRODUCTCODE_START_IDX = 16;
+
+            string retVal = String.Empty;
+
+            if (debug) StoreLogData.Instance.Store("FC43 (Read Device Identification from Master device), StartingAddress: " + startingAddress + ", Quantity: " + quantity, System.DateTime.Now);
+            transactionIdentifierInternal++;
+            if (serialport != null)
+                if (!serialport.IsOpen)
+                {
+                    if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
+                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                }
+            if (tcpClient == null & !udpFlag & serialport == null)
+            {
+                if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+            }
+           
+
+            int[] response;
+            this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
+            this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
+            this.length = BitConverter.GetBytes((int)0x0005);
+            this.functionCode = 0x2B;
+            byte ReadDeviceInformation = 0x0E;
+            byte ReadDeviceID = 0x04;
+            byte ObjectID = 0x01;
+
+
+            Byte[] data = new byte[]{
+                            this.transactionIdentifier[1],
+                            this.transactionIdentifier[0],
+                            this.protocolIdentifier[1],
+                            this.protocolIdentifier[0],
+                            this.length[1],
+                            this.length[0],
+                            this.unitIdentifier,       //From here Bytes for CRC  0x01
+                            this.functionCode,         //0x2B
+                            ReadDeviceInformation,     //0x0E 
+                            ReadDeviceID,              //0x04
+                            ObjectID,                  //0x01
+                            this.crc[0],
+                            this.crc[1]
+            };
+
+            crc = BitConverter.GetBytes(calculateCRC(data, 5, 6));
+
+            data[11] = crc[0];
+            data[12] = crc[1];
+
+            if (serialport != null)
+            {
+                dataReceived = false;
+
+                bytesToRead = NO_BYTES_READ_PRODUCTCODE;
+
+                serialport.Write(data, 6, 7);  //Including CRC-Checksum
+
+                if (debug)
+                {
+                    byte[] debugData = new byte[7];
+                    Array.Copy(data, 6, debugData, 0, 7);
+                    if (debug) StoreLogData.Instance.Store("Send Serial-Data: " + BitConverter.ToString(debugData), System.DateTime.Now);
+                }
+
+                if (SendDataChanged != null)
+                {
+                    sendData = new byte[7];
+                    Array.Copy(data, 6, sendData, 0, 7);
+                    SendDataChanged(this);
+                }
+
+                data = new byte[2100];
+
+                readBuffer = new byte[256];
+
+                DateTime dateTimeSend = DateTime.Now;
+
+                byte receivedUnitIdentifier = 0xFF;
+
+                while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
+                {
+                    while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
+                        System.Threading.Thread.Sleep(1);
+                    data = new byte[2100];
+
+                    Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
+
+                    receivedUnitIdentifier = data[6];
+                }
+
+                if (receivedUnitIdentifier != this.unitIdentifier)
+                    data = new byte[2100];
+                else
+                    countRetries = 0;
+            }
+            else if (tcpClient.Client.Connected | udpFlag)
+            {
+           
+                    if (udpFlag)
+                    {
+                        UdpClient udpClient = new UdpClient();
+                        IPEndPoint endPoint = new IPEndPoint(System.Net.IPAddress.Parse(ipAddress), port);
+                        udpClient.Send(data, data.Length - 2, endPoint);
+                        portOut = ((IPEndPoint)udpClient.Client.LocalEndPoint).Port;
+                        udpClient.Client.ReceiveTimeout = 5000;
+                        endPoint = new IPEndPoint(System.Net.IPAddress.Parse(ipAddress), portOut);
+                        data = udpClient.Receive(ref endPoint);
+                    }
+                    else
+                    {
+                        stream.Write(data, 0, data.Length - 2);
+                        if (debug)
+                        {
+                            byte[] debugData = new byte[data.Length - 2];
+                            Array.Copy(data, 0, debugData, 0, data.Length - 2);
+                            if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: " + BitConverter.ToString(debugData), System.DateTime.Now);
+                        }
+                        if (SendDataChanged != null)
+                        {
+                            sendData = new byte[data.Length - 2];
+                            Array.Copy(data, 0, sendData, 0, data.Length - 2);
+                            SendDataChanged(this);
+                        }
+                        data = new Byte[2100];
+
+                        int NumberOfBytes = stream.Read(data, 0, data.Length);
+
+                        if (ReceiveDataChanged != null)
+                        {
+                            receiveData = new byte[NumberOfBytes];
+                            Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
+                            if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
+                            ReceiveDataChanged(this);
+                        }
+                    }  
+            }
+
+            if (data[7] == 0x83 & data[8] == 0x01)
+            {
+                if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+            }
+
+            if (data[7] == 0x83 & data[8] == 0x02)
+            {
+                if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+            }
+
+            if (data[7] == 0x83 & data[8] == 0x03)
+            {
+                if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+            }
+
+            if (data[7] == 0x83 & data[8] == 0x04)
+            {
+                if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.ModbusException("error reading");
+            }
+
+            if (serialport != null)
+            {
+                crc = BitConverter.GetBytes(calculateCRC(data, (ushort)(data[8] + 3), 6));
+
+                if ((crc[0] != data[data[8] + 9] | crc[1] != data[data[8] + 10]) & dataReceived)
+                {
+                    if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadProductCode();
+                    }
+                }
+                else if (!dataReceived)
+                {
+                    if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
+                    if (NumberOfRetries <= countRetries)
+                    {
+                        countRetries = 0;
+                        throw new TimeoutException("No Response from Modbus Slave");
+                    }
+                    else
+                    {
+                        countRetries++;
+                        return ReadProductCode();
+                    }
+                }
+            }
+
+            int lengthOfPayload = Convert.ToInt32(data[15]);
+
+            for (int i = PRODUCTCODE_START_IDX; i < PRODUCTCODE_START_IDX + lengthOfPayload; i++)
+            {
+                retVal =retVal + Convert.ToChar(data[i]).ToString(); 
+            }
+
+            return retVal.Trim();
         }
 
     }
