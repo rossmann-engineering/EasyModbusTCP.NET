@@ -30,6 +30,7 @@ Supports Function Codes:
 - Write Single Register (FC6)
 - Write Multiple Coils (FC15)
 - Write Multiple Registers (FC16)
+- Read Production Code (FC43/14)
 
 
 Modbus TCP, Modbus UDP and Modbus RTU client/server library
