@@ -1730,7 +1730,6 @@ namespace EasyModbus
                 	data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
-                    countRetries = 0;
                 }
               
             }
