@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (c) 2018 Stefan Roßmann.
+ * Copyright (c) 2018-2020 Stefan Roßmann.
  * 
  * This program is free software: you can redistribute it and/or modify  
  * it under the terms of the GNU General Public License as published by  
@@ -13,8 +13,6 @@
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * http://www.rossmann-engineering.de
- * Datum: 16.06.2011
- * Zeit: 21:35
  */
 using System;
 using System.Net.Sockets;
