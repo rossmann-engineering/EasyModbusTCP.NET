@@ -1,8 +1,18 @@
 ﻿/*
- * Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
- * User: iMac
- * Date: 09.07.2016
- * Time: 12:36
+ * Copyright (c) 2018-2020 Stefan Roßmann.
+ * 
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, version 3. 
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * http://www.rossmann-engineering.de
  */
 using System;
 using System.Runtime.Serialization;
