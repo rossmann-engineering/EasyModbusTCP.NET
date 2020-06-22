@@ -1579,6 +1579,7 @@ namespace EasyModbus
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
                         ReceiveDataChanged(this);
             		}
+
                 }
 			}
             if (data[7] == 0x84 & data[8] == 0x01)
@@ -1736,7 +1737,12 @@ namespace EasyModbus
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
                 }
-              
+
+                if (receivedUnitIdentifier != this.unitIdentifier)
+                    data = new byte[2100];
+                else
+                    countRetries = 0;
+
             }
             else if (tcpClient.Client.Connected | udpFlag)
             {
