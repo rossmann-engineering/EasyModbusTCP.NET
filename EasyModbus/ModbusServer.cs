@@ -181,7 +181,7 @@ namespace EasyModbus
 
                     read = networkStream.EndRead(asyncResult);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return;
                 }
@@ -270,10 +270,10 @@ namespace EasyModbus
         ModbusProtocol sendData =  new ModbusProtocol();
         Byte[] bytes = new Byte[2100];
         //public Int16[] _holdingRegisters = new Int16[65535];
-        public HoldingRegisters holdingRegisters;      
-        public InputRegisters inputRegisters;
-        public Coils coils;
-        public DiscreteInputs discreteInputs;
+        public HoldingRegistersClass holdingRegisters;      
+        public InputRegistersClass inputRegisters;
+        public CoilsClass coils;
+        public DiscreteInputsClass discreteInputs;
         private int numberOfConnections = 0;
         private bool udpFlag;
         private bool serialFlag;
@@ -309,10 +309,10 @@ namespace EasyModbus
 
         public ModbusServer()
         {
-            holdingRegisters = new HoldingRegisters(this);
-            inputRegisters = new InputRegisters(this);
-            coils = new Coils(this);
-            discreteInputs = new DiscreteInputs(this);
+            holdingRegisters = new HoldingRegistersClass(this);
+            inputRegisters = new InputRegistersClass(this);
+            coils = new CoilsClass(this);
+            discreteInputs = new DiscreteInputsClass(this);
 
         }
 
@@ -635,7 +635,7 @@ namespace EasyModbus
                         }
                     }
                 }
-                catch (Exception exc)
+                catch (Exception)
                 { }
                 this.CreateAnswer(receiveDataThread, sendDataThread, stream, portIn, ipAddressIn);
                 //this.sendAnswer();
@@ -2146,12 +2146,12 @@ namespace EasyModbus
 
 
 
-    public class HoldingRegisters
+    public class HoldingRegistersClass
     {
         public Int16[] localArray = new Int16[65535];
         ModbusServer modbusServer;
      
-        public HoldingRegisters(EasyModbus.ModbusServer modbusServer)
+        public HoldingRegistersClass(EasyModbus.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
@@ -2167,12 +2167,12 @@ namespace EasyModbus
         }
     }
 
-    public class InputRegisters
+    public class InputRegistersClass
     {
         public Int16[] localArray = new Int16[65535];
         ModbusServer modbusServer;
 
-        public InputRegisters(EasyModbus.ModbusServer modbusServer)
+        public InputRegistersClass(EasyModbus.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
@@ -2188,12 +2188,12 @@ namespace EasyModbus
         }
     }
 
-    public class Coils
+    public class CoilsClass
     {
         public bool[] localArray = new bool[65535];
         ModbusServer modbusServer;
 
-        public Coils(EasyModbus.ModbusServer modbusServer)
+        public CoilsClass(EasyModbus.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
@@ -2209,12 +2209,12 @@ namespace EasyModbus
         }
     }
 
-    public class DiscreteInputs
+    public class DiscreteInputsClass
     {
         public bool[] localArray = new bool[65535];
         ModbusServer modbusServer;
 
-        public DiscreteInputs(EasyModbus.ModbusServer modbusServer)
+        public DiscreteInputsClass(EasyModbus.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
