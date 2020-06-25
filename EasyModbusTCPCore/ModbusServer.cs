@@ -931,6 +931,118 @@ namespace EasyModbus
             }       
         }
 
+	      public int ReportSlaveID()
+        {
+            int startingAddress=0, quantity = 0;
+
+
+            if (debug) StoreLogData.Instance.Store("FC17 (Report Slave ID from Master device)", System.DateTime.Now);
+            transactionIdentifierInternal++;
+            if (tcpClient == null)
+            {
+                if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+            }
+
+            int[] response;
+            this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
+            this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
+            this.length = BitConverter.GetBytes((int)0x0002);
+            this.functionCode = 0x11;
+            this.startingAddress = BitConverter.GetBytes(startingAddress);
+            this.quantity = BitConverter.GetBytes(quantity);
+            Byte[] data = new byte[]{   this.transactionIdentifier[1],
+                            this.transactionIdentifier[0],
+                            this.protocolIdentifier[1],
+                            this.protocolIdentifier[0],
+                            this.length[1],
+                            this.length[0],
+                            0,//this.unitIdentifier,
+                            this.functionCode,
+                            //this.startingAddress[1],
+                            //this.startingAddress[0],
+                            //this.quantity[1],
+                            //this.quantity[0],
+                            //this.crc[0],
+                            //this.crc[1]
+            };
+            //crc = BitConverter.GetBytes(calculateCRC(data, 6, 6));
+            //data[12] = crc[0];
+            //data[13] = crc[1];
+            if (tcpClient.Client.Connected)
+            {
+                stream.Write(data, 0, data.Length );
+                if (debug)
+                {
+                    byte[] debugData = new byte[data.Length ];
+                    Array.Copy(data, 0, debugData, 0, data.Length );
+                    if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: " + BitConverter.ToString(debugData), System.DateTime.Now);
+                }
+                if (sendDataChanged != null)
+                {
+                    sendData = new byte[data.Length ];
+                    Array.Copy(data, 0, sendData, 0, data.Length);
+                    sendDataChanged(this);
+
+                }
+                data = new Byte[256];
+
+                try
+                {
+                    int NumberOfBytes = stream.Read(data, 0, data.Length);
+                    if (receiveDataChanged != null)
+                    {
+                        receiveData = new byte[NumberOfBytes];
+                        Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
+                        if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
+                        receiveDataChanged(this);
+                    }
+
+                }
+                catch
+                {
+                    Console.WriteLine("time out in  stream.Read");
+              
+                }
+
+            }
+            if (data[7] == 0x83 & data[8] == 0x01)
+            {
+                if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+            }
+            if (data[7] == 0x83 & data[8] == 0x02)
+            {
+                if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+            }
+            if (data[7] == 0x83 & data[8] == 0x03)
+            {
+                if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+            }
+            if (data[7] == 0x83 & data[8] == 0x04)
+            {
+                if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
+                throw new EasyModbus.Exceptions.ModbusException("error reading");
+            }
+            response = new int[quantity];
+            //for (int i = 0; i < quantity; i++)
+            //{
+            //    byte lowByte;
+            //    byte highByte;
+            //    highByte = data[9 + i * 2];
+            //    lowByte = data[9 + i * 2 + 1];
+
+            //    data[9 + i * 2] = lowByte;
+            //    data[9 + i * 2 + 1] = highByte;
+
+            //    response[i] = BitConverter.ToInt16(data, (9 + i * 2));
+            //}
+
+           Byte unitId = data[6];
+            return unitId;
+        }
         private void ReadInputRegisters(ModbusProtocol receiveData, ModbusProtocol sendData, NetworkStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
