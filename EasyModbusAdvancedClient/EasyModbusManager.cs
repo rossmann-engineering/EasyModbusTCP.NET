@@ -54,6 +54,19 @@ namespace EasyModbusAdvancedClient
                     throw new Exception("Duplicate connection Name detected");
                 }
             }
+
+            // create modbus client accordingly
+            if (connectionProperties.ModbusTypeProperty == ModbusType.ModbusTCP)
+            {
+                connectionProperties.modbusClient = new EasyModbus.ModbusClient();
+                connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
+            }
+            else
+            {
+                connectionProperties.modbusClient = new EasyModbus.ModbusClient(connectionProperties.ComPort);
+                connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
+            }
+
             connectionPropertiesList.Add(connectionProperties);
             if (connectionPropertiesListChanged != null)
                 connectionPropertiesListChanged(this);
@@ -195,67 +208,74 @@ namespace EasyModbusAdvancedClient
         {
             XmlDocument xmlDocument = new XmlDocument();
             XmlNode xmlRoot;
-            XmlNode xmlChild1;
-            XmlNode xmlChild2, xmlChild3;
+            XmlNode xmlNodeConnection, xmlNodeConnectionProp;
+            XmlNode xmlNodeFunctionCodes, xmlNodeFunctionCodesProp;
+            XmlNode xmlNodeDataGrid, xmlNodeDataGridLines, xmlNodeDataGridLinesProp;
             xmlRoot = xmlDocument.CreateElement("ModbusConfiguration");
             for (int i = 0; i < this.connectionPropertiesList.Count; i++)
             {
-                xmlChild1 = xmlDocument.CreateElement("connection");
-                xmlChild2 = xmlDocument.CreateElement("connectionName");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].ConnectionName;
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("ipAddress");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].ModbusTCPAddress;
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("port");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].Port.ToString();
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("cyclicFlag");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].CyclicFlag.ToString();
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("cycleTime");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].CycleTime.ToString();
-                xmlChild1.AppendChild(xmlChild2);
+                xmlNodeConnection = xmlDocument.CreateElement("connection");
+                xmlNodeConnectionProp = xmlDocument.CreateElement("connectionName");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].ConnectionName;
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("ipAddress");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].ModbusTCPAddress;
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("port");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].Port.ToString();
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("cyclicFlag");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].CyclicFlag.ToString();
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("cycleTime");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].CycleTime.ToString();
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
                 for (int j = 0; j < this.connectionPropertiesList[i].FunctionPropertiesList.Count; j++)
                 {
-                    xmlChild2 = xmlDocument.CreateElement("functionCodes");
-                    xmlChild3 = xmlDocument.CreateElement("functionCode");
-                    xmlChild3.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].FunctionCode.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("quantity");
-                    xmlChild3.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].Quantity.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("startingAddress");
-                    xmlChild3.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].StartingAdress.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild1.AppendChild(xmlChild2);
+                    xmlNodeFunctionCodes = xmlDocument.CreateElement("functionCodes");
+                    xmlNodeFunctionCodesProp = xmlDocument.CreateElement("functionCode");
+                    xmlNodeFunctionCodesProp.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].FunctionCode.ToString();
+                    xmlNodeFunctionCodes.AppendChild(xmlNodeFunctionCodesProp);
+                    xmlNodeFunctionCodesProp = xmlDocument.CreateElement("quantity");
+                    xmlNodeFunctionCodesProp.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].Quantity.ToString();
+                    xmlNodeFunctionCodes.AppendChild(xmlNodeFunctionCodesProp);
+                    xmlNodeFunctionCodesProp = xmlDocument.CreateElement("startingAddress");
+                    xmlNodeFunctionCodesProp.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].StartingAdress.ToString();
+                    xmlNodeFunctionCodes.AppendChild(xmlNodeFunctionCodesProp);
+                    xmlNodeConnection.AppendChild(xmlNodeFunctionCodes);
                 }
-                xmlRoot.AppendChild(xmlChild1);
-                xmlChild1 = xmlDocument.CreateElement("dataGridView");
+                xmlRoot.AppendChild(xmlNodeConnection);
+                xmlNodeDataGrid = xmlDocument.CreateElement("dataGridView");
                 for (int j = 0; j < dataGridView.Rows.Count; j++)
                 {
-                    if (dataGridView[0, j].Value != null & dataGridView[1, j].Value!= null & dataGridView[2, j].Value != null & dataGridView[3, j].Value != null)
-                    xmlChild2 = xmlDocument.CreateElement("dataGridViewLines");
-                    xmlChild3 = xmlDocument.CreateElement("columnConnection");
-                    if (dataGridView[0, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[0, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("columnAddress");
-                    if (dataGridView[1, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[1, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("columnTag");
-                    if (dataGridView[2, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[2, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("columnDataType");
-                    if (dataGridView[3, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[3, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild1.AppendChild(xmlChild2);
+                    if (dataGridView[0, j].Value != null & dataGridView[1, j].Value != null & dataGridView[3, j].Value != null)
+                    {
+                        xmlNodeDataGridLines = xmlDocument.CreateElement("dataGridViewLines");
 
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnConnection");
+                        xmlNodeDataGridLinesProp.InnerText = dataGridView[0, j].Value.ToString();
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnAddress");
+                        xmlNodeDataGridLinesProp.InnerText = dataGridView[1, j].Value.ToString();
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnTag");
+                        if (dataGridView[2, j].Value != null)
+                            xmlNodeDataGridLinesProp.InnerText = dataGridView[2, j].Value.ToString();
+                        else
+                            xmlNodeDataGridLinesProp.InnerText = "n.a.";
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnDataType");
+                        xmlNodeDataGridLinesProp.InnerText = dataGridView[3, j].Value.ToString();
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGrid.AppendChild(xmlNodeDataGridLines);
+                    }
                 }
-                xmlRoot.AppendChild(xmlChild1);
+                xmlRoot.AppendChild(xmlNodeDataGrid);
+
                 xmlDocument.AppendChild(xmlRoot);
                 xmlDocument.Save("textWriter.xml");
             }
@@ -273,7 +293,9 @@ namespace EasyModbusAdvancedClient
             System.Xml.XmlDocument xmlDocument = new System.Xml.XmlDocument();
             xmlDocument.Load("textWriter.xml");
             xmlNodeList = xmlDocument.GetElementsByTagName("connection");
-            connectionPropertiesList = new List<ConnectionProperties>();
+            //connectionPropertiesList = new List<ConnectionProperties>();
+            this.connectionPropertiesList.Clear();
+
             foreach (XmlNode xmlNode in xmlNodeList)
             {
                 ConnectionProperties connectionProperty = new ConnectionProperties();
@@ -313,10 +335,12 @@ namespace EasyModbusAdvancedClient
                     connectionProperty.FunctionPropertiesList.Add(functionProperty);
                     xmlNode3 = xmlNode3.NextSibling;
                 }
-                connectionPropertiesList.Add(connectionProperty);
+                AddConnection(connectionProperty);
+                //this.connectionPropertiesList.Add(connectionProperty);
             }
             if (connectionPropertiesListChanged != null)
                 connectionPropertiesListChanged(this);
+
             xmlNodeList = xmlDocument.GetElementsByTagName("dataGridViewLines");
             dataGridView.Rows.Clear();
             dataGridView.AllowUserToAddRows = false;
