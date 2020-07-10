@@ -146,16 +146,27 @@ namespace EasyModbusAdvancedClient
         										dataGridView1[4,i].Value=((bool[]) functionProperty.values)[j].ToString();
         									else
         									{
-        										if (dataGridView1[3,i].Value != null)
-        											if (dataGridView1[3,i].Value.Equals("UINT16 (0...65535)"))
-        												if (((int[]) functionProperty.values)[j] < 0)
-        													dataGridView1[4,i].Value=(65536+((int[]) functionProperty.values)[j]).ToString();
-        												else
-        													dataGridView1[4,i].Value=((int[]) functionProperty.values)[j].ToString();
-        											else
-        												dataGridView1[4,i].Value=((int[]) functionProperty.values)[j].ToString();
-        										else
-        											dataGridView1[4,i].Value=((int[]) functionProperty.values)[j].ToString();
+                                                if (dataGridView1[3, i].Value != null)
+                                                    if (dataGridView1[3, i].Value.Equals("UINT16 (0...65535)"))
+                                                        if (((int[])functionProperty.values)[j] < 0)
+                                                            dataGridView1[4, i].Value = (65536 + ((int[])functionProperty.values)[j]).ToString();
+                                                        else
+                                                            dataGridView1[4, i].Value = ((int[])functionProperty.values)[j].ToString();
+                                                    else if (dataGridView1[3, i].Value.Equals("ASCII"))
+                                                    {
+                                                        
+                                                        string str = "";
+                                                        for (int tt = 0; tt < ((int[])functionProperty.values).Length; tt++)
+                                                        {
+                                                            int value = ((int[])functionProperty.values)[tt];
+                                                            str += "" + (char)((value & 0xff00) >> 8) + (char)((value & 0x00ff));
+                                                        }
+                                                        dataGridView1[4, i].Value = "" + str;
+                                                    } 
+                                                    else
+                                                        dataGridView1[4, i].Value = ((int[])functionProperty.values)[j].ToString();
+                                                else
+                                                    dataGridView1[4, i].Value = ((int[])functionProperty.values)[j].ToString();
         									}
         								}
         					}
@@ -475,6 +486,7 @@ namespace EasyModbusAdvancedClient
             {
             	cbCell.Items.Add("INT16 (-32768...32767)");
             	cbCell.Items.Add("UINT16 (0...65535)");
+                cbCell.Items.Add("ASCII");
             }
             if (selectedCell != null)
             {

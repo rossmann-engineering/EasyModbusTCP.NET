@@ -447,7 +447,8 @@ namespace EasyModbusAdvancedClient
             "UINT16 (0...65535)",
             "BOOL (FALSE...TRUE)",
             "INT16 (-32768...32767)",
-            "WORD16 (0...65535)"});
+            "WORD16 (0...65535)",
+            "ASCII"});
             this.Column4.Name = "Column4";
             this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
