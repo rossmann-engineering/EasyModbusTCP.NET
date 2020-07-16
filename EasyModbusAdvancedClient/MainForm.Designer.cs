@@ -416,6 +416,7 @@ namespace EasyModbusAdvancedClient
             this.dataGridView1.Size = new System.Drawing.Size(766, 662);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1CellClick);
+            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             // 
             // Column5
             // 
