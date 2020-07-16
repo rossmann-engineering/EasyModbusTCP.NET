@@ -24,10 +24,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
 using System.Net.Sockets;
 using System.Net;
-using System.IO.Ports;
 using System.Reflection;
-using System.Text;
-using System.Collections.Generic;
+using System.IO.Ports;
 
 namespace EasyModbus
 {

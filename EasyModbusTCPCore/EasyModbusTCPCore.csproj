@@ -1,7 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <ApplicationIcon />
     <Win32Resource />
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -11,5 +10,8 @@
     <Product>EasyModbusTCP</Product>
     <Description>EasyModbusTCP library for .NET Core</Description>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="5.0.0-preview.6.20305.6" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.6.20305.6" />
+  </ItemGroup>
 </Project>
