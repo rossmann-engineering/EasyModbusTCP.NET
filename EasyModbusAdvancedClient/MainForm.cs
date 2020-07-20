@@ -117,7 +117,7 @@ namespace EasyModbusAdvancedClient
             		treeNode = new TreeNode("Modbus-RTU Connection: " + connectionProperty.ConnectionName +"; COM-Port: "+connectionProperty.ComPort);
             	foreach (FunctionProperties functionProperty in connectionProperty.FunctionPropertiesList)
             	{
-            		treeNode.Nodes.Add("Function code: " + functionProperty.FunctionCode + "; Starting Address: "+functionProperty.StartingAdress + "; Quantity: "+functionProperty.Quantity);
+            		treeNode.Nodes.Add("Function code: " + functionProperty.FunctionCodeRead + "; Starting Address: "+functionProperty.StartingAdress + "; Quantity: "+functionProperty.Quantity);
             	}
             	rootNode.Nodes.Add(treeNode);
             
@@ -138,11 +138,14 @@ namespace EasyModbusAdvancedClient
         				{
         					foreach (FunctionProperties functionProperty in connectionProperty.FunctionPropertiesList)
         					{
+
         						if (dataGridView1[1,i].Value != null)
-        							for (int j = 0; j < functionProperty.Quantity; j++)
-        								if (EasyModbusManager.getAddress(functionProperty.FunctionCode, functionProperty.StartingAdress, functionProperty.Quantity, j).Equals(dataGridView1[1,i].Value.ToString()))
+                                    
+                                    for (int j = 0; j < functionProperty.Quantity; j++)
+        								if (EasyModbusManager.getAddress(functionProperty.FunctionCodeRead, functionProperty.StartingAdress, functionProperty.Quantity, j).Equals(dataGridView1[1,i].Value.ToString()))
         								{
-        									if (functionProperty.values.GetType().Equals(typeof(Boolean[])))
+                                            functionProperty.DataGridRow = i;
+                                            if (functionProperty.values.GetType().Equals(typeof(Boolean[])))
         										dataGridView1[4,i].Value=((bool[]) functionProperty.values)[j].ToString();
         									else
         									{
@@ -352,15 +355,15 @@ namespace EasyModbusAdvancedClient
 					DataGridView1CellClick(null, null);
 				
 					// DataGridViewComboBoxCell cbCell = (DataGridViewComboBoxCell)dataGridView1.Rows[row].Cells[1];
-					switch (functionProperty.FunctionCode)
+					switch (functionProperty.FunctionCodeRead)
 					{
-        			case FunctionCode.ReadCoils: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "0x"+(functionProperty.StartingAdress+i+1).ToString();
+        			case FunctionCodeRd.ReadCoils: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "0x"+(functionProperty.StartingAdress+i+1).ToString();
 						break;
-					case FunctionCode.ReadDiscreteInputs: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "1x"+(functionProperty.StartingAdress+i+1).ToString();
+					case FunctionCodeRd.ReadDiscreteInputs: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "1x"+(functionProperty.StartingAdress+i+1).ToString();
 						break;
-					case FunctionCode.ReadHoldingRegisters: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "4x"+(functionProperty.StartingAdress+i+1).ToString();
+					case FunctionCodeRd.ReadHoldingRegisters: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "4x"+(functionProperty.StartingAdress+i+1).ToString();
 						break;
-					case FunctionCode.ReadInputRegisters: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "3x"+(functionProperty.StartingAdress+i+1).ToString();
+					case FunctionCodeRd.ReadInputRegisters: dataGridView1[1,dataGridView1.Rows.Count-1].Value = "3x"+(functionProperty.StartingAdress+i+1).ToString();
 						break;
 					default: break;
 					
@@ -440,19 +443,19 @@ namespace EasyModbusAdvancedClient
             			for (int l = 0; l < easyModbusManager.connectionPropertiesList[j].FunctionPropertiesList[k].Quantity; l++)
             			{
             				currentAddress = easyModbusManager.connectionPropertiesList[j].FunctionPropertiesList[k].StartingAdress + l + 1;
-            				switch (easyModbusManager.connectionPropertiesList[j].FunctionPropertiesList[k].FunctionCode)
+            				switch (easyModbusManager.connectionPropertiesList[j].FunctionPropertiesList[k].FunctionCodeRead)
             				{
             						
-            					case FunctionCode.ReadCoils:
+            					case FunctionCodeRd.ReadCoils:
             						cbCell.Items.Add("0x" + currentAddress.ToString());
             						break;
-            					case FunctionCode.ReadDiscreteInputs:
+            					case FunctionCodeRd.ReadDiscreteInputs:
             						cbCell.Items.Add("1x" + currentAddress.ToString());
             						break;
-            					case FunctionCode.ReadHoldingRegisters:
+            					case FunctionCodeRd.ReadHoldingRegisters:
             						cbCell.Items.Add("4x" + currentAddress.ToString());
             						break;
-            					case FunctionCode.ReadInputRegisters:
+            					case FunctionCodeRd.ReadInputRegisters:
             						cbCell.Items.Add("3x" + currentAddress.ToString());
             						break;
             					default: break;
@@ -763,6 +766,23 @@ namespace EasyModbusAdvancedClient
                 textBox1.AppendText(hex);
                 textBox1.AppendText(System.Environment.NewLine);
             }
+        }
+
+        private void dataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            // check if we are in column value
+            if (e.ColumnIndex == 4)
+            {
+                int idx = e.RowIndex;
+                FunctionProperties functionProperties= easyModbusManager.FindPropertyFromGrid(idx);
+                if (functionProperties != null)
+                {
+                    string str = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                    int[] values = EasyModbusManager.StrToValues(functionProperties, str);
+                    easyModbusManager.WriteToServer(functionProperties, values);
+                }
+            }
+            
         }
     }
 
