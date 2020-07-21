@@ -246,10 +246,12 @@ namespace EasyModbusAdvancedClient
 
         public void WriteToServer(FunctionProperties prop, int[] values)
         {
+            /*
             string text = "";
-            text += "property " + prop.StartingAdress + "\n" + "type " + prop.FunctionCodeWrite.ToString() + "\n" + "new value: " + prop.values.ToString() + "\n";
+            text += "property " + prop.StartingAdress + "\n" + "type " + prop.FunctionCodeWrite.ToString() + "\n" + "new value: " + values.ToString() + "\n";
             text += "connection " + prop.Connection.ConnectionName;
             MessageBox.Show(text, "updating register");
+            */
 
             int startingAddress = prop.StartingAdress;
             switch(prop.FunctionCodeWrite)
