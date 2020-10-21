@@ -348,23 +348,15 @@ namespace EasyModbus
         #region events
         public delegate void CoilsChangedHandler(int coil, int numberOfCoils);
         public event CoilsChangedHandler CoilsChanged;
-        public delegate void CoilsChangedWithServerHandler(ModbusServer server, int coil, int numberOfCoils);
-        public event CoilsChangedWithServerHandler CoilsChangedWithServer;
 
         public delegate void HoldingRegistersChangedHandler(int register, int numberOfRegisters);
         public event HoldingRegistersChangedHandler HoldingRegistersChanged;
-        public delegate void HoldingRegistersChangedWithServerHandler(ModbusServer server, int register, int numberOfRegisters);
-        public event HoldingRegistersChangedWithServerHandler HoldingRegistersChangedWithServer;
 
         public delegate void NumberOfConnectedClientsChangedHandler();
         public event NumberOfConnectedClientsChangedHandler NumberOfConnectedClientsChanged;
-        public delegate void NumberOfConnectedClientsChangedWithServerHandler(ModbusServer server);
-        public event NumberOfConnectedClientsChangedWithServerHandler NumberOfConnectedClientsChangedWithServer;
 
         public delegate void LogDataChangedHandler();
         public event LogDataChangedHandler LogDataChanged;
-        public delegate void LogDataChangedWithServerHandler(ModbusServer server);
-        public event LogDataChangedWithServerHandler LogDataChangedWithServer;
         #endregion
 
         public void Listen()
@@ -516,8 +508,6 @@ namespace EasyModbus
             numberOfConnections = tcpHandler.NumberOfConnectedClients;
             if (NumberOfConnectedClientsChanged != null)
                 NumberOfConnectedClientsChanged();
-            if (NumberOfConnectedClientsChangedWithServer != null)
-                NumberOfConnectedClientsChangedWithServer(this);
         }
         #endregion
 
@@ -683,8 +673,6 @@ namespace EasyModbus
 
                 if (LogDataChanged != null)
                     LogDataChanged();
-                if (LogDataChangedWithServer != null)
-                    LogDataChangedWithServer(this);
             }
         }
         #endregion
@@ -1425,8 +1413,6 @@ namespace EasyModbus
                 catch (Exception) { }
                 if (CoilsChanged != null)
                     CoilsChanged(receiveData.startingAdress+1, 1);
-                if (CoilsChangedWithServer != null)
-                    CoilsChangedWithServer(this, receiveData.startingAdress + 1, 1);
             }
         }
 
@@ -1550,8 +1536,6 @@ namespace EasyModbus
                 catch (Exception) { }
                 if (HoldingRegistersChanged != null)
                     HoldingRegistersChanged(receiveData.startingAdress+1, 1);
-                if (HoldingRegistersChangedWithServer != null)
-                    HoldingRegistersChangedWithServer(this, receiveData.startingAdress + 1, 1);
             }
         }
 
@@ -1692,8 +1676,6 @@ namespace EasyModbus
                 catch (Exception) { }
                 if (CoilsChanged != null)
                     CoilsChanged(receiveData.startingAdress+1, receiveData.quantity);
-                if (CoilsChangedWithServer != null)
-                    CoilsChangedWithServer(this, receiveData.startingAdress + 1, receiveData.quantity);
             }
         }
 
@@ -1818,8 +1800,6 @@ namespace EasyModbus
                 catch (Exception) { }
                 if (HoldingRegistersChanged != null)
                     HoldingRegistersChanged(receiveData.startingAdress+1, receiveData.quantity);
-                if (HoldingRegistersChangedWithServer != null)
-                    HoldingRegistersChangedWithServer(this, receiveData.startingAdress + 1, receiveData.quantity);
             }
         }
 
@@ -1951,8 +1931,6 @@ namespace EasyModbus
                 catch (Exception) { }
                 if (HoldingRegistersChanged != null)
                     HoldingRegistersChanged(receiveData.startingAddressWrite+1, receiveData.quantityWrite);
-                if (HoldingRegistersChangedWithServer != null)
-                    HoldingRegistersChangedWithServer(this, receiveData.startingAddressWrite + 1, receiveData.quantityWrite);
             }
         }
 
