@@ -10,8 +10,9 @@
 
 namespace EasyModbusAdvancedClient.Properties {
     using System;
-    
-    
+    using System.Drawing;
+
+
     /// <summary>
     ///   Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
     /// </summary>
@@ -61,82 +62,82 @@ namespace EasyModbusAdvancedClient.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap network_connect {
+        internal static Bitmap network_connect {
             get {
                 object obj = ResourceManager.GetObject("network-connect", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap network_connect_2 {
+        internal static Bitmap network_connect_2 {
             get {
                 object obj = ResourceManager.GetObject("network-connect-2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap network_disconnect_2 {
+        internal static Bitmap network_disconnect_2 {
             get {
                 object obj = ResourceManager.GetObject("network-disconnect-2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap process_stop_2 {
+        internal static Bitmap process_stop_2 {
             get {
                 object obj = ResourceManager.GetObject("process-stop-2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tab {
+        internal static Bitmap tab {
             get {
                 object obj = ResourceManager.GetObject("tab", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tab_close {
+        internal static Bitmap tab_close {
             get {
                 object obj = ResourceManager.GetObject("tab-close", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tab_new {
+        internal static Bitmap tab_new {
             get {
                 object obj = ResourceManager.GetObject("tab-new", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        ///   Sucht eine lokalisierte Ressource vom Typ Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap view_refresh_2 {
+        internal static Bitmap view_refresh_2 {
             get {
                 object obj = ResourceManager.GetObject("view-refresh-2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ((Bitmap)(obj));
             }
         }
     }

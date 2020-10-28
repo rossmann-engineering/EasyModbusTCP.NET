@@ -6,6 +6,8 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
+using System.ComponentModel;
+
 namespace EasyModbusAdvancedClient
 {
 	partial class AddConnectionForm
@@ -13,7 +15,7 @@ namespace EasyModbusAdvancedClient
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+		private IContainer components = null;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
