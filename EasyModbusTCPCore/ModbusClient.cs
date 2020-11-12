@@ -27,6 +27,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EasyModbus
 {
@@ -90,13 +91,13 @@ namespace EasyModbus
 		/// <summary>
 		/// Establish connection to Master device in case of Modbus TCP. Opens COM-Port in case of Modbus RTU
 		/// </summary>
-		public void Connect()
+		public async Task ConnectAsync()
 		{
 
             if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port, System.DateTime.Now);
             tcpClient = new TcpClient();
 
-            var result = tcpClient.ConnectAsync(ipAddress, port);
+            await tcpClient.ConnectAsync(ipAddress, port);
 
 
             //tcpClient = new TcpClient(ipAddress, port);
@@ -108,13 +109,13 @@ namespace EasyModbus
 		/// <summary>
 		/// Establish connection to Master device in case of Modbus TCP.
 		/// </summary>
-		public void Connect(string ipAddress, int port)
+		public async Task ConnectAsync(string ipAddress, int port)
 		{
  
                 if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port, System.DateTime.Now);
                 tcpClient = new TcpClient();
 
-                 var result = tcpClient.ConnectAsync(ipAddress, port);
+                 await tcpClient.ConnectAsync(ipAddress, port);
            
 
                 //tcpClient = new TcpClient(ipAddress, port);
