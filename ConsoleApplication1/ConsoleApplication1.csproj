@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EasyModbus, Version=4.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyModbusTCP.4.5.1\lib\EasyModbus.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,6 +49,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EasyModbusStd\EasyModbusStd.csproj">
+      <Project>{723f8a8c-55aa-44ea-b595-db10dfd24e74}</Project>
+      <Name>EasyModbusStd</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

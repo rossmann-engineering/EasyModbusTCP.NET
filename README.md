@@ -13,14 +13,7 @@ Download Library (*.DLL) from NuGet or from: <a href="https://sourceforge.net/pr
 
 
 
-
-For JAVA-Version see: https://sourceforge.net/projects/easymodbustcp-udp-java/
-
-Now available: Modbus RTU Slave for ATMEL ATMEGA microcontrollers
-
-See Also CRC-Checking Tool for RTU Frames: http://easymodbustcp.net/crc-calculation 
-
-Supports Function Codes:
+Supported Function Codes:
 
 - Read Coils (FC1)
 - Read Discrete Inputs (FC2)
@@ -30,6 +23,7 @@ Supports Function Codes:
 - Write Single Register (FC6)
 - Write Multiple Coils (FC15)
 - Write Multiple Registers (FC16)
+- Read/Write Multiple Registers (FC23)
 
 
 Modbus TCP, Modbus UDP and Modbus RTU client/server library
