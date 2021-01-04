@@ -411,7 +411,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 102);
+            this.label2.Location = new System.Drawing.Point(12, 115);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(143, 13);
             this.label2.TabIndex = 3;
@@ -420,7 +420,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(152, 102);
+            this.label3.Location = new System.Drawing.Point(152, 115);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(13, 13);
             this.label3.TabIndex = 4;
@@ -429,7 +429,7 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(87, 54);
+            this.linkLabel1.Location = new System.Drawing.Point(218, 82);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(165, 13);
             this.linkLabel1.TabIndex = 6;
@@ -495,11 +495,11 @@
             // lblVersion
             // 
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(88, 71);
+            this.lblVersion.Location = new System.Drawing.Point(219, 99);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(60, 13);
             this.lblVersion.TabIndex = 12;
-            this.lblVersion.Text = "Version 2.6";
+            this.lblVersion.Text = "Version 5.6";
             // 
             // checkBox2
             // 
@@ -610,10 +610,10 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::EasyModbusServerSimulator.Properties.Resources.PLCLoggerCompactBitmap;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 32);
+            this.pictureBox1.Image = global::EasyModbusServerSimulator.Properties.Resources.small;
+            this.pictureBox1.Location = new System.Drawing.Point(12, 27);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(69, 67);
+            this.pictureBox1.Size = new System.Drawing.Size(201, 85);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;

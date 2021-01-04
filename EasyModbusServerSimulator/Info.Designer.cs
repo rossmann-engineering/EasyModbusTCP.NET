@@ -39,10 +39,10 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::EasyModbusServerSimulator.Properties.Resources.PLCLoggerCompactBitmap;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 16);
+            this.pictureBox1.Image = global::EasyModbusServerSimulator.Properties.Resources.small;
+            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(69, 67);
+            this.pictureBox1.Size = new System.Drawing.Size(183, 92);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
@@ -50,16 +50,16 @@
             // lblVersion
             // 
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(87, 39);
+            this.lblVersion.Location = new System.Drawing.Point(194, 39);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(60, 13);
             this.lblVersion.TabIndex = 14;
-            this.lblVersion.Text = "Version 2.9";
+            this.lblVersion.Text = "Version 5.6";
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(86, 12);
+            this.linkLabel1.Location = new System.Drawing.Point(193, 12);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(165, 13);
             this.linkLabel1.TabIndex = 13;
@@ -69,17 +69,17 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(87, 66);
+            this.label1.Location = new System.Drawing.Point(194, 66);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(158, 13);
+            this.label1.Size = new System.Drawing.Size(185, 13);
             this.label1.TabIndex = 15;
-            this.label1.Text = "(c) Rossmann-Engineering 2018";
+            this.label1.Text = "(c) Rossmann-Engineering 2018-2020";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(87, 82);
+            this.linkLabel2.Location = new System.Drawing.Point(194, 82);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(189, 13);
             this.linkLabel2.TabIndex = 16;
@@ -90,7 +90,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(287, 103);
+            this.ClientSize = new System.Drawing.Size(388, 103);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblVersion);
