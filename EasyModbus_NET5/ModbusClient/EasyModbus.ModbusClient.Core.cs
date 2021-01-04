@@ -180,8 +180,10 @@ namespace EasyModbus
             request.TransactionIdentifier = (ushort)transactionIdentifierInternal;
 
 
-            byte[] data = new byte[2100];
-            bool[] response;
+            ApplicationDataUnit response = new ApplicationDataUnit(2);
+            response.QuantityRead = (ushort)quantity;
+
+            byte[] data = new byte[255];
             if (serialport != null)
             {
                 dataReceived = false;
@@ -189,7 +191,7 @@ namespace EasyModbus
                     bytesToRead = 5 + quantity / 8;
                 else
                     bytesToRead = 6 + quantity / 8;
-                //               serialport.ReceivedBytesThreshold = bytesToRead;
+
                 serialport.Write(request.Payload, 6, 8);
                 if (debug)
                 {
@@ -204,22 +206,24 @@ namespace EasyModbus
                     SendDataChanged(this);
 
                 }
-                data = new byte[2100];
+
+                
+
                 readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.UtcNow;
-                byte receivedUnitIdentifier = 0xFF;
 
+                response.UnitIdentifier = 0xFF;
 
-                while (receivedUnitIdentifier != unitIdentifier & !((DateTime.UtcNow.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * connectTimeout))
+                while (response.UnitIdentifier != unitIdentifier & !((DateTime.UtcNow.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * connectTimeout))
                 {
                     while (dataReceived == false & !((DateTime.UtcNow.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * connectTimeout))
                         System.Threading.Thread.Sleep(1);
-                    data = new byte[2100];
+                    data = new byte[255];
                     Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
-                    receivedUnitIdentifier = data[6];
+                 
                 }
-                if (receivedUnitIdentifier != unitIdentifier)
-                    data = new byte[2100];
+                if (response.UnitIdentifier != unitIdentifier)
+                    data = new byte[255];
                 else
                     countRetries = 0;
             }
@@ -250,8 +254,8 @@ namespace EasyModbus
                         Array.Copy(data, 0, sendData, 0, data.Length - 2);
                         SendDataChanged(this);
                     }
-                    data = new Byte[2100];
-                    int NumberOfBytes = stream.Read(data, 0, data.Length);
+                    data = new Byte[255];
+                    int NumberOfBytes = stream.Read(response.Payload, 0, response.Payload.Length);
                     if (ReceiveDataChanged != null)
                     {
                         receiveData = new byte[NumberOfBytes];
@@ -313,14 +317,8 @@ namespace EasyModbus
                     }
                 }
             }
-            response = new bool[quantity];
-            for (int i = 0; i < quantity; i++)
-            {
-                int intData = data[9 + i / 8];
-                int mask = Convert.ToInt32(Math.Pow(2, (i % 8)));
-                response[i] = Convert.ToBoolean((intData & mask) / mask);
-            }
-            return (response);
+
+            return response.RegisterDataBool;
         }
 
  

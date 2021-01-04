@@ -27,10 +27,15 @@ namespace EasyModbus
         public byte ByteCount { get; }
         public byte ErroCode { get; }
         public byte ExceptionCode { get; }
-        public object[] RegisterData { get; set; }
+        public int[] RegisterDataInt { get; set; }
+
+        public bool[] RegisterDataBool { get; set; }
+
+
 
         public byte[] Data
         {
+            //return the data in case of a request
             get
             {
                 Byte[] returnvalue = null;
@@ -62,6 +67,27 @@ namespace EasyModbus
                 }
                 return returnvalue;
             }
+            //set the data in case of a response
+            set
+            {
+                switch (FunctionCode)
+                {
+                    // FC 01: Read Coils and 02 Read Discrete Inputs provide the same response
+                    case 1: case 2:
+                        byte byteCount = value[1];
+                        RegisterDataBool = new bool[QuantityRead];
+                        for (int i = 0; i < QuantityRead; i++)
+                        {
+                            int intData = data[i / 8];
+                            int mask = Convert.ToInt32(Math.Pow(2, (i % 8)));
+                            RegisterDataBool[i] = (Convert.ToBoolean((intData & mask) / mask));
+                        }
+                        break;
+
+                }
+            }
+
+
         }
 
     }
@@ -103,13 +129,13 @@ namespace EasyModbus
                 ushort length = 0x0006;
                 if (FunctionCode == 15)
                 {
-                    byte byteCount = (byte)((RegisterData.Length % 8 != 0 ? RegisterData.Length / 8 + 1 : (RegisterData.Length / 8)));
+                    byte byteCount = (byte)((RegisterDataBool.Length % 8 != 0 ? RegisterDataBool.Length / 8 + 1 : (RegisterDataBool.Length / 8)));
                     length = (ushort)(7 + byteCount);
                 }
                 if (FunctionCode == 16)
-                    length = (ushort)(7 + RegisterData.Length * 2);
+                    length = (ushort)(7 + RegisterDataInt.Length * 2);
                 if (FunctionCode == 23)
-                    length = (ushort)(11 + RegisterData.Length * 2);
+                    length = (ushort)(11 + RegisterDataInt.Length * 2);
 
                 Byte[] returnvalue = new byte[]
                 {
@@ -123,13 +149,13 @@ namespace EasyModbus
                 };
 
                 return returnvalue;
-
             }
         }
 
 
 
        public byte[] Payload {
+            // Return the Payload in case of a request
             get
             {
                 List<byte> returnvalue = new List<byte>();
@@ -141,7 +167,13 @@ namespace EasyModbus
                 byte [] crc = BitConverter.GetBytes(ModbusClient.calculateCRC(returnvalue.ToArray(), (ushort)(returnvalue.Count - 8), 6));
                 returnvalue.AddRange(crc);
                 return returnvalue.ToArray();
-
+            }
+            // Set the Payload in case of a resonse
+            set 
+            {
+                
+                TransactionIdentifier = BitConverter.ToUInt16(value, 0);
+                UnitIdentifier = value[6];
 
             }
 

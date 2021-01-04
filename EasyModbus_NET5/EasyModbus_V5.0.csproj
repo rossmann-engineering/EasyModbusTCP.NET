@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
+    <AssemblyName>EasyModbus</AssemblyName>
+    <RootNamespace>EasyModbus</RootNamespace>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   
 
