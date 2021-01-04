@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>EasyModbusTCP</id>
+    <version>5.6</version>
+    <title>EasyModbusTCP</title>
+    <authors>Stefan Roßmann</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>http://www.EasyModbusTCP.net</projectUrl>
+    <iconUrl>http://easymodbustcp.net/wp-content/uploads/2020/06/medium-e1592036520465.png</iconUrl>
+    <description>Modbus TCP, Modbus UDP and Modbus RTU client/server library for .NET implementations</description>
+    <releaseNotes>Update to version 5.6</releaseNotes>
+    <copyright>Rossmann Engineering 2018-2020</copyright>
+    <tags>Modbus TCP RTU EasyModbusTCP</tags>
+	<dependencies>
+	<group targetFramework=".NETFramework4.0" />
+	</dependencies>
+  </metadata>
+</package>

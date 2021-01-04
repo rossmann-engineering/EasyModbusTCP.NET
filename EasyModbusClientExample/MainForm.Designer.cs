@@ -75,11 +75,6 @@ namespace EasyModbusClientExample
             this.btnWriteSingleCoil = new System.Windows.Forms.Button();
             this.txtCoilValue = new System.Windows.Forms.TextBox();
             this.txtRegisterValue = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnPrepareCoils = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblReadOperations = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -94,6 +89,11 @@ namespace EasyModbusClientExample
             this.txtBaudrate = new System.Windows.Forms.TextBox();
             this.lblBaudrate = new System.Windows.Forms.Label();
             this.txtConnectedStatus = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnPrepareCoils = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -217,7 +217,7 @@ namespace EasyModbusClientExample
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(417, 13);
+            this.linkLabel1.Location = new System.Drawing.Point(307, 6);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(165, 13);
             this.linkLabel1.TabIndex = 16;
@@ -360,70 +360,6 @@ namespace EasyModbusClientExample
             this.txtRegisterValue.Text = "0";
             this.txtRegisterValue.TextChanged += new System.EventHandler(this.txtRegisterValue_TextChanged);
             // 
-            // button2
-            // 
-            this.button2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.button2.Image = global::EasyModbusClientExample.Properties.Resources.circle_minus;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button2.Location = new System.Drawing.Point(518, 340);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(64, 52);
-            this.button2.TabIndex = 34;
-            this.button2.Text = "clear entry";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // btnClear
-            // 
-            this.btnClear.Cursor = System.Windows.Forms.Cursors.Default;
-            this.btnClear.Image = global::EasyModbusClientExample.Properties.Resources.circle_delete1;
-            this.btnClear.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnClear.Location = new System.Drawing.Point(585, 340);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(64, 52);
-            this.btnClear.TabIndex = 33;
-            this.btnClear.Text = "clear all";
-            this.btnClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
-            // 
-            // button1
-            // 
-            this.button1.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(507, 457);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(146, 43);
-            this.button1.TabIndex = 26;
-            this.button1.Text = "Prepare Registers";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // btnPrepareCoils
-            // 
-            this.btnPrepareCoils.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
-            this.btnPrepareCoils.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPrepareCoils.Location = new System.Drawing.Point(507, 408);
-            this.btnPrepareCoils.Name = "btnPrepareCoils";
-            this.btnPrepareCoils.Size = new System.Drawing.Size(146, 43);
-            this.btnPrepareCoils.TabIndex = 25;
-            this.btnPrepareCoils.Text = "Prepare Coils";
-            this.btnPrepareCoils.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.btnPrepareCoils.UseVisualStyleBackColor = true;
-            this.btnPrepareCoils.Click += new System.EventHandler(this.btnPrepareCoils_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::EasyModbusClientExample.Properties.Resources.PLCLoggerCompact;
-            this.pictureBox1.Location = new System.Drawing.Point(588, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(65, 66);
-            this.pictureBox1.TabIndex = 15;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
             // lblReadOperations
             // 
             this.lblReadOperations.AutoSize = true;
@@ -438,7 +374,7 @@ namespace EasyModbusClientExample
             // 
             this.button3.BackColor = System.Drawing.Color.Lime;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(310, 65);
+            this.button3.Location = new System.Drawing.Point(310, 94);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(89, 47);
             this.button3.TabIndex = 38;
@@ -450,7 +386,7 @@ namespace EasyModbusClientExample
             // 
             this.button4.BackColor = System.Drawing.Color.Red;
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(409, 65);
+            this.button4.Location = new System.Drawing.Point(409, 94);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(89, 47);
             this.button4.TabIndex = 39;
@@ -564,6 +500,71 @@ namespace EasyModbusClientExample
             this.txtConnectedStatus.Size = new System.Drawing.Size(665, 32);
             this.txtConnectedStatus.TabIndex = 54;
             this.txtConnectedStatus.Text = "Not connected to Server";
+            // 
+            // button2
+            // 
+            this.button2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.button2.Image = global::EasyModbusClientExample.Properties.Resources.circle_minus;
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button2.Location = new System.Drawing.Point(518, 340);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(64, 52);
+            this.button2.TabIndex = 34;
+            this.button2.Text = "clear entry";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.Cursor = System.Windows.Forms.Cursors.Default;
+            this.btnClear.Image = global::EasyModbusClientExample.Properties.Resources.circle_delete1;
+            this.btnClear.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnClear.Location = new System.Drawing.Point(585, 340);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(64, 52);
+            this.btnClear.TabIndex = 33;
+            this.btnClear.Text = "clear all";
+            this.btnClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // button1
+            // 
+            this.button1.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(507, 457);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(146, 43);
+            this.button1.TabIndex = 26;
+            this.button1.Text = "Prepare Registers";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // btnPrepareCoils
+            // 
+            this.btnPrepareCoils.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
+            this.btnPrepareCoils.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrepareCoils.Location = new System.Drawing.Point(507, 408);
+            this.btnPrepareCoils.Name = "btnPrepareCoils";
+            this.btnPrepareCoils.Size = new System.Drawing.Size(146, 43);
+            this.btnPrepareCoils.TabIndex = 25;
+            this.btnPrepareCoils.Text = "Prepare Coils";
+            this.btnPrepareCoils.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.btnPrepareCoils.UseVisualStyleBackColor = true;
+            this.btnPrepareCoils.Click += new System.EventHandler(this.btnPrepareCoils_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::EasyModbusClientExample.Properties.Resources.small;
+            this.pictureBox1.Location = new System.Drawing.Point(476, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(192, 101);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 15;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // MainForm
             // 
