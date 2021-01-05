@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyModbusAdvancedClient", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppStd", "ConsoleAppStd\ConsoleAppStd.csproj", "{62AFCA11-8005-4D14-9F29-89DED1076335}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyModbus_V5.0", "V:\Projekte\Rossmann\EasyModbusTCP.NET\code_git\EasyModbus_NET5\EasyModbus_V5.0.csproj", "{83AFFC60-BC95-46B1-861F-B1F80270FBFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyModbus_V5.0", "EasyModbus_NET5\EasyModbus_V5.0.csproj", "{83AFFC60-BC95-46B1-861F-B1F80270FBFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
