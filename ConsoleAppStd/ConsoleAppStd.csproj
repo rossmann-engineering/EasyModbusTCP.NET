@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EasyModbusStd\EasyModbus_V5.0.csproj" />
+    <ProjectReference Include="..\EasyModbus_NET5\EasyModbus_V5.0.csproj" />
   </ItemGroup>
 
 </Project>
