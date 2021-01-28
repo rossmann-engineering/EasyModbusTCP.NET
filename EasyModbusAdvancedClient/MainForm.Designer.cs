@@ -416,6 +416,7 @@ namespace EasyModbusAdvancedClient
             this.dataGridView1.Size = new System.Drawing.Size(766, 662);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1CellClick);
+            this.dataGridView1.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEndEdit);
             // 
             // Column5
             // 
@@ -447,7 +448,8 @@ namespace EasyModbusAdvancedClient
             "UINT16 (0...65535)",
             "BOOL (FALSE...TRUE)",
             "INT16 (-32768...32767)",
-            "WORD16 (0...65535)"});
+            "WORD16 (0...65535)",
+            "ASCII"});
             this.Column4.Name = "Column4";
             this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
