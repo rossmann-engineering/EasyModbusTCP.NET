@@ -23,7 +23,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using System;
 using System.Windows.Forms;
-using EasyModbus;
+using EasyModbusSecure;
 
 namespace EasyModbusServerSimulator
 {

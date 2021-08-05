@@ -84,12 +84,12 @@ namespace EasyModbusAdvancedClient
                     easyModbusManager.AddConnection(connectionProperties);
                     if (connectionProperties.ModbusTypeProperty == ModbusType.ModbusTCP)
                     {
-						connectionProperties.modbusClient = new EasyModbus.ModbusClient();
+						connectionProperties.modbusClient = new EasyModbusSecure.ModbusClient();
 						connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
                     }
                     else
                     {
-                    	connectionProperties.modbusClient = new EasyModbus.ModbusClient(connectionProperties.ComPort);
+                    	connectionProperties.modbusClient = new EasyModbusSecure.ModbusClient(connectionProperties.ComPort);
                     	connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
                     }
                 }
@@ -214,7 +214,7 @@ namespace EasyModbusAdvancedClient
         	set { functionPropertiesList = value; }
     	}	
     	
-    	public EasyModbus.ModbusClient modbusClient;
+    	public EasyModbusSecure.ModbusClient modbusClient;
     	public System.Threading.Timer timer;
 	}	
 }

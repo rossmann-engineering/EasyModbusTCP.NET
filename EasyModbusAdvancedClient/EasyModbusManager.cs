@@ -38,7 +38,7 @@ namespace EasyModbusAdvancedClient
     public class EasyModbusManager
     {
 
-        EasyModbus.ModbusClient modbusClient = new EasyModbus.ModbusClient();
+        EasyModbusSecure.ModbusClient modbusClient = new EasyModbusSecure.ModbusClient();
         public List<ConnectionProperties> connectionPropertiesList = new List<ConnectionProperties>();
 
         public EasyModbusManager()

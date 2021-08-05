@@ -584,8 +584,8 @@ namespace EasyModbusAdvancedClient
 			    getValuesThreadObject.connectionProperty.timer = new System.Threading.Timer(GetValuesThread, getValuesThreadObject , easyModbusManager.connectionPropertiesList[treeView1.SelectedNode.Parent.Index].CycleTime, easyModbusManager.connectionPropertiesList[treeView1.SelectedNode.Parent.Index].CycleTime);
             else
                 getValuesThreadObject.connectionProperty.timer.Change(easyModbusManager.connectionPropertiesList[treeView1.SelectedNode.Parent.Index].CycleTime, easyModbusManager.connectionPropertiesList[treeView1.SelectedNode.Parent.Index].CycleTime);
-            getValuesThreadObject.connectionProperty.modbusClient.ReceiveDataChanged -= new EasyModbus.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
-            getValuesThreadObject.connectionProperty.modbusClient.SendDataChanged -= new EasyModbus.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
+            getValuesThreadObject.connectionProperty.modbusClient.ReceiveDataChanged -= new EasyModbusSecure.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
+            getValuesThreadObject.connectionProperty.modbusClient.SendDataChanged -= new EasyModbusSecure.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
 
         }
 
@@ -622,8 +622,8 @@ namespace EasyModbusAdvancedClient
 		{		
 			foreach(ConnectionProperties connectionProperty in easyModbusManager.connectionPropertiesList)
 			{
-                connectionProperty.modbusClient.ReceiveDataChanged += new EasyModbus.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
-                connectionProperty.modbusClient.SendDataChanged += new EasyModbus.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
+                connectionProperty.modbusClient.ReceiveDataChanged += new EasyModbusSecure.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
+                connectionProperty.modbusClient.SendDataChanged += new EasyModbusSecure.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
                 GetValuesThreadObject getValuesThreadObject = new GetValuesThreadObject();
 				getValuesThreadObject.connectionProperty = connectionProperty;
                 if (connectionProperty.timer == null)
@@ -657,8 +657,8 @@ namespace EasyModbusAdvancedClient
 		{
 			foreach(ConnectionProperties connectionProperty in easyModbusManager.connectionPropertiesList)
 			{
-                connectionProperty.modbusClient.ReceiveDataChanged -= new EasyModbus.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
-                connectionProperty.modbusClient.SendDataChanged -= new EasyModbus.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
+                connectionProperty.modbusClient.ReceiveDataChanged -= new EasyModbusSecure.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
+                connectionProperty.modbusClient.SendDataChanged -= new EasyModbusSecure.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
                 connectionProperty.timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 				connectionProperty.modbusClient.Disconnect();
 			}
@@ -680,16 +680,16 @@ namespace EasyModbusAdvancedClient
             indexJobToStop = treeView1.SelectedNode.Index;
             easyModbusManager.connectionPropertiesList[indexJobToStop].timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.Disconnect();
-                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.ReceiveDataChanged += new EasyModbus.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
-                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.SendDataChanged += new EasyModbus.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
+                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.ReceiveDataChanged += new EasyModbusSecure.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
+                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.SendDataChanged += new EasyModbusSecure.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
             }
         if (treeView1.SelectedNode.Level == 2)
             {
                 indexJobToStop = treeView1.SelectedNode.Parent.Index;
                 easyModbusManager.connectionPropertiesList[indexJobToStop].timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.Disconnect();
-                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.ReceiveDataChanged += new EasyModbus.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
-                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.SendDataChanged += new EasyModbus.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
+                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.ReceiveDataChanged += new EasyModbusSecure.ModbusClient.ReceiveDataChangedHandler(UpdateTextBoxReceive);
+                easyModbusManager.connectionPropertiesList[indexJobToStop].modbusClient.SendDataChanged += new EasyModbusSecure.ModbusClient.SendDataChangedHandler(UpdateTextBoxSend);
 
             }
             UpdateNodesConnectedStatus();
@@ -714,10 +714,10 @@ namespace EasyModbusAdvancedClient
             DataGridView1CellClick(null, null);
         }
 
-        delegate void UpdateReceiveDataCallback(EasyModbus.ModbusClient sender);
+        delegate void UpdateReceiveDataCallback(EasyModbusSecure.ModbusClient sender);
         void UpdateTextBoxReceive(object sender)
         {
-            EasyModbus.ModbusClient modbusClient = (EasyModbus.ModbusClient)sender;
+            EasyModbusSecure.ModbusClient modbusClient = (EasyModbusSecure.ModbusClient)sender;
             if (textBox1.InvokeRequired)
             {
                 UpdateReceiveDataCallback d = new UpdateReceiveDataCallback(UpdateTextBoxReceive);
@@ -734,10 +734,10 @@ namespace EasyModbusAdvancedClient
         }
 
 
-        delegate void UpdateSendDataCallback(EasyModbus.ModbusClient sender);
+        delegate void UpdateSendDataCallback(EasyModbusSecure.ModbusClient sender);
         void UpdateTextBoxSend(object sender)
         {
-            EasyModbus.ModbusClient modbusClient = (EasyModbus.ModbusClient)sender;
+            EasyModbusSecure.ModbusClient modbusClient = (EasyModbusSecure.ModbusClient)sender;
             if (textBox1.InvokeRequired)
             {
                 UpdateSendDataCallback d = new UpdateSendDataCallback(UpdateTextBoxSend);
