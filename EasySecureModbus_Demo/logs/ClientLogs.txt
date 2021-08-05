@@ -1,0 +1,103 @@
+06.06.2021 12:02:24.26 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 12:05:31.13 Destructor called - automatically disconnect
+06.06.2021 12:07:30.69 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 12:08:50.48 Destructor called - automatically disconnect
+06.06.2021 12:10:30.30 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 12:12:45.38 Destructor called - automatically disconnect
+06.06.2021 12:30:50.09 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 12:30:50.27 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+06.06.2021 12:30:50.27 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+06.06.2021 12:41:24.89 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 12:41:25.07 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+06.06.2021 12:41:25.07 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+06.06.2021 12:53:21.31 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 12:53:35.07 Destructor called - automatically disconnect
+06.06.2021 18:02:24.34 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:02:36.71 Destructor called - automatically disconnect
+06.06.2021 18:03:14.79 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:12:40.89 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:22:00.83 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:22:11.34 Destructor called - automatically disconnect
+06.06.2021 18:27:28.11 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:28:16.84 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:28:29.01 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:33:23.97 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:34:04.68 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:34:14.64 Destructor called - automatically disconnect
+06.06.2021 18:35:55.13 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:36:00.45 Destructor called - automatically disconnect
+06.06.2021 18:45:43.99 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:45:44.09 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+06.06.2021 18:45:44.09 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+06.06.2021 18:47:59.88 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:47:59.97 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+06.06.2021 18:47:59.98 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+06.06.2021 18:49:01.72 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:49:01.82 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+06.06.2021 18:49:01.82 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+06.06.2021 18:51:05.27 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+06.06.2021 18:51:08.05 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+06.06.2021 18:51:08.05 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+13.06.2021 20:19:35.27 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+13.06.2021 20:19:35.40 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+13.06.2021 20:19:35.40 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+13.06.2021 20:22:58.63 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+13.06.2021 20:22:58.74 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+13.06.2021 20:22:58.74 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+13.06.2021 21:09:33.04 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+13.06.2021 21:12:17.76 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+13.06.2021 21:12:25.71 Destructor called - automatically disconnect
+14.06.2021 18:53:59.12 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+14.06.2021 18:53:59.35 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+14.06.2021 18:53:59.35 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+14.06.2021 18:54:04.45 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+14.06.2021 18:54:04.45 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+14.06.2021 18:54:04.45 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+14.06.2021 18:54:04.45 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+14.06.2021 18:54:04.46 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+14.06.2021 18:54:04.46 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+14.06.2021 18:54:04.46 Disconnect
+14.06.2021 19:16:00.30 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+14.06.2021 19:16:00.45 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+14.06.2021 19:16:00.45 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+14.06.2021 19:16:04.01 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+14.06.2021 19:16:04.01 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+14.06.2021 19:16:04.01 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+14.06.2021 19:16:04.02 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+14.06.2021 19:16:04.02 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+14.06.2021 19:16:04.02 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+14.06.2021 19:16:04.02 Disconnect
+14.06.2021 19:16:13.70 Destructor called - automatically disconnect
+04.08.2021 17:02:17.73 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+04.08.2021 17:02:17.97 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+04.08.2021 17:02:17.97 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+04.08.2021 17:02:22.05 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+04.08.2021 17:02:22.06 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+04.08.2021 17:02:22.06 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+04.08.2021 17:02:22.06 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+04.08.2021 17:02:22.06 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+04.08.2021 17:02:22.06 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+04.08.2021 17:02:22.06 Disconnect
+04.08.2021 17:04:10.70 Destructor called - automatically disconnect
+04.08.2021 17:16:52.09 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+04.08.2021 17:16:52.24 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+04.08.2021 17:16:52.24 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+04.08.2021 17:16:52.26 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+04.08.2021 17:16:52.26 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+04.08.2021 17:16:52.26 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+04.08.2021 17:16:52.26 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+04.08.2021 17:16:52.26 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+04.08.2021 17:16:52.26 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+04.08.2021 17:16:52.26 Disconnect
+04.08.2021 17:19:15.41 Destructor called - automatically disconnect
+04.08.2021 18:54:32.72 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+04.08.2021 18:54:32.95 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+04.08.2021 18:54:32.95 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+04.08.2021 18:54:32.97 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+04.08.2021 18:54:32.97 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+04.08.2021 18:54:32.98 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+04.08.2021 18:54:32.98 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+04.08.2021 18:54:32.98 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+04.08.2021 18:54:32.98 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+04.08.2021 18:54:32.98 Disconnect
+04.08.2021 18:54:42.36 Destructor called - automatically disconnect

@@ -29,7 +29,7 @@ using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
 
-namespace EasyModbus
+namespace EasyModbusSecure
 {
 	/// <summary>
 	/// Implements a ModbusClient.
@@ -166,7 +166,7 @@ namespace EasyModbus
                 var success = result.AsyncWaitHandle.WaitOne(connectTimeout);
                 if (!success)
                 {
-                    throw new EasyModbus.Exceptions.ConnectionException("connection timed out");
+                    throw new EasyModbusSecure.Exceptions.ConnectionException("connection timed out");
                 }
                 tcpClient.EndConnect(result);
 
@@ -204,7 +204,7 @@ namespace EasyModbus
                 var success = result.AsyncWaitHandle.WaitOne(connectTimeout);
                 if (!success)
                 {
-                    throw new EasyModbus.Exceptions.ConnectionException("connection timed out");
+                    throw new EasyModbusSecure.Exceptions.ConnectionException("connection timed out");
                 }
                 tcpClient.EndConnect(result);
 
@@ -874,12 +874,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
 			if (tcpClient == null & !udpFlag & serialport==null)
 			{
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
 			if (startingAddress > 65535 | quantity >2000)
 			{
@@ -996,22 +996,22 @@ namespace EasyModbus
             if (data[7] == 0x82 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x82 & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x82 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x82 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -1022,7 +1022,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -1070,12 +1070,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
 			if (startingAddress > 65535 | quantity >2000)
 			{
@@ -1191,22 +1191,22 @@ namespace EasyModbus
             if (data[7] == 0x81 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x81 & data[8] == 0x02)
            {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x81 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x81 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -1217,7 +1217,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -1265,12 +1265,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
 			if (startingAddress > 65535 | quantity >125)
 			{
@@ -1382,22 +1382,22 @@ namespace EasyModbus
             if (data[7] == 0x83 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x83 & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x83 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x83 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -1408,7 +1408,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -1466,12 +1466,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
 			if (startingAddress > 65535 | quantity >125)
 			{
@@ -1585,22 +1585,22 @@ namespace EasyModbus
             if (data[7] == 0x84 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x84 & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x84 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x84 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -1611,7 +1611,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -1667,12 +1667,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
             byte[] coilValue = new byte[2];
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
@@ -1786,22 +1786,22 @@ namespace EasyModbus
             if (data[7] == 0x85 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x85 & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x85 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x85 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -1812,7 +1812,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -1852,12 +1852,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
             byte[] registerValue = new byte[2];
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
@@ -1963,22 +1963,22 @@ namespace EasyModbus
             if (data[7] == 0x86 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x86 & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x86 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x86 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -1989,7 +1989,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -2034,12 +2034,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
@@ -2159,22 +2159,22 @@ namespace EasyModbus
             if (data[7] == 0x8F & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x8F & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x8F & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x8F & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -2185,7 +2185,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -2229,12 +2229,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
             this.transactionIdentifier = BitConverter.GetBytes((uint)transactionIdentifierInternal);
             this.protocolIdentifier = BitConverter.GetBytes((int)0x0000);
@@ -2343,22 +2343,22 @@ namespace EasyModbus
             if (data[7] == 0x90 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x90 & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x90 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x90 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             if (serialport != null)
             {
@@ -2369,7 +2369,7 @@ namespace EasyModbus
                     if (NumberOfRetries <= countRetries)
                     {
                         countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                        throw new EasyModbusSecure.Exceptions.CRCCheckFailedException("Response CRC check failed");
                     }
                     else
                     {
@@ -2420,12 +2420,12 @@ namespace EasyModbus
                 if (!serialport.IsOpen)
             	{
             		if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
-                    throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                    throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
             	}
             if (tcpClient == null & !udpFlag & serialport == null)
             {
 				if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ConnectionException("connection error");
+                throw new EasyModbusSecure.Exceptions.ConnectionException("connection error");
 			}
             if (startingAddressRead > 65535 | quantityRead > 125 | startingAddressWrite > 65535 | values.Length > 121)
             {
@@ -2547,22 +2547,22 @@ namespace EasyModbus
             if (data[7] == 0x97 & data[8] == 0x01)
             {
             	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                throw new EasyModbusSecure.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
             }
             if (data[7] == 0x97 & data[8] == 0x02)
             {
             	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                throw new EasyModbusSecure.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
             }
             if (data[7] == 0x97 & data[8] == 0x03)
             {
             	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                throw new EasyModbusSecure.Exceptions.QuantityInvalidException("quantity invalid");
             }
             if (data[7] == 0x97 & data[8] == 0x04)
             {
             	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
+                throw new EasyModbusSecure.Exceptions.ModbusException("error reading");
             }
             response = new int[quantityRead];
             for (int i = 0; i < quantityRead; i++)

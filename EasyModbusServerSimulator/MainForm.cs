@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using EasyModbus;
+using EasyModbusSecure;
 using System.Reflection;
 
 namespace EasyModbusServerSimulator
@@ -13,7 +13,7 @@ namespace EasyModbusServerSimulator
     public partial class MainForm : Form
     {
         Settings settings = new Settings();
-        EasyModbus.ModbusServer easyModbusTCPServer;
+        EasyModbusSecure.ModbusServer easyModbusTCPServer;
         private UInt16 startingAddressDiscreteInputs = 1;
         private UInt16 startingAddressCoils = 1;
         private UInt16 startingAddressHoldingRegisters = 1;
@@ -29,7 +29,7 @@ namespace EasyModbusServerSimulator
             InitializeComponent();
             Assembly.GetExecutingAssembly().GetName().Version.ToString();
             lblVersion.Text = "Version: " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() +"."+ Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
-            easyModbusTCPServer = new EasyModbus.ModbusServer();
+            easyModbusTCPServer = new EasyModbusSecure.ModbusServer();
             
             easyModbusTCPServer.Listen();
 

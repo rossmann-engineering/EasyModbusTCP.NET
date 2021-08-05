@@ -24,7 +24,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
 using System.Runtime.Serialization;
 
-namespace EasyModbus.Exceptions
+namespace EasyModbusSecure.Exceptions
 {
 	/// <summary>
 	/// Exception to be thrown if serial port is not opened
