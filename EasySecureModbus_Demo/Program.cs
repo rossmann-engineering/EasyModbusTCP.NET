@@ -9,9 +9,9 @@ namespace EasuySecureModbus_Demo
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) // For now we pass only the password, later can be cert path as well
         {
-            ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502, "..\\..\\certs\\client.pfx");    //Ip-Address and Port of Modbus-TCP-Server
+            ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502, "..\\..\\certs\\client.pfx", args[0]);    //Ip-Address and Port of Modbus-TCP-Server
             //ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502);    //Ip-Address and Port of Modbus-TCP-Server
             modbusClient.LogFileFilename = "..\\..\\logs\\ClientLogs.txt";
             modbusClient.Connect();                                                    //Connect to Server

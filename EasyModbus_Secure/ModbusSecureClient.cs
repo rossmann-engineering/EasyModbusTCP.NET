@@ -100,7 +100,7 @@ namespace EasyModbusSecure
             this.remoteCertificate = null;
         }
 
-        public ModbusSecureClient(string ipAddress, int port, string certificate)
+        public ModbusSecureClient(string ipAddress, int port, string certificate, string certificatePassword)
         {
 
             if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-TCP, IPAddress: " + ipAddress + ", Port: " + port, System.DateTime.Now);
@@ -113,10 +113,10 @@ namespace EasyModbusSecure
             Console.WriteLine("Create client");
             this.ipAddress = ipAddress;
             this.port = port;
-            this.remoteCertificate = new X509Certificate2(certificate, "123456", X509KeyStorageFlags.MachineKeySet);
+            this.remoteCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
             X509CertificateCollection certs = new X509CertificateCollection();
             certs.Add(remoteCertificate);
-            this.localCertificates = certs;
+            this.localCertificates = certs;         
         }
 
         /// <summary>

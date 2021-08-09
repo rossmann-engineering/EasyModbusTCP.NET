@@ -158,10 +158,10 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate)
+        public TCPHandler(int port, string certificate, string certificatePassword)
         {
             server = new TcpListener(LocalIPAddress, port);
-            serverCertificate = new X509Certificate2(certificate, "123456", X509KeyStorageFlags.MachineKeySet); // TODO: Move password to command line argument or similar
+            serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
@@ -172,11 +172,11 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
-            serverCertificate = new X509Certificate2(certificate, "123456", X509KeyStorageFlags.MachineKeySet); // TODO: Move password to command line argument or similar
+            serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet); // TODO: Move password to command line argument or similar
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
@@ -549,6 +549,7 @@ namespace EasyModbusSecure
         private IPAddress localIPAddress = IPAddress.Any;
 
         private string certificate { get; set; }
+        private string certificatePassword { get; set; }
 
         /// <summary>
         /// When creating a TCP or UDP socket, the local IP address to attach to.
@@ -559,7 +560,7 @@ namespace EasyModbusSecure
             set { if (listenerThread == null) localIPAddress = value; }
         }
 
-        public ModbusSecureServer(string certificate)
+        public ModbusSecureServer(string certificate, string certificatePassword)
         {
             holdingRegisters = new HoldingRegisters(this);
             inputRegisters = new InputRegisters(this);
@@ -567,6 +568,8 @@ namespace EasyModbusSecure
             discreteInputs = new DiscreteInputs(this);
 
             this.certificate = certificate;
+
+            this.certificatePassword = certificatePassword;
 
         }
 
@@ -627,7 +630,7 @@ namespace EasyModbusSecure
                     }
                     catch (Exception) { }
                 }
-                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate);
+                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword);
                 if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 tcpHandler.numberOfClientsChanged += new TCPHandler.NumberOfClientsChanged(numberOfClientsChanged);
