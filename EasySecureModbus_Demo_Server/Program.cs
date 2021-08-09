@@ -8,13 +8,13 @@ namespace EasySecureModbus_Demo_Server
         static void Main(string[] args)
         {
             Program application = new Program();
-            application.startServer();
+            application.startServer(args[0]); // For now we pass only the password, later can be cert path as well
         }
 
-        public void startServer()
+        public void startServer(string certPass)
         {
             //convert that to use CLI argument
-            ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx");
+            ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass);
             modbusServer.LogFileFilename = "..\\..\\logs\\ServerLogs.txt";
             modbusServer.Listen();
 
