@@ -99,6 +99,8 @@ namespace EasyModbusSecure
 
         private X509Certificate2 serverCertificate;
 
+        private bool mutualAuthentication { get; set; }
+
         static void DisplaySecurityLevel(SslStream stream)
         {
             Console.WriteLine("Cipher: {0} strength {1}", stream.CipherAlgorithm, stream.CipherStrength);
@@ -135,6 +137,9 @@ namespace EasyModbusSecure
             }
             // Display the properties of the client's certificate.
             X509Certificate remoteCertificate = stream.RemoteCertificate;
+
+           
+
             if (stream.RemoteCertificate != null)
             {
                 Console.WriteLine("Remote cert was issued to {0} and is valid from {1} until {2}.",
@@ -158,13 +163,16 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate, string certificatePassword)
+        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication)
         {
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
+            this.mutualAuthentication = mutualAuthentication;
+
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
+            
         }
 
         /// <summary>
@@ -172,11 +180,13 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
-            serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet); // TODO: Move password to command line argument or similar
+            serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
+
+            this.mutualAuthentication = mutualAuthentication;
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
@@ -216,50 +226,98 @@ namespace EasyModbusSecure
                 }
             }
             catch (Exception) { }
+
             try
             {
                 server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
-                Client client = new Client(tcpClient);
+                Client client = new Client(tcpClient, mutualAuthentication);
                 SslStream sslStream = client.SslStream;
 
                 //With Mutual Authentication
-                try
+                if (mutualAuthentication)
                 {
-                    sslStream.AuthenticateAsServer(serverCertificate, true, SslProtocols.Tls12, true) ;
-                    if (sslStream.RemoteCertificate == null)
+
+                    try
                     {
-                        Console.WriteLine("Client did not send back a certificate");
+                        sslStream.AuthenticateAsServer(serverCertificate, true, SslProtocols.Tls12, true);
+                        if (sslStream.RemoteCertificate == null)
+                        {
+                            Console.WriteLine("Client did not send back a certificate");
+                            sslStream.Close();
+                            tcpClient.Close();
+                        }
+
+                        // Display the properties and settings for the authenticated stream.
+                        DisplaySecurityLevel(sslStream);
+                        DisplaySecurityServices(sslStream);
+                        DisplayCertificateInformation(sslStream, client);
+                        DisplayStreamProperties(sslStream);
+
+
+                    }
+                    catch (AuthenticationException e)
+                    {
+
+                        Console.WriteLine("Exception: {0}", e.Message);
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                        }
+                        Console.WriteLine("Authentication failed - closing the connection.");
                         sslStream.Close();
                         tcpClient.Close();
+                        return;
+
                     }
-
-                    // Display the properties and settings for the authenticated stream.
-                    DisplaySecurityLevel(sslStream);
-                    DisplaySecurityServices(sslStream);
-                    DisplayCertificateInformation(sslStream, client);
-                    DisplayStreamProperties(sslStream);
-
-
                 }
-                catch (AuthenticationException e)
+                else
                 {
-
-                    Console.WriteLine("Exception: {0}", e.Message);
-                    if (e.InnerException != null)
+                    try
                     {
-                        Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
-                    }
-                    Console.WriteLine("Authentication failed - closing the connection.");
-                    sslStream.Close();
-                    tcpClient.Close();
-                    return;
+                        sslStream.AuthenticateAsServer(serverCertificate, false, SslProtocols.Tls12, true);
 
+                        Console.WriteLine("NO CLIENT AUTH!!!");
+
+                        // TODO: Remove this if not needed
+                        //if (sslStream.RemoteCertificate == null)
+                        //{
+                        //    Console.WriteLine("Client did not send back a certificate");
+                        //    sslStream.Close();
+                        //    tcpClient.Close();
+                        //}
+
+                        // Display the properties and settings for the authenticated stream.
+                        DisplaySecurityLevel(sslStream);
+                        DisplaySecurityServices(sslStream);
+                        DisplayCertificateInformation(sslStream, client);
+                        DisplayStreamProperties(sslStream);
+
+
+                    }
+                    catch (AuthenticationException e)
+                    {
+
+                        Console.WriteLine("Exception: {0}", e.Message);
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                        }
+                      
+                        sslStream.Close();
+                        tcpClient.Close();
+                        return;
+
+                    }
                 }
 
                 sslStream.ReadTimeout = 4000;
                 sslStream.BeginRead(client.Buffer, 0, client.Buffer.Length, ReadCallback, client);
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                // TODO: Populate that with an exception handling
+                Console.WriteLine("Exception 2: {0}", e.Message);
+            }
         }
 
         private int GetAndCleanNumberOfConnectedClients(Client client)
@@ -368,13 +426,15 @@ namespace EasyModbusSecure
             {
                 Console.WriteLine("Local certificate is null.");
             }
+
             // Display the properties of the client's certificate.
-            X509Certificate remoteCertificateX509 = stream.RemoteCertificate;
-            X509Certificate2 remoteCertificateX5092 = new X509Certificate2(remoteCertificateX509);
+            X509Certificate remoteCertificateX509 = stream.RemoteCertificate;    
 
             int roleCount = 0;
-            if (stream.RemoteCertificate != null)
+            if (remoteCertificateX509 != null)
             {
+                X509Certificate2 remoteCertificateX5092 = new X509Certificate2(remoteCertificateX509);
+
                 Console.WriteLine("Remote cert was issued to {0} and is valid from {1} until {2}.",
                     remoteCertificateX5092.Subject,
                     remoteCertificateX5092.GetEffectiveDateString(),
@@ -420,7 +480,7 @@ namespace EasyModbusSecure
             }
             else
             {
-                Console.WriteLine("Remote certificate is null.");
+                Console.WriteLine("Remote (client) certificate is null.");
             }
         }
 
@@ -431,15 +491,18 @@ namespace EasyModbusSecure
             private readonly byte[] buffer;
             private SslStream stream;
             private Role role;
+            private bool mutualAuthentication { get; set; }
 
             public long Ticks { get; set; }
 
-            public Client(TcpClient tcpClient)
+            public Client(TcpClient tcpClient, bool mutualAuthentication)
             {
                 this.role = null;
                 this.tcpClient = tcpClient;
                 int bufferSize = tcpClient.ReceiveBufferSize;
                 buffer = new byte[bufferSize];
+
+                this.mutualAuthentication = mutualAuthentication;
             }
 
             public int getRole()
@@ -467,8 +530,16 @@ namespace EasyModbusSecure
                 {
                     if (stream == null)
                     {
-                        stream = new SslStream(tcpClient.GetStream(), false, new RemoteCertificateValidationCallback(ValidateClientCertificate), null);
-                        return stream;
+                        if (mutualAuthentication)
+                        {
+                            stream = new SslStream(tcpClient.GetStream(), false, new RemoteCertificateValidationCallback(ValidateClientCertificate), null);
+                            return stream;
+                        }
+                        else
+                        {
+                            stream = new SslStream(tcpClient.GetStream(), false);
+                            return stream;
+                        }
                     }
                     else
                     {
@@ -551,6 +622,8 @@ namespace EasyModbusSecure
         private string certificate { get; set; }
         private string certificatePassword { get; set; }
 
+        private bool mutualAuthentication { get; set; }
+
         /// <summary>
         /// When creating a TCP or UDP socket, the local IP address to attach to.
         /// </summary>
@@ -560,7 +633,7 @@ namespace EasyModbusSecure
             set { if (listenerThread == null) localIPAddress = value; }
         }
 
-        public ModbusSecureServer(string certificate, string certificatePassword)
+        public ModbusSecureServer(string certificate, string certificatePassword, bool mutualAuthentication)
         {
             holdingRegisters = new HoldingRegisters(this);
             inputRegisters = new InputRegisters(this);
@@ -570,6 +643,8 @@ namespace EasyModbusSecure
             this.certificate = certificate;
 
             this.certificatePassword = certificatePassword;
+
+            this.mutualAuthentication = mutualAuthentication;
 
         }
 
@@ -630,7 +705,7 @@ namespace EasyModbusSecure
                     }
                     catch (Exception) { }
                 }
-                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword);
+                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication);
                 if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 tcpHandler.numberOfClientsChanged += new TCPHandler.NumberOfClientsChanged(numberOfClientsChanged);
