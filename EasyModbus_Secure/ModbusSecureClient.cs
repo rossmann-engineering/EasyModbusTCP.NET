@@ -79,6 +79,8 @@ namespace EasyModbusSecure
 
         SslStream stream;
 
+        private bool mutualAuthentication { get; set; }
+
         /// <summary>
         /// Constructor which determines the Master ip-address and the Master Port.
         /// </summary>
@@ -98,9 +100,12 @@ namespace EasyModbusSecure
             this.ipAddress = ipAddress;
             this.port = port;
             this.remoteCertificate = null;
+
+            // Empty certs list
+            this.localCertificates = new X509CertificateCollection();
         }
 
-        public ModbusSecureClient(string ipAddress, int port, string certificate, string certificatePassword)
+        public ModbusSecureClient(string ipAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication)
         {
 
             if (debug) StoreLogData.Instance.Store("EasyModbus library initialized for Modbus-TCP, IPAddress: " + ipAddress + ", Port: " + port, System.DateTime.Now);
@@ -116,7 +121,20 @@ namespace EasyModbusSecure
             this.remoteCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
             X509CertificateCollection certs = new X509CertificateCollection();
             certs.Add(remoteCertificate);
-            this.localCertificates = certs;         
+
+            // TODO: maybe simplify these since we send the cert, we want mutual auth?
+
+            this.mutualAuthentication = mutualAuthentication;
+
+            if(this.mutualAuthentication)
+            {
+                this.localCertificates = certs;
+            }
+            else
+            {
+                // Empty certs list
+                this.localCertificates = new X509CertificateCollection();
+            }
         }
 
         /// <summary>
@@ -225,10 +243,13 @@ namespace EasyModbusSecure
                 }
                 tcpClient.EndConnect(result);
 
-                if (remoteCertificate == null)
+                if (mutualAuthentication == true && remoteCertificate == null)
                 {
                     Console.WriteLine("Cannot connect to server if you do not have a certificate");
                     tcpClient.Close();
+
+                    connected = false;
+                    return;
                 }
                 //tcpClient = new TcpClient(ipAddress, port);
                 stream = new SslStream(tcpClient.GetStream(),
@@ -239,26 +260,72 @@ namespace EasyModbusSecure
                 stream.ReadTimeout = connectTimeout;
                 connected = true;
 
-                try
+                if (mutualAuthentication)
                 {
-
-                    // Enforcing TLS 1.2, in case system is configured otherwise
-                    // With Mutual Authentication
-                    stream.AuthenticateAsClient(ipAddress, localCertificates, SslProtocols.Tls12, checkCertificateRevocation: true);
-
-                }
-                catch (AuthenticationException e)
-                {
-                    Console.WriteLine("Exception: {0}", e.Message);
-                    if (e.InnerException != null)
+                    try
                     {
-                        Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+
+                        // Enforcing TLS 1.2, in case system is configured otherwise
+                        // With Mutual Authentication
+                        stream.AuthenticateAsClient(ipAddress, localCertificates, SslProtocols.Tls12, checkCertificateRevocation: true);
+
                     }
-                    Console.WriteLine("Authentication failed - closing the connection.");
-                    tcpClient.Close();
-                    //Disconnect();
-                    connected = false;
-                    return;
+                    catch (AuthenticationException e)
+                    {
+                        Console.WriteLine("Exception: {0}", e.Message);
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                        }
+                        Console.WriteLine("Authentication failed - closing the connection.");
+                        tcpClient.Close();
+                        //Disconnect();
+                        connected = false;
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Exception 2: {0}", e.Message);
+
+                        tcpClient.Close();
+                        //Disconnect();
+                        connected = false;
+                        return;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+
+                        // Enforcing TLS 1.2, in case system is configured otherwise
+                        // Without Mutual Authentication, "localCertificates" should be empty - TODO: find a way to move it to the other Connect()
+                        stream.AuthenticateAsClient(ipAddress, localCertificates, SslProtocols.Tls12, checkCertificateRevocation: true);
+                        //stream.AuthenticateAsClient(ipAddress);
+
+                    }
+                    catch (AuthenticationException e)
+                    {
+                        Console.WriteLine("Exception: {0}", e.Message);
+
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                        }
+                        
+                        tcpClient.Close();
+                        connected = false;
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Exception 2: {0}", e.Message);
+
+                        tcpClient.Close();
+                        //Disconnect();
+                        connected = false;
+                        return;
+                    }
                 }
             }
             else
@@ -302,7 +369,7 @@ namespace EasyModbusSecure
                 try
                 {
                     // Enforcing TLS 1.2, in case system is configured otherwise
-                    // Without Mutual Authentication
+                    // Without Mutual Authentication TODO: Maybe consider adding the rest of parameters (SslProtocols etc.)
                     stream.AuthenticateAsClient(ipAddress); 
 
                     // With Mutual Authentication
@@ -316,6 +383,14 @@ namespace EasyModbusSecure
                         Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
                     }
                     Console.WriteLine("Authentication failed - closing the connection.");
+                    tcpClient.Close();
+                    //Disconnect();
+                    connected = false;
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception 2: {0}", e.Message);
                     tcpClient.Close();
                     //Disconnect();
                     connected = false;
