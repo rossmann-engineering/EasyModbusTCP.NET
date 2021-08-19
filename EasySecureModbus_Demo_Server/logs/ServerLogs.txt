@@ -182,3 +182,71 @@
 10.08.2021 18:27:37.02 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
 10.08.2021 18:27:37.02 Send Data: 00-04-00-00-00-04-01-01-01-00
 10.08.2021 18:29:39.06 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 13:51:30.91 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 13:59:55.06 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:15:56.90 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:18:05.44 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:18:24.17 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:19:01.65 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:19:40.14 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:26:04.80 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:26:31.47 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:27:25.32 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:34:04.15 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:34:13.02 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:34:39.18 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:38:24.87 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:42:17.03 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:55:40.82 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 14:59:20.94 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 15:09:04.65 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 15:10:38.88 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 15:11:32.85 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 15:33:35.84 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 15:56:06.13 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 15:59:42.27 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 16:01:47.17 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 16:11:18.09 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 16:20:20.09 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+12.08.2021 16:21:48.71 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:21:48.71 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+12.08.2021 16:21:48.71 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:21:48.72 Send Data: 00-02-00-00-00-04-01-01-01-03
+12.08.2021 16:21:48.72 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:21:48.72 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+12.08.2021 16:21:48.72 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:21:48.72 Send Data: 00-04-00-00-00-04-01-01-01-00
+12.08.2021 16:22:25.88 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:22:25.88 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+12.08.2021 16:22:25.88 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:22:25.88 Send Data: 00-02-00-00-00-04-01-01-01-03
+12.08.2021 16:22:25.88 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:22:25.89 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+12.08.2021 16:22:25.89 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+12.08.2021 16:22:25.89 Send Data: 00-04-00-00-00-04-01-01-01-00
+14.08.2021 14:45:07.45 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 14:46:03.37 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+14.08.2021 14:46:03.37 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+14.08.2021 14:46:03.38 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+14.08.2021 14:46:03.38 Send Data: 00-02-00-00-00-04-01-01-01-03
+14.08.2021 14:46:03.39 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+14.08.2021 14:46:03.39 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+14.08.2021 14:46:03.39 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+14.08.2021 14:46:03.39 Send Data: 00-04-00-00-00-04-01-01-01-00
+14.08.2021 14:56:23.28 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 15:04:21.50 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 15:33:44.33 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 15:33:54.65 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 15:36:23.08 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 15:42:36.41 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 16:16:00.83 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 16:19:04.46 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 16:22:42.21 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 16:37:25.56 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 16:38:11.53 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 16:55:09.50 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 17:02:29.13 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 17:02:38.06 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 17:03:28.56 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+14.08.2021 17:07:12.27 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 8:08:17.37 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
