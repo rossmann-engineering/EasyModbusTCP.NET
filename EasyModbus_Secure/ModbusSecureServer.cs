@@ -245,7 +245,7 @@ namespace EasyModbusSecure
                             Console.WriteLine("Client did not send back a certificate");
                             sslStream.Close();
                             tcpClient.Close();
-                        }
+                        }                        
 
                         // Display the properties and settings for the authenticated stream.
                         DisplaySecurityLevel(sslStream);
@@ -532,7 +532,7 @@ namespace EasyModbusSecure
                     {
                         if (mutualAuthentication)
                         {
-                            stream = new SslStream(tcpClient.GetStream(), false, new RemoteCertificateValidationCallback(ValidateClientCertificate), null);
+                            stream = new SslStream(tcpClient.GetStream(), false, new RemoteCertificateValidationCallback(ValidateClientCertificate), null);                            
                             return stream;
                         }
                         else

@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 
 namespace EasyModbusSecure
 {
@@ -301,8 +302,16 @@ namespace EasyModbusSecure
                         // Enforcing TLS 1.2, in case system is configured otherwise
                         // Without Mutual Authentication, "localCertificates" should be empty - TODO: find a way to move it to the other Connect()
                         stream.AuthenticateAsClient(ipAddress, localCertificates, SslProtocols.Tls12, checkCertificateRevocation: true);
-                        //stream.AuthenticateAsClient(ipAddress);
+                        //Thread.Sleep(3000);
+                        //stream.AuthenticateAsClient(ipAddress, null, SslProtocols.Tls12, checkCertificateRevocation: true);
+                        //stream.AuthenticateAsClient(ipAddress);                       
 
+                        NetworkStream networkStream = tcpClient.GetStream();
+                        if (tcpClient.Client.Poll(1, SelectMode.SelectRead) && !networkStream.DataAvailable)
+                        {
+                            Console.WriteLine("!!!!!!!! CONNECTION CLOSED!!!!!");
+                            // Close connection and return.
+                        }
                     }
                     catch (AuthenticationException e)
                     {
@@ -312,7 +321,7 @@ namespace EasyModbusSecure
                         {
                             Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
                         }
-                        
+                        Console.WriteLine("Authentication failed - closing the connection.");
                         tcpClient.Close();
                         connected = false;
                         return;
