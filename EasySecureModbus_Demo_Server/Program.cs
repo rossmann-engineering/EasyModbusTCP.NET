@@ -14,8 +14,8 @@ namespace EasySecureModbus_Demo_Server
         public void startServer(string certPass)
         {
             //convert that to use CLI argument
-            //ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, true);
-            ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, false);
+            ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, true);
+            //ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, false);
             modbusServer.LogFileFilename = "..\\..\\logs\\ServerLogs.txt";
             modbusServer.Listen();
 

@@ -13,6 +13,10 @@ namespace EasuySecureModbus_Demo
         {
             ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502, "..\\..\\certs\\client.pfx", args[0], true);    //Ip-Address and Port of Modbus-TCP-Server
             //ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502);    //Ip-Address and Port of Modbus-TCP-Server
+            //ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502, null, args[0], true);    //Ip-Address and Port of Modbus-TCP-Server
+            //ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502, "", args[0], true);    //Ip-Address and Port of Modbus-TCP-Server
+            //ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 502, "..\\..\\certs\\something.pfx", args[0], true);    //Ip-Address and Port of Modbus-TCP-Server
+            
             modbusClient.LogFileFilename = "..\\..\\logs\\ClientLogs.txt";
             modbusClient.Connect();                                                    //Connect to Server
 
