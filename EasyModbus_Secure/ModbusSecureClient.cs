@@ -270,6 +270,15 @@ namespace EasyModbusSecure
                         // With Mutual Authentication
                         stream.AuthenticateAsClient(ipAddress, localCertificates, SslProtocols.Tls12, checkCertificateRevocation: true);
 
+                        NetworkStream networkStream = tcpClient.GetStream();                        
+                        if (tcpClient.Client.Poll(1, SelectMode.SelectRead) && !networkStream.DataAvailable)
+                        {
+                            // Close connection and return.
+                            tcpClient.Close();
+                            connected = false;
+                            throw new AuthenticationException("Unable to authenticate to the server");
+                        }
+
                     }
                     catch (AuthenticationException e)
                     {
@@ -301,16 +310,15 @@ namespace EasyModbusSecure
 
                         // Enforcing TLS 1.2, in case system is configured otherwise
                         // Without Mutual Authentication, "localCertificates" should be empty - TODO: find a way to move it to the other Connect()
-                        stream.AuthenticateAsClient(ipAddress, localCertificates, SslProtocols.Tls12, checkCertificateRevocation: true);
-                        //Thread.Sleep(3000);
-                        //stream.AuthenticateAsClient(ipAddress, null, SslProtocols.Tls12, checkCertificateRevocation: true);
-                        //stream.AuthenticateAsClient(ipAddress);                       
+                        stream.AuthenticateAsClient(ipAddress, localCertificates, SslProtocols.Tls12, checkCertificateRevocation: true);                                                       
 
                         NetworkStream networkStream = tcpClient.GetStream();
                         if (tcpClient.Client.Poll(1, SelectMode.SelectRead) && !networkStream.DataAvailable)
-                        {
-                            Console.WriteLine("!!!!!!!! CONNECTION CLOSED!!!!!");
+                        {                            
                             // Close connection and return.
+                            tcpClient.Close();
+                            connected = false;
+                            throw new AuthenticationException("Unable to authenticate to the server");
                         }
                     }
                     catch (AuthenticationException e)
