@@ -250,3 +250,57 @@
 14.08.2021 17:03:28.56 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
 14.08.2021 17:07:12.27 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
 19.08.2021 8:08:17.37 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 21:49:39.34 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 21:59:57.05 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 22:01:50.07 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 22:13:22.78 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 22:17:00.43 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 22:17:10.65 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 22:29:24.56 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+19.08.2021 22:31:06.02 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+20.08.2021 14:21:44.66 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+24.08.2021 22:53:15.53 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+24.08.2021 22:53:29.27 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:53:29.27 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 22:53:29.28 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:53:29.28 Send Data: 00-02-00-00-00-04-01-01-01-03
+24.08.2021 22:53:29.28 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:53:29.28 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 22:53:29.28 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:53:29.28 Send Data: 00-04-00-00-00-04-01-01-01-00
+24.08.2021 22:54:58.97 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+24.08.2021 22:56:04.97 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:56:04.98 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 22:56:04.98 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:56:04.99 Send Data: 00-02-00-00-00-04-01-01-01-03
+24.08.2021 22:56:04.99 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:56:04.99 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 22:56:04.99 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 22:56:04.99 Send Data: 00-04-00-00-00-04-01-01-01-00
+24.08.2021 23:00:38.65 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+24.08.2021 23:04:56.09 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+24.08.2021 23:04:57.92 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:04:57.93 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 23:04:57.94 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:04:57.94 Send Data: 00-02-00-00-00-04-01-01-01-03
+24.08.2021 23:04:57.94 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:04:57.94 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 23:04:57.95 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:04:57.95 Send Data: 00-04-00-00-00-04-01-01-01-00
+24.08.2021 23:05:55.47 EasyModbus Server listing for incomming data at Port 502, local IP 0.0.0.0
+24.08.2021 23:05:59.82 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:05:59.83 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 23:05:59.84 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:05:59.84 Send Data: 00-02-00-00-00-04-01-01-01-03
+24.08.2021 23:05:59.84 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:05:59.84 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 23:05:59.84 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:05:59.84 Send Data: 00-04-00-00-00-04-01-01-01-00
+24.08.2021 23:06:13.10 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:06:13.11 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 23:06:13.11 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:06:13.11 Send Data: 00-02-00-00-00-04-01-01-01-03
+24.08.2021 23:06:13.11 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:06:13.11 Send Data: 00-03-00-00-00-06-01-0F-00-04-00-0A
+24.08.2021 23:06:13.11 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+24.08.2021 23:06:13.12 Send Data: 00-04-00-00-00-04-01-01-01-00

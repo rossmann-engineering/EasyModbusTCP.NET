@@ -194,6 +194,9 @@ namespace EasyModbusSecure
 
         public static bool ValidateClientCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
+            //if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateNotAvailable)
+            //    return true;
+
             if (sslPolicyErrors == SslPolicyErrors.None)
                 return true;
 
@@ -240,11 +243,14 @@ namespace EasyModbusSecure
                     try
                     {
                         sslStream.AuthenticateAsServer(serverCertificate, true, SslProtocols.Tls12, true);
+                        
                         if (sslStream.RemoteCertificate == null)
                         {
                             Console.WriteLine("Client did not send back a certificate");
-                            sslStream.Close();
-                            tcpClient.Close();
+                            //sslStream.Close();
+                            //tcpClient.Close();
+
+                            throw new AuthenticationException();
                         }                        
 
                         // Display the properties and settings for the authenticated stream.
