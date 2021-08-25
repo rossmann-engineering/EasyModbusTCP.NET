@@ -129,11 +129,13 @@ namespace EasyModbusSecure
             catch (ArgumentNullException e)
             {
                 Console.WriteLine("Certificate value cannot be null.");
+                if (debug) StoreLogData.Instance.Store($"Exception: {e.Message}. Certificate value cannot be null.", System.DateTime.Now);
                 return;
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine("The certificate path is not of a legal form.");
+                if (debug) StoreLogData.Instance.Store($"Exception: {e.Message}. The certificate path is not of a legal form.", System.DateTime.Now);
                 return;
             }
             catch(CryptographicException e)
@@ -142,6 +144,7 @@ namespace EasyModbusSecure
                 if (e.InnerException != null)
                 {
                     Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                    if (debug) StoreLogData.Instance.Store($"Exception: {e.Message}", System.DateTime.Now);
                 }
                 return;
             }
@@ -176,6 +179,8 @@ namespace EasyModbusSecure
                 return true;
 
             Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+            // We should store this log even outside the debugging environment.
+            StoreLogData.Instance.Store("Certificate error"+ sslPolicyErrors, System.DateTime.Now);
 
             // Do not allow this client to communicate with unauthenticated servers.
             return false;
@@ -294,9 +299,12 @@ namespace EasyModbusSecure
                     catch (AuthenticationException e)
                     {
                         Console.WriteLine("Exception: {0}", e.Message);
+                        if(debug) StoreLogData.Instance.Store($"Exception: {e.Message}", System.DateTime.Now);
+
                         if (e.InnerException != null)
                         {
                             Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                            if (debug) StoreLogData.Instance.Store($"Inner exception: {e.InnerException.Message}", System.DateTime.Now);
                         }
                         Console.WriteLine("Authentication failed - closing the connection.");
                         tcpClient.Close();
@@ -307,6 +315,7 @@ namespace EasyModbusSecure
                     catch (Exception e)
                     {
                         Console.WriteLine("Exception 2: {0}", e.Message);
+                        if (debug) StoreLogData.Instance.Store($"Exception 2: {e.Message}", System.DateTime.Now);
 
                         tcpClient.Close();
                         //Disconnect();
@@ -323,10 +332,12 @@ namespace EasyModbusSecure
                     catch (AuthenticationException e)
                     {
                         Console.WriteLine("Exception: {0}", e.Message);
+                        if (debug) StoreLogData.Instance.Store($"Exception: {e.Message}", System.DateTime.Now);
 
                         if (e.InnerException != null)
                         {
                             Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                            if (debug) StoreLogData.Instance.Store($"Inner exception: {e.InnerException.Message}", System.DateTime.Now);
                         }
                         Console.WriteLine("Authentication failed - closing the connection.");
                         tcpClient.Close();
@@ -336,6 +347,7 @@ namespace EasyModbusSecure
                     catch (Exception e)
                     {
                         Console.WriteLine("Exception 2: {0}", e.Message);
+                        if (debug) StoreLogData.Instance.Store($"Exception 2: {e.Message}", System.DateTime.Now);
 
                         tcpClient.Close();
                         //Disconnect();
@@ -385,7 +397,9 @@ namespace EasyModbusSecure
                 try
                 {
                     // Enforcing TLS 1.2, in case system is configured otherwise
-                    // Without Mutual Authentication TODO: Maybe consider adding the rest of parameters (SslProtocols etc.)
+                    // Without Mutual Authentication 
+                    //TODO: Maybe consider adding the rest of parameters (SslProtocols etc.)
+                    //TODO: Use the local Authenticate() method for this one as well. Add some exeption handling
                     stream.AuthenticateAsClient(ipAddress); 
 
                     // With Mutual Authentication
