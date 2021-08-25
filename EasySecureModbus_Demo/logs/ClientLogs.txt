@@ -652,3 +652,11 @@
 24.08.2021 23:37:45.33 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
 24.08.2021 23:39:36.77 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
 24.08.2021 23:39:47.63 Destructor called - automatically disconnect
+24.08.2021 23:45:47.76 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+24.08.2021 23:45:53.11 Destructor called - automatically disconnect
+25.08.2021 0:01:08.67 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+25.08.2021 0:01:08.87 Exception: Unable to authenticate to the server
+25.08.2021 0:01:12.18 Destructor called - automatically disconnect
+25.08.2021 0:02:12.16 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+25.08.2021 0:02:12.38 Exception: Unable to authenticate to the server
+25.08.2021 0:02:13.17 Destructor called - automatically disconnect
