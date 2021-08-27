@@ -450,7 +450,7 @@ namespace EasyModbusSecure
                 tcpClient.Close();
                 connected = false;
                 throw new AuthenticationException("Unable to authenticate to the server");
-            }
+            }            
         }
 
         /// <summary>

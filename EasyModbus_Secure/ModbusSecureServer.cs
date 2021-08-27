@@ -234,7 +234,7 @@ namespace EasyModbusSecure
             {
                 server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
                 Client client = new Client(tcpClient, mutualAuthentication);
-                SslStream sslStream = client.SslStream;
+                SslStream sslStream = client.SslStream;                
 
                 //With Mutual Authentication
                 if (mutualAuthentication)
