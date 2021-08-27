@@ -55,6 +55,26 @@ namespace EasuySecureModbus_Demo
             //    Console.WriteLine("Value of HoldingRegister " + (i + 1) + " " + readHoldingRegister[i].ToString());
 
             modbusClient.Disconnect();                                                //Disconnect from Server
+
+
+            // Second attempt to check session caching
+            modbusClient.Connect();
+
+            if (modbusClient.Connected == false)
+            {
+                Console.WriteLine("Connection could not be established ");
+                Console.WriteLine("Press any key to continue . . . ");
+                Console.ReadKey(true);
+                return;
+            }
+
+            readCoils = modbusClient.ReadCoils(0, 2);
+            // Console Output 2
+            for (int i = 0; i < readCoils.Length; i++)
+                Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
+
+            modbusClient.Disconnect();
+
             Console.Write("Press any key to continue . . . ");
             Console.ReadKey(true);
         }
