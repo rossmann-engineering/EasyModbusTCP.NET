@@ -583,7 +583,7 @@ namespace EasyModbusSecure
     public class ModbusSecureServer
     {
         private bool debug = false;
-        Int32 port = 502;
+        Int32 port = 802;
         ModbusSecureProtocol receiveData;
         ModbusSecureProtocol sendData =  new ModbusSecureProtocol();
         Byte[] bytes = new Byte[2100];

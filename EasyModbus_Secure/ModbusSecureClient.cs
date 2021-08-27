@@ -45,7 +45,7 @@ namespace EasyModbusSecure
         private bool debug=false;
 		private TcpClient tcpClient;
 		private string ipAddress = "127.0.0.1";
-		private int port = 502;
+		private int port = 802;
         private uint transactionIdentifierInternal = 0;
 		private byte [] transactionIdentifier = new byte[2];
 		private byte [] protocolIdentifier = new byte[2];

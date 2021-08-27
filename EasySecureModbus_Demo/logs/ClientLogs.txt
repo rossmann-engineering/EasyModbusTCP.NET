@@ -660,3 +660,22 @@
 25.08.2021 0:02:12.16 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
 25.08.2021 0:02:12.38 Exception: Unable to authenticate to the server
 25.08.2021 0:02:13.17 Destructor called - automatically disconnect
+26.08.2021 20:54:13.21 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+26.08.2021 20:54:38.24 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+26.08.2021 20:56:38.90 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 502
+26.08.2021 20:56:48.52 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.08.2021 20:56:48.88 Exception: Unable to authenticate to the server
+26.08.2021 20:56:50.04 Destructor called - automatically disconnect
+26.08.2021 20:57:06.11 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.08.2021 20:57:06.32 Exception: Unable to authenticate to the server
+26.08.2021 20:57:13.57 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.08.2021 20:57:13.81 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+26.08.2021 20:57:13.81 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+26.08.2021 20:57:13.84 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+26.08.2021 20:57:13.84 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+26.08.2021 20:57:13.84 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+26.08.2021 20:57:13.84 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+26.08.2021 20:57:13.84 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+26.08.2021 20:57:13.84 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+26.08.2021 20:57:13.85 Disconnect
+26.08.2021 20:57:17.22 Destructor called - automatically disconnect
