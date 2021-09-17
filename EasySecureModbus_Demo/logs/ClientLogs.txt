@@ -742,3 +742,392 @@
 26.08.2021 21:33:39.23 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
 26.08.2021 21:33:39.23 Disconnect
 26.08.2021 21:33:48.31 Destructor called - automatically disconnect
+05.09.2021 20:08:21.92 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.09.2021 20:08:22.22 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+05.09.2021 20:08:22.22 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+05.09.2021 20:08:22.24 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+05.09.2021 20:08:22.24 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+05.09.2021 20:08:22.24 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+05.09.2021 20:08:22.24 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+05.09.2021 20:08:22.24 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+05.09.2021 20:08:22.24 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+05.09.2021 20:08:22.25 Disconnect
+05.09.2021 20:08:22.25 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.09.2021 20:08:22.26 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+05.09.2021 20:08:22.26 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+05.09.2021 20:08:22.26 Disconnect
+05.09.2021 20:26:50.50 Destructor called - automatically disconnect
+05.09.2021 20:50:57.78 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.09.2021 20:50:57.99 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+05.09.2021 20:50:57.99 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+05.09.2021 20:50:58.01 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+05.09.2021 20:50:58.01 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+05.09.2021 20:50:58.01 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+05.09.2021 20:50:58.01 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+05.09.2021 20:50:58.01 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+05.09.2021 20:50:58.02 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+05.09.2021 20:50:58.02 Disconnect
+05.09.2021 20:50:58.02 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.09.2021 20:50:58.03 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+05.09.2021 20:50:58.03 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+05.09.2021 20:50:58.03 Disconnect
+05.09.2021 20:52:49.46 Destructor called - automatically disconnect
+09.09.2021 21:08:36.86 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 21:08:37.09 Certificate errorRemoteCertificateChainErrors
+09.09.2021 21:08:37.11 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 21:08:45.97 Destructor called - automatically disconnect
+09.09.2021 23:32:37.91 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:32:38.12 Certificate errorRemoteCertificateChainErrors
+09.09.2021 23:32:38.13 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:33:29.57 Destructor called - automatically disconnect
+09.09.2021 23:33:44.35 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:33:44.67 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+09.09.2021 23:33:44.67 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+09.09.2021 23:33:44.69 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+09.09.2021 23:33:44.69 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+09.09.2021 23:33:44.70 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+09.09.2021 23:33:44.70 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+09.09.2021 23:33:44.70 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.09.2021 23:33:44.70 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+09.09.2021 23:33:44.71 Disconnect
+09.09.2021 23:33:44.71 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:33:44.73 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.09.2021 23:33:44.73 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+09.09.2021 23:33:44.73 Disconnect
+09.09.2021 23:33:49.52 Destructor called - automatically disconnect
+09.09.2021 23:34:05.15 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:34:05.35 Certificate errorRemoteCertificateChainErrors
+09.09.2021 23:34:05.37 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:34:08.96 Destructor called - automatically disconnect
+09.09.2021 23:38:50.80 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:38:51.07 Certificate errorRemoteCertificateNameMismatch, RemoteCertificateChainErrors
+09.09.2021 23:38:51.08 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:39:00.12 Destructor called - automatically disconnect
+09.09.2021 23:47:24.13 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:47:24.34 Certificate errorRemoteCertificateNameMismatch, RemoteCertificateChainErrors
+09.09.2021 23:47:24.36 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:48:30.82 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:48:31.01 Certificate errorRemoteCertificateNameMismatch, RemoteCertificateChainErrors
+09.09.2021 23:48:31.02 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:48:37.70 Destructor called - automatically disconnect
+09.09.2021 23:48:53.56 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:48:53.78 Certificate errorRemoteCertificateNameMismatch, RemoteCertificateChainErrors
+09.09.2021 23:48:53.79 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:55:02.98 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:55:03.20 Certificate errorRemoteCertificateNameMismatch, RemoteCertificateChainErrors
+09.09.2021 23:55:03.21 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:55:04.89 Destructor called - automatically disconnect
+09.09.2021 23:57:31.66 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:57:31.88 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+09.09.2021 23:57:31.88 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+09.09.2021 23:57:31.90 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+09.09.2021 23:57:31.90 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+09.09.2021 23:57:31.90 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+09.09.2021 23:57:31.90 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+09.09.2021 23:57:31.91 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.09.2021 23:57:31.91 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+09.09.2021 23:57:31.91 Disconnect
+09.09.2021 23:57:31.91 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:57:31.93 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.09.2021 23:57:31.93 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+09.09.2021 23:57:31.93 Disconnect
+09.09.2021 23:57:47.64 Destructor called - automatically disconnect
+09.09.2021 23:58:17.54 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:58:17.73 Certificate errorRemoteCertificateNameMismatch, RemoteCertificateChainErrors
+09.09.2021 23:58:17.74 Exception: The remote certificate is invalid according to the validation procedure.
+09.09.2021 23:58:18.65 Destructor called - automatically disconnect
+09.09.2021 23:58:55.79 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:58:56.00 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+09.09.2021 23:58:56.00 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+09.09.2021 23:58:56.02 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+09.09.2021 23:58:56.02 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+09.09.2021 23:58:56.02 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+09.09.2021 23:58:56.02 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+09.09.2021 23:58:56.03 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.09.2021 23:58:56.03 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+09.09.2021 23:58:56.03 Disconnect
+09.09.2021 23:58:56.03 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.09.2021 23:58:56.05 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.09.2021 23:58:56.05 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+09.09.2021 23:58:56.05 Disconnect
+09.09.2021 23:58:58.53 Destructor called - automatically disconnect
+16.09.2021 21:52:07.16 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:52:07.43 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 21:52:07.43 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 21:52:07.47 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 21:52:07.47 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 21:52:07.48 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 21:52:07.48 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 21:52:07.48 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:52:07.48 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:52:07.49 Disconnect
+16.09.2021 21:52:07.49 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:52:07.50 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:52:07.50 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:52:07.50 Disconnect
+16.09.2021 21:53:45.31 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:53:45.50 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 21:53:45.51 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 21:53:45.52 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 21:53:45.52 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 21:53:45.53 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 21:53:45.53 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 21:53:45.53 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:53:45.53 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:53:45.53 Disconnect
+16.09.2021 21:53:45.53 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:53:45.55 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:53:45.55 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:53:45.55 Disconnect
+16.09.2021 21:57:32.02 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:57:32.23 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 21:57:32.23 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 21:57:32.24 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 21:57:32.24 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 21:57:32.26 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 21:57:32.26 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 21:57:32.26 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:57:32.26 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:57:32.26 Disconnect
+16.09.2021 21:57:32.26 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:57:32.28 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:57:32.28 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:57:32.28 Disconnect
+16.09.2021 21:58:14.86 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:58:15.05 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 21:58:15.05 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 21:58:15.07 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 21:58:15.07 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 21:58:15.07 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 21:58:15.07 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 21:58:15.08 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:58:15.08 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:58:15.08 Disconnect
+16.09.2021 21:58:15.08 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 21:58:15.09 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 21:58:15.09 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 21:58:15.09 Disconnect
+16.09.2021 22:02:49.72 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:02:49.96 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:02:49.96 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:02:49.98 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:02:49.98 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:02:49.98 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:02:49.99 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:02:49.99 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:02:49.99 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:02:50.00 Disconnect
+16.09.2021 22:02:50.00 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:02:50.02 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:02:50.02 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:02:50.02 Disconnect
+16.09.2021 22:04:26.40 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:04:26.62 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:04:26.62 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:04:26.64 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:04:26.64 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:04:26.65 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:04:26.65 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:04:26.66 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:04:26.66 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:04:26.66 Disconnect
+16.09.2021 22:04:26.66 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:04:26.68 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:04:26.68 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:04:26.69 Disconnect
+16.09.2021 22:05:33.78 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:05:33.99 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:05:33.99 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:05:34.01 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:05:34.01 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:05:34.01 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:05:34.01 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:05:34.01 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:05:34.01 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:05:34.02 Disconnect
+16.09.2021 22:05:34.02 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:05:34.03 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:05:34.03 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:05:34.03 Disconnect
+16.09.2021 22:11:13.24 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:11:13.43 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:11:13.43 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:11:13.45 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:11:13.45 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:11:13.46 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:11:13.46 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:11:13.46 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:11:13.46 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:11:13.46 Disconnect
+16.09.2021 22:11:13.46 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:11:13.47 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:11:13.47 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:11:13.47 Disconnect
+16.09.2021 22:20:02.74 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:20:02.93 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:20:02.93 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:20:02.95 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:20:02.95 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:20:02.95 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:20:02.96 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:20:02.96 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:20:02.96 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:20:02.96 Disconnect
+16.09.2021 22:20:02.96 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:20:02.98 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:20:02.98 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:20:02.98 Disconnect
+16.09.2021 22:21:22.38 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:21:22.61 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:21:22.61 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:21:22.63 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:21:22.63 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:21:22.64 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:21:22.64 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:21:22.64 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:21:22.64 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:21:22.64 Disconnect
+16.09.2021 22:21:22.65 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:21:22.67 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:21:22.67 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:21:22.67 Disconnect
+16.09.2021 22:27:11.72 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:27:11.97 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:27:11.98 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:27:11.99 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:27:11.99 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:27:12.00 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:27:12.00 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:27:12.00 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:27:12.00 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:27:12.00 Disconnect
+16.09.2021 22:27:12.00 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:27:12.03 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:27:12.03 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:27:12.03 Disconnect
+16.09.2021 22:28:46.25 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:28:46.48 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:28:46.49 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:28:46.51 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:28:46.51 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:28:46.51 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:28:46.51 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:28:46.51 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:28:46.51 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:28:46.51 Disconnect
+16.09.2021 22:28:46.51 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:28:46.53 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:28:46.53 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:28:46.54 Disconnect
+16.09.2021 22:33:08.19 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:33:08.42 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:33:08.43 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:33:08.44 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:33:08.44 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:33:08.45 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:33:08.45 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:33:08.45 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:33:08.45 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:33:08.46 Disconnect
+16.09.2021 22:33:08.46 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:33:08.46 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:33:08.46 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:33:08.47 Disconnect
+16.09.2021 22:34:21.33 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:34:21.53 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:34:21.54 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:34:21.55 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:34:21.55 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:34:21.56 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:34:21.56 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:34:21.56 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:34:21.56 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:34:21.56 Disconnect
+16.09.2021 22:34:21.56 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:34:21.58 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:34:21.58 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:34:21.58 Disconnect
+16.09.2021 22:38:22.43 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:38:22.66 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:38:22.66 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:38:22.67 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:38:22.67 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:38:22.68 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:38:22.68 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:38:22.68 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:38:22.68 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:38:22.68 Disconnect
+16.09.2021 22:38:22.69 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:38:22.69 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:38:22.69 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:38:22.70 Disconnect
+16.09.2021 22:43:52.41 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:43:52.63 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:43:52.63 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:43:52.64 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:43:52.64 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:43:52.65 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:43:52.65 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:43:52.66 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:43:52.66 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:43:52.66 Disconnect
+16.09.2021 22:43:52.66 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:43:52.67 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:43:52.67 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:43:52.67 Disconnect
+16.09.2021 22:45:14.82 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:45:15.02 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:45:15.02 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:45:15.03 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:45:15.03 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:45:15.04 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:45:15.04 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:45:15.04 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:45:15.04 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:45:15.06 Disconnect
+16.09.2021 22:45:15.06 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:45:15.08 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:45:15.08 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:45:15.10 Disconnect
+16.09.2021 22:47:10.47 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:47:10.72 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:47:10.72 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:47:10.73 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:47:10.73 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:47:10.74 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:47:10.74 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:47:10.75 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:47:10.75 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:47:10.75 Disconnect
+16.09.2021 22:47:10.75 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:47:10.77 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:47:10.77 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:47:10.78 Disconnect
+16.09.2021 22:50:11.87 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:50:12.11 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:50:12.11 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:50:12.13 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:50:12.13 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:50:12.13 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:50:12.14 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:50:12.14 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:50:12.14 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:50:12.14 Disconnect
+16.09.2021 22:50:12.14 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:50:12.16 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:50:12.16 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:50:12.16 Disconnect
+16.09.2021 22:52:40.10 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:52:40.35 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+16.09.2021 22:52:40.36 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+16.09.2021 22:52:40.38 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+16.09.2021 22:52:40.38 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+16.09.2021 22:52:40.39 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+16.09.2021 22:52:40.39 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+16.09.2021 22:52:40.40 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:52:40.40 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:52:40.40 Disconnect
+16.09.2021 22:52:40.40 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+16.09.2021 22:52:40.41 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+16.09.2021 22:52:40.41 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+16.09.2021 22:52:40.42 Disconnect
