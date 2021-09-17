@@ -34,6 +34,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace EasyModbusSecure
 {
@@ -101,6 +103,8 @@ namespace EasyModbusSecure
 
         private bool mutualAuthentication { get; set; }
 
+        private List<string> acceptableRoles { get; set; }
+
         static void DisplaySecurityLevel(SslStream stream)
         {
             Console.WriteLine("Cipher: {0} strength {1}", stream.CipherAlgorithm, stream.CipherStrength);
@@ -163,12 +167,15 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication)
+        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles)
         {
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
             this.mutualAuthentication = mutualAuthentication;
+
+            this.acceptableRoles = new List<string>();
+            this.acceptableRoles.AddRange(acceptableRoles);            
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
@@ -180,13 +187,16 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
             this.mutualAuthentication = mutualAuthentication;
+
+            this.acceptableRoles = new List<string>();
+            this.acceptableRoles.AddRange(acceptableRoles);            
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
@@ -259,6 +269,8 @@ namespace EasyModbusSecure
                         DisplayCertificateInformation(sslStream, client);
                         DisplayStreamProperties(sslStream);
 
+                        CheckRoleInformation(sslStream, client);
+
 
                     }
                     catch (AuthenticationException e)
@@ -297,6 +309,8 @@ namespace EasyModbusSecure
                         DisplaySecurityServices(sslStream);
                         DisplayCertificateInformation(sslStream, client);
                         DisplayStreamProperties(sslStream);
+
+                        CheckRoleInformation(sslStream, client);
 
 
                     }
@@ -435,8 +449,7 @@ namespace EasyModbusSecure
 
             // Display the properties of the client's certificate.
             X509Certificate remoteCertificateX509 = stream.RemoteCertificate;    
-
-            int roleCount = 0;
+            
             if (remoteCertificateX509 != null)
             {
                 X509Certificate2 remoteCertificateX5092 = new X509Certificate2(remoteCertificateX509);
@@ -444,9 +457,24 @@ namespace EasyModbusSecure
                 Console.WriteLine("Remote cert was issued to {0} and is valid from {1} until {2}.",
                     remoteCertificateX5092.Subject,
                     remoteCertificateX5092.GetEffectiveDateString(),
-                    remoteCertificateX5092.GetExpirationDateString());
+                    remoteCertificateX5092.GetExpirationDateString());               
+            }
+            else
+            {
+                Console.WriteLine("Remote (client) certificate is null.");
+            }
+        }
 
-                // TODO: Do all these checks in another fucntion and return error code
+        public void CheckRoleInformation(SslStream stream, Client client)
+        {
+            // Display the properties of the client's certificate.
+            X509Certificate remoteCertificateX509 = stream.RemoteCertificate;
+
+            int roleCount = 0;
+            if (remoteCertificateX509 != null)
+            {
+                X509Certificate2 remoteCertificateX5092 = new X509Certificate2(remoteCertificateX509);
+       
                 foreach (X509Extension ext in remoteCertificateX5092.Extensions)
                 {
 
@@ -466,15 +494,39 @@ namespace EasyModbusSecure
 
                     if (ext.Oid.Value.ToString().Equals("1.3.6.1.4.1.50316.802.1"))
                     {
+                        string report = string.Join(Environment.NewLine, this.acceptableRoles.Select(array => string.Join(" ", array)));
+
+                        Console.WriteLine("User Role {0}, len: {1}", report, report.Length);
+
+                        string roleStr = Encoding.ASCII.GetString(asndata.RawData);
+
+                        roleStr = Regex.Replace(roleStr, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
+
+                        // To check if special chars exist
+
+                        //var withoutSpecial = new string(roleStr.Where(c => Char.IsLetterOrDigit(c)
+                        //                    || Char.IsWhiteSpace(c)).ToArray());
+
+                        //if (roleStr != withoutSpecial)
+                        //{
+                        //    Console.WriteLine("String contains special chars");
+                        //}
+
+                        Console.WriteLine("Cert Role {0}, len: {1}", roleStr, roleStr.Length);
+
                         roleCount++;
-                        if (!Encoding.ASCII.GetString(asndata.RawData).Equals("Operator"))
+                        if (!this.acceptableRoles.Contains(roleStr)) // This can be read from a database or a config file, and can include multiple roles
                         {
-                            client.setRole(0);
-                            Console.WriteLine(client.getRole());
+                            client.setRole("0");
+                            Console.WriteLine("RoleOID:  {0}", client.getRole());
                             // Role should be equal to zero when implemented in Modbus
                         }
-                        //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
-                        Console.WriteLine("RoleOID:  {0}", Encoding.ASCII.GetString(asndata.RawData));
+                        else if (this.acceptableRoles.Contains(roleStr))
+                        {
+                            //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
+                            Console.WriteLine("RoleOID:  {0}", Encoding.ASCII.GetString(asndata.RawData));
+                            client.setRole(roleStr);
+                        }
                     }
 
                 }
@@ -511,11 +563,11 @@ namespace EasyModbusSecure
                 this.mutualAuthentication = mutualAuthentication;
             }
 
-            public int getRole()
+            public string getRole()
             {
                 return this.role.getRole();
             }
-            public void setRole(int role)
+            public void setRole(string role)
             {
                 this.role = new Role(role);
             }
@@ -559,16 +611,16 @@ namespace EasyModbusSecure
         }
         private class Role
         {
-            private int val;
-            public Role(int val)
+            private string val;
+            public Role(string val)
             {
                 this.setRole(val);
             }
-            public int getRole()
+            public string getRole()
             {
                 return this.val;
             }
-            public void setRole(int role)
+            public void setRole(string role)
             {
                 this.val = role;
             }
@@ -630,6 +682,8 @@ namespace EasyModbusSecure
 
         private bool mutualAuthentication { get; set; }
 
+        private List<string> acceptableRoles { get; set; }
+
         /// <summary>
         /// When creating a TCP or UDP socket, the local IP address to attach to.
         /// </summary>
@@ -639,7 +693,7 @@ namespace EasyModbusSecure
             set { if (listenerThread == null) localIPAddress = value; }
         }
 
-        public ModbusSecureServer(string certificate, string certificatePassword, bool mutualAuthentication)
+        public ModbusSecureServer(string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles)
         {
             holdingRegisters = new HoldingRegisters(this);
             inputRegisters = new InputRegisters(this);
@@ -651,6 +705,8 @@ namespace EasyModbusSecure
             this.certificatePassword = certificatePassword;
 
             this.mutualAuthentication = mutualAuthentication;
+
+            this.acceptableRoles = acceptableRoles;
 
         }
 
@@ -711,7 +767,7 @@ namespace EasyModbusSecure
                     }
                     catch (Exception) { }
                 }
-                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication);
+                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles);
                 if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 tcpHandler.numberOfClientsChanged += new TCPHandler.NumberOfClientsChanged(numberOfClientsChanged);

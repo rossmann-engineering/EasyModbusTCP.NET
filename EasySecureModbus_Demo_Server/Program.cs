@@ -1,5 +1,6 @@
 ﻿using EasyModbusSecure;
 using System;
+using System.Collections.Generic;
 
 namespace EasySecureModbus_Demo_Server
 {
@@ -14,7 +15,8 @@ namespace EasySecureModbus_Demo_Server
         public void startServer(string certPass)
         {
             //convert that to use CLI argument
-            ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, true);
+            List<string> roles = new List<string> { "Operator" };
+            ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs2\\server.pfx", certPass, true, roles);
             //ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, false);
             modbusServer.LogFileFilename = "..\\..\\logs\\ServerLogs.txt";
             modbusServer.Listen();
