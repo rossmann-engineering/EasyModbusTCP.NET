@@ -28,6 +28,7 @@ using System.IO.Ports;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace EasyModbus
 {
@@ -74,6 +75,7 @@ namespace EasyModbus
 
         NetworkStream stream;
 		
+        private SpinWait sw_delay = new SpinWait();
 		/// <summary>
 		/// Constructor which determines the Master ip-address and the Master Port.
 		/// </summary>
@@ -944,8 +946,9 @@ namespace EasyModbus
 
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
-                	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);       
+                    while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
+                        this.sw_delay.SpinOnce();  
+						  
                 	data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
@@ -1137,8 +1140,9 @@ namespace EasyModbus
                 byte receivedUnitIdentifier = 0xFF;
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
-                	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);  
+                    while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
+                        this.sw_delay.SpinOnce();
+						
                 	data = new byte[2100];
           
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
@@ -1329,8 +1333,9 @@ namespace EasyModbus
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);  
-                	data = new byte[2100];
+                        this.sw_delay.SpinOnce();
+
+                    data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	
                 	receivedUnitIdentifier = data[6];
@@ -1532,8 +1537,9 @@ namespace EasyModbus
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);  
-                	data = new byte[2100];
+                        this.sw_delay.SpinOnce();
+
+                    data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
                 }
@@ -1732,8 +1738,9 @@ namespace EasyModbus
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);  
-                	data = new byte[2100];
+                        this.sw_delay.SpinOnce();
+
+                    data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
                 }
@@ -1911,8 +1918,9 @@ namespace EasyModbus
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);  
-                	data = new byte[2100];
+                        this.sw_delay.SpinOnce();
+
+                    data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
                 }
@@ -2107,8 +2115,9 @@ namespace EasyModbus
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);  
-                	data = new byte[2100];
+                        this.sw_delay.SpinOnce();
+
+                    data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
                 }
@@ -2292,8 +2301,9 @@ namespace EasyModbus
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                    	System.Threading.Thread.Sleep(1);  
-                	data = new byte[2100];
+                        this.sw_delay.SpinOnce();
+
+                    data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
                 }
@@ -2495,8 +2505,9 @@ namespace EasyModbus
                 while (receivedUnitIdentifier != this.unitIdentifier & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
                 {
                 	while (dataReceived == false & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
-                   	 	System.Threading.Thread.Sleep(1);  
-                	data = new byte[2100];
+                        this.sw_delay.SpinOnce();
+
+                    data = new byte[2100];
                 	Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
                 	receivedUnitIdentifier = data[6];
                 }
