@@ -494,23 +494,10 @@ namespace EasyModbusSecure
 
                     if (ext.Oid.Value.ToString().Equals("1.3.6.1.4.1.50316.802.1"))
                     {
-                        string report = string.Join(Environment.NewLine, this.acceptableRoles.Select(array => string.Join(" ", array)));
-
-                        Console.WriteLine("User Role {0}, len: {1}", report, report.Length);
-
-                        string roleStr = Encoding.ASCII.GetString(asndata.RawData);
-
-                        roleStr = Regex.Replace(roleStr, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
-
-                        // To check if special chars exist
-
-                        //var withoutSpecial = new string(roleStr.Where(c => Char.IsLetterOrDigit(c)
-                        //                    || Char.IsWhiteSpace(c)).ToArray());
-
-                        //if (roleStr != withoutSpecial)
-                        //{
-                        //    Console.WriteLine("String contains special chars");
-                        //}
+                        // We get the ASN.1 format from the data taht contains some special characters in the beggininig. 
+                        // We then remove all visilbe and invisible control characters.
+                        string roleStr = Encoding.UTF8.GetString(asndata.RawData);
+                        roleStr = Regex.Replace(roleStr, @"\p{Cc}+", string.Empty);
 
                         Console.WriteLine("Cert Role {0}, len: {1}", roleStr, roleStr.Length);
 
