@@ -479,13 +479,7 @@ namespace EasyModbusSecure
                 {
 
                     AsnEncodedData asndata = new AsnEncodedData(ext.Oid, ext.RawData);
-
-                    // Remove the first two dots from the desited extension
-                    //byte[] dst = new byte[asndata.RawData.Length - 2];
-
-                    //Array.Copy(asndata.RawData, 2, dst, 0, dst.Length);
-
-                    //Console.WriteLine("EEEEEEE  {0}", Encoding.ASCII.GetString(dst));
+                   
                     if (roleCount > 1)
                     {
                         Console.WriteLine("No valid role is provided - closing the connection.");
@@ -497,9 +491,7 @@ namespace EasyModbusSecure
                         // We get the ASN.1 format from the data taht contains some special characters in the beggininig. 
                         // We then remove all visilbe and invisible control characters.
                         string roleStr = Encoding.UTF8.GetString(asndata.RawData);
-                        roleStr = Regex.Replace(roleStr, @"\p{Cc}+", string.Empty);
-
-                        Console.WriteLine("Cert Role {0}, len: {1}", roleStr, roleStr.Length);
+                        roleStr = Regex.Replace(roleStr, @"\p{Cc}+", string.Empty);                       
 
                         roleCount++;
                         if (!this.acceptableRoles.Contains(roleStr)) // This can be read from a database or a config file, and can include multiple roles
