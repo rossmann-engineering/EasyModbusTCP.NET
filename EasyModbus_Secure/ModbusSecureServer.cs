@@ -36,6 +36,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Org.BouncyCastle;
 
 namespace EasyModbusSecure
 {
@@ -474,24 +475,35 @@ namespace EasyModbusSecure
             if (remoteCertificateX509 != null)
             {
                 X509Certificate2 remoteCertificateX5092 = new X509Certificate2(remoteCertificateX509);
-       
-                foreach (X509Extension ext in remoteCertificateX5092.Extensions)
+
+                var bcCert = Org.BouncyCastle.Security.DotNetUtilities.FromX509Certificate(remoteCertificateX5092);
+
+                var oids = bcCert.GetNonCriticalExtensionOids();
+
+                foreach (var oid in oids)
                 {
 
-                    AsnEncodedData asndata = new AsnEncodedData(ext.Oid, ext.RawData);
-                   
                     if (roleCount > 1)
                     {
                         Console.WriteLine("No valid role is provided - closing the connection.");
                         throw new AuthenticationException();
                     }
 
-                    if (ext.Oid.Value.ToString().Equals("1.3.6.1.4.1.50316.802.1"))
+                    if (oid.Equals("1.3.6.1.4.1.50316.802.1"))
                     {
                         // We get the ASN.1 format from the data taht contains some special characters in the beggininig. 
                         // We then remove all visilbe and invisible control characters.
-                        string roleStr = Encoding.UTF8.GetString(asndata.RawData);
-                        roleStr = Regex.Replace(roleStr, @"\p{Cc}+", string.Empty);                       
+
+                        //string roleStr = Encoding.UTF8.GetString(asndata.RawData);
+                        //roleStr = Regex.Replace(roleStr, @"\p{Cc}+", string.Empty);   
+
+                        var oct = bcCert.GetExtensionValue(new Org.BouncyCastle.Asn1.DerObjectIdentifier(oid.ToString())).GetOctets();
+                        //var extVal = bcCert.GetExtensionValue(oid.ToString());
+                        //var oct = Org.BouncyCastle.Asn1.Asn1Object.FromByteArray(extVal.GetOctets());           
+                        var aIn = new Org.BouncyCastle.Asn1.Asn1InputStream(oct);
+
+                        var roleStr = aIn.ReadObject().ToString();
+
 
                         roleCount++;
                         if (!this.acceptableRoles.Contains(roleStr)) // This can be read from a database or a config file, and can include multiple roles
@@ -503,7 +515,7 @@ namespace EasyModbusSecure
                         else if (this.acceptableRoles.Contains(roleStr))
                         {
                             //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
-                            Console.WriteLine("RoleOID:  {0}", Encoding.ASCII.GetString(asndata.RawData));
+                            Console.WriteLine("RoleOID:  {0}", roleStr);
                             client.setRole(roleStr);
                         }
                     }
