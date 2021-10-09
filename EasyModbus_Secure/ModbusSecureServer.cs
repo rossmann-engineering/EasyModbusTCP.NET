@@ -316,6 +316,7 @@ namespace EasyModbusSecure
 
                         CheckRoleInformation(sslStream, client);
 
+                        this.role = new Role(client.getRole());
 
                     }
                     catch (AuthenticationException e)
