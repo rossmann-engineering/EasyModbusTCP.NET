@@ -106,6 +106,8 @@ namespace EasyModbusSecure
 
         private List<string> acceptableRoles { get; set; }
 
+        public Role role { get; set; }
+
         static void DisplaySecurityLevel(SslStream stream)
         {
             Console.WriteLine("Cipher: {0} strength {1}", stream.CipherAlgorithm, stream.CipherStrength);
@@ -245,7 +247,7 @@ namespace EasyModbusSecure
             {
                 server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
                 Client client = new Client(tcpClient, mutualAuthentication);
-                SslStream sslStream = client.SslStream;                
+                SslStream sslStream = client.SslStream;
 
                 //With Mutual Authentication
                 if (mutualAuthentication)
@@ -272,6 +274,7 @@ namespace EasyModbusSecure
 
                         CheckRoleInformation(sslStream, client);
 
+                        this.role = new Role(client.getRole());
 
                     }
                     catch (AuthenticationException e)
@@ -600,7 +603,7 @@ namespace EasyModbusSecure
 
             }
         }
-        private class Role
+        public class Role
         {
             private string val;
             public Role(string val)
@@ -758,9 +761,10 @@ namespace EasyModbusSecure
                     }
                     catch (Exception) { }
                 }
-                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles);
+                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles);             
                 if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
+                //tcpHandler.CheckRoleInformation(tcpHandler.)
                 tcpHandler.numberOfClientsChanged += new TCPHandler.NumberOfClientsChanged(numberOfClientsChanged);
             }
             else if (serialFlag)
@@ -1032,17 +1036,38 @@ namespace EasyModbusSecure
             }
         }
         #endregion
-         
+
+        #region Method CheckRoleAccess
+        private Boolean CheckRoleAccess(SslStream stream, string roleStr)
+        {
+            
+            // TODO: Maybe Modbus functions accessiblity might be checked
+            if (!this.acceptableRoles.Contains(roleStr))
+            {
+                return false;
+            }
+            else if (this.acceptableRoles.Contains(roleStr))
+            {
+                return true;
+            }
+           
+            return false;
+        }
+        #endregion
+
         #region Method CreateAnswer
         private void CreateAnswer(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
+
+            var accessible = CheckRoleAccess(stream, this.tcpHandler.role.getRole());
+            //var accessible = CheckRoleAccess(stream, "Engineer");
 
             switch (receiveData.functionCode)
             {
                 // Read Coils
                 case 1:
-                    if (!FunctionCode1Disabled)
-                        this.ReadCoils(receiveData, sendData, stream, portIn, ipAddressIn);
+                    if (!FunctionCode1Disabled && accessible)
+                        this.ReadCoils(receiveData, sendData, stream, portIn, ipAddressIn);                   
                     else
                     {
                         sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
@@ -1052,7 +1077,7 @@ namespace EasyModbusSecure
                     break;
                 // Read Input Registers
                 case 2:
-                    if (!FunctionCode2Disabled)
+                    if (!FunctionCode2Disabled && accessible)
                         this.ReadDiscreteInputs(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1064,7 +1089,7 @@ namespace EasyModbusSecure
                     break;
                 // Read Holding Registers
                 case 3:
-                    if (!FunctionCode3Disabled)
+                    if (!FunctionCode3Disabled && accessible)
                         this.ReadHoldingRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1076,7 +1101,7 @@ namespace EasyModbusSecure
                     break;
                 // Read Input Registers
                 case 4:
-                    if (!FunctionCode4Disabled)
+                    if (!FunctionCode4Disabled && accessible)
                         this.ReadInputRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1088,7 +1113,7 @@ namespace EasyModbusSecure
                     break;
                 // Write single coil
                 case 5:
-                    if (!FunctionCode5Disabled)
+                    if (!FunctionCode5Disabled && accessible)
                         this.WriteSingleCoil(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1100,7 +1125,7 @@ namespace EasyModbusSecure
                     break;
                 // Write single register
                 case 6:
-                    if (!FunctionCode6Disabled)
+                    if (!FunctionCode6Disabled && accessible)
                         this.WriteSingleRegister(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1112,8 +1137,8 @@ namespace EasyModbusSecure
                         break;
                 // Write Multiple coils
                 case 15:
-                        if (!FunctionCode15Disabled)
-                            this.WriteMultipleCoils(receiveData, sendData, stream, portIn, ipAddressIn);
+                        if (!FunctionCode15Disabled && accessible)
+                        this.WriteMultipleCoils(receiveData, sendData, stream, portIn, ipAddressIn);
                         else
                         {
                             sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
@@ -1124,8 +1149,8 @@ namespace EasyModbusSecure
                         break;
                 // Write Multiple registers
                 case 16:
-                        if (!FunctionCode16Disabled)
-                            this.WriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+                        if (!FunctionCode16Disabled && accessible)
+                        this.WriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                         else
                         {
                             sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
@@ -1136,8 +1161,8 @@ namespace EasyModbusSecure
                         break;
                 // Error: Function Code not supported
                 case 23:
-                        if (!FunctionCode23Disabled)
-                            this.ReadWriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+                        if (!FunctionCode23Disabled && accessible)
+                        this.ReadWriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                         else
                         {
                             sendData.errorCode = (byte)(receiveData.functionCode + 0x80);

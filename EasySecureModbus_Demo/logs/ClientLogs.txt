@@ -1205,3 +1205,25 @@
 05.10.2021 21:29:20.17 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
 05.10.2021 21:29:20.17 Disconnect
 05.10.2021 21:29:34.43 Destructor called - automatically disconnect
+09.10.2021 15:41:03.62 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.10.2021 15:41:03.88 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+09.10.2021 15:41:03.88 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+09.10.2021 15:42:40.74 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.10.2021 15:42:40.96 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+09.10.2021 15:42:40.97 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+09.10.2021 15:42:41.06 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+09.10.2021 15:42:41.06 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
+09.10.2021 15:42:41.08 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+09.10.2021 15:42:41.08 Send ModbusTCP-Data: 00-03-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+09.10.2021 15:42:41.08 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.10.2021 15:42:41.08 Send MocbusTCP-Data: 00-04-00-00-00-06-01-01-00-00-00-02
+09.10.2021 15:42:41.08 Disconnect
+09.10.2021 15:42:41.09 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.10.2021 15:42:41.10 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+09.10.2021 15:42:41.10 Send MocbusTCP-Data: 00-05-00-00-00-06-01-01-00-00-00-02
+09.10.2021 15:42:41.10 Disconnect
+09.10.2021 15:42:52.57 Destructor called - automatically disconnect
+09.10.2021 15:46:09.38 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+09.10.2021 15:46:09.62 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+09.10.2021 15:46:09.62 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+09.10.2021 15:46:09.70 FunctionCodeNotSupportedException Throwed
