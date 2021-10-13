@@ -622,12 +622,104 @@ namespace EasyModbusSecure
 
         };
     }
-#endregion
-    
+    #endregion
+
+    #region Interface Modbus Functions
+    public interface IModbusFunctions
+    {
+        void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);
+
+        void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn);        
+    }
+    #endregion
+
+    //public class ModbusSecureServerBase : IModbusFunctions
+    //{
+    //    public HoldingRegisters holdingRegisters;
+    //    public InputRegisters inputRegisters;
+    //    public Coils coils;
+    //    public DiscreteInputs discreteInputs;
+    //    public ModbusSecureServerBase(string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles)
+    //    {
+    //        holdingRegisters = new HoldingRegisters(this);
+    //        inputRegisters = new InputRegisters(this);
+    //        coils = new Coils(this);
+    //        discreteInputs = new DiscreteInputs(this);
+
+    //        this.certificate = certificate;
+
+    //        this.certificatePassword = certificatePassword;
+
+    //        this.mutualAuthentication = mutualAuthentication;
+
+    //        this.acceptableRoles = acceptableRoles;
+
+    //    }
+
+    //    public void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    public void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
     /// <summary>
     /// Modbus TCP Server.
     /// </summary>
-    public class ModbusSecureServer
+    public class ModbusSecureServer : IModbusFunctions
     {
         private bool debug = false;
         Int32 port = 802;
@@ -678,6 +770,11 @@ namespace EasyModbusSecure
         private bool mutualAuthentication { get; set; }
 
         private List<string> acceptableRoles { get; set; }
+
+        public List<string> getAacceptableRoles()
+        {
+            return this.acceptableRoles;
+        }
 
         /// <summary>
         /// When creating a TCP or UDP socket, the local IP address to attach to.
@@ -1038,36 +1135,36 @@ namespace EasyModbusSecure
         }
         #endregion
 
-        #region Method CheckRoleAccess
-        private Boolean CheckRoleAccess(SslStream stream, string roleStr)
-        {
+        //#region Method CheckRoleAccess
+        //public bool CheckRoleAccess(SslStream stream, string roleStr)
+        //{
             
-            // TODO: Maybe Modbus functions accessiblity might be checked
-            if (!this.acceptableRoles.Contains(roleStr))
-            {
-                return false;
-            }
-            else if (this.acceptableRoles.Contains(roleStr))
-            {
-                return true;
-            }
+        //    // TODO: Maybe Modbus functions accessiblity might be checked
+        //    if (!this.acceptableRoles.Contains(roleStr))
+        //    {
+        //        return false;
+        //    }
+        //    else if (this.acceptableRoles.Contains(roleStr))
+        //    {
+        //        return true;
+        //    }
            
-            return false;
-        }
-        #endregion
+        //    return false;
+        //}
+        //#endregion
 
         #region Method CreateAnswer
-        private void CreateAnswer(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void CreateAnswer(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
 
-            var accessible = CheckRoleAccess(stream, this.tcpHandler.role.getRole());
+            //var accessible = CheckRoleAccess(stream, this.tcpHandler.role.getRole());
             //var accessible = CheckRoleAccess(stream, "Engineer");
 
             switch (receiveData.functionCode)
             {
                 // Read Coils
                 case 1:
-                    if (!FunctionCode1Disabled && accessible)
+                    if (!FunctionCode1Disabled)
                         this.ReadCoils(receiveData, sendData, stream, portIn, ipAddressIn);                   
                     else
                     {
@@ -1078,7 +1175,7 @@ namespace EasyModbusSecure
                     break;
                 // Read Input Registers
                 case 2:
-                    if (!FunctionCode2Disabled && accessible)
+                    if (!FunctionCode2Disabled)
                         this.ReadDiscreteInputs(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1090,7 +1187,7 @@ namespace EasyModbusSecure
                     break;
                 // Read Holding Registers
                 case 3:
-                    if (!FunctionCode3Disabled && accessible)
+                    if (!FunctionCode3Disabled)
                         this.ReadHoldingRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1102,7 +1199,7 @@ namespace EasyModbusSecure
                     break;
                 // Read Input Registers
                 case 4:
-                    if (!FunctionCode4Disabled && accessible)
+                    if (!FunctionCode4Disabled)
                         this.ReadInputRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1114,7 +1211,7 @@ namespace EasyModbusSecure
                     break;
                 // Write single coil
                 case 5:
-                    if (!FunctionCode5Disabled && accessible)
+                    if (!FunctionCode5Disabled)
                         this.WriteSingleCoil(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1126,7 +1223,7 @@ namespace EasyModbusSecure
                     break;
                 // Write single register
                 case 6:
-                    if (!FunctionCode6Disabled && accessible)
+                    if (!FunctionCode6Disabled)
                         this.WriteSingleRegister(receiveData, sendData, stream, portIn, ipAddressIn);
                     else
                     {
@@ -1138,7 +1235,7 @@ namespace EasyModbusSecure
                         break;
                 // Write Multiple coils
                 case 15:
-                        if (!FunctionCode15Disabled && accessible)
+                        if (!FunctionCode15Disabled)
                         this.WriteMultipleCoils(receiveData, sendData, stream, portIn, ipAddressIn);
                         else
                         {
@@ -1150,7 +1247,7 @@ namespace EasyModbusSecure
                         break;
                 // Write Multiple registers
                 case 16:
-                        if (!FunctionCode16Disabled && accessible)
+                        if (!FunctionCode16Disabled)
                         this.WriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                         else
                         {
@@ -1162,7 +1259,7 @@ namespace EasyModbusSecure
                         break;
                 // Error: Function Code not supported
                 case 23:
-                        if (!FunctionCode23Disabled && accessible)
+                        if (!FunctionCode23Disabled)
                         this.ReadWriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
                         else
                         {
@@ -1181,8 +1278,8 @@ namespace EasyModbusSecure
             sendData.timeStamp = DateTime.Now;
         }
         #endregion
-         
-        private void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+
+        public void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1310,7 +1407,7 @@ namespace EasyModbusSecure
             }  
         }
 
-        private void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1436,7 +1533,7 @@ namespace EasyModbusSecure
             }
         }
 
-        private void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1552,7 +1649,7 @@ namespace EasyModbusSecure
             }       
         }
 
-        private void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1669,7 +1766,7 @@ namespace EasyModbusSecure
             }
         }
 
-        private void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1798,7 +1895,7 @@ namespace EasyModbusSecure
             }
         }
 
-        private void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1921,7 +2018,7 @@ namespace EasyModbusSecure
             }
         }
 
-        private void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -2061,7 +2158,7 @@ namespace EasyModbusSecure
             }
         }
 
-        private void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -2185,7 +2282,7 @@ namespace EasyModbusSecure
             }
         }
 
-        private void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -2582,7 +2679,7 @@ namespace EasyModbusSecure
     public class InputRegisters
     {
         public Int16[] localArray = new Int16[65535];
-        ModbusSecureServer ModbusSecureServer;
+            ModbusSecureServer ModbusSecureServer;
 
         public InputRegisters(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
         {
@@ -2603,7 +2700,7 @@ namespace EasyModbusSecure
     public class Coils
     {
         public bool[] localArray = new bool[65535];
-        ModbusSecureServer ModbusSecureServer;
+            ModbusSecureServer ModbusSecureServer;
 
         public Coils(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
         {
@@ -2624,7 +2721,7 @@ namespace EasyModbusSecure
     public class DiscreteInputs
     {
         public bool[] localArray = new bool[65535];
-        ModbusSecureServer ModbusSecureServer;
+            ModbusSecureServer ModbusSecureServer;
 
         public DiscreteInputs(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
         {
@@ -2644,5 +2741,138 @@ namespace EasyModbusSecure
       
         }
     }
+
+    public class ModbusSecureServerBase : IModbusFunctions
+    {
+        protected IModbusFunctions wrapee;
+
+        public ModbusSecureServerBase() { }
+
+        public ModbusSecureServerBase(IModbusFunctions source)
+        {
+            this.wrapee = source;
+        }
+
+        public void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadCoils(receiveData, sendData,  stream, portIn, ipAddressIn);
+        }
+
+        public void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadDiscreteInputs(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadHoldingRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadInputRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteSingleCoil(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteSingleRegister(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteMultipleCoils(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadWriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }        
+    }
+
+    public class ModbusSecureServerAuthZ : ModbusSecureServerBase
+    {
+        public ModbusSecureServerAuthZ(IModbusFunctions source)
+        {
+            this.wrapee = source;
+        }
+
+        //#region Method CheckRoleAccess
+        //private Boolean CheckRoleAccess(SslStream stream, string roleStr)
+        //{
+        //    this.wrapee.
+
+        //    // TODO: Maybe Modbus functions accessiblity might be checked
+        //    if (!this.acceptableRoles.Contains(roleStr))
+        //    {
+        //        return false;
+        //    }
+        //    else if (this.acceptableRoles.Contains(roleStr))
+        //    {
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+        //#endregion
+
+        public void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            //var accessible = CheckRoleAccess(stream, this.tcpHandler.role.getRole());        
+           
+            this.wrapee.ReadCoils(receiveData, sendData, stream, portIn, ipAddressIn);
+            
+        }
+
+        public void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadDiscreteInputs(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadHoldingRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadInputRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteSingleCoil(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteSingleRegister(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteMultipleCoils(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.WriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+
+        public void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            this.wrapee.ReadWriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
+        }
+    }
+
 }
    
