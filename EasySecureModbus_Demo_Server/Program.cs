@@ -18,6 +18,8 @@ namespace EasySecureModbus_Demo_Server
             List<string> roles = new List<string> { "Operator" };
             ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs2\\server.pfx", certPass, true, roles);
             //ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, false);
+
+            modbusServer.FunctionCode1AuthZDisabled = true;
             modbusServer.LogFileFilename = "..\\..\\logs\\ServerLogs.txt";
             modbusServer.Listen();
 
