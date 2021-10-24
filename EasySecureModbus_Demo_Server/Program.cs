@@ -15,8 +15,9 @@ namespace EasySecureModbus_Demo_Server
         public void startServer(string certPass)
         {
             //convert that to use CLI argument
-            List<string> roles = new List<string> { "Operator" };
-            ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs2\\server.pfx", certPass, true, roles);
+            List<string> roles = new List<string> { "Operator" }; 
+            ModbusSecureServerAuthZ modbusServer = new ModbusSecureServerAuthZ("..\\..\\certs2\\server.pfx", certPass, true, roles);
+            //ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs2\\server.pfx", certPass, true, roles);
             //ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs\\server.pfx", certPass, false);
 
             modbusServer.FunctionCode1AuthZDisabled = true;
