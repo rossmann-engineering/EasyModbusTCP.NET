@@ -28,7 +28,7 @@ namespace EasuySecureModbus_Demo
                 return;
             }
 
-            modbusClient.WriteMultipleCoils(4, new bool[] { true, true, true, true, true, true, true, true, true, true });    //Write Coils starting with Address 5
+            //modbusClient.WriteMultipleCoils(4, new bool[] { true, true, true, true, true, true, true, true, true, true });    //Write Coils starting with Address 5
             //modbusClient.WriteSingleRegister(0, 5);
             bool[] readCoils = modbusClient.ReadCoils(9, 2);                        //Read 10 Coils from Server, starting with address 10
             //int[] readHoldingRegisters = modbusClient.ReadHoldingRegisters(0, 10);    //Read 2 Holding Registers from Server, starting with Address 1
@@ -38,12 +38,12 @@ namespace EasuySecureModbus_Demo
                 Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
 
 
-            modbusClient.WriteMultipleCoils(4, new bool[] { true, false, true, true, true, false, true, true, true, true });    //Write Coils starting with Address 1
+            //modbusClient.WriteMultipleCoils(4, new bool[] { true, false, true, true, true, false, true, true, true, true });    //Write Coils starting with Address 1
 
-            readCoils = modbusClient.ReadCoils(0, 2);
-            // Console Output 2
-            for (int i = 0; i < readCoils.Length; i++)
-                Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
+            //readCoils = modbusClient.ReadCoils(0, 2);
+            //// Console Output 2
+            //for (int i = 0; i < readCoils.Length; i++)
+            //    Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
 
             //for (int i = 0; i < readHoldingRegisters.Length; i++)
             //    Console.WriteLine("Value of HoldingRegister " + (i + 1) + " " + readHoldingRegisters[i].ToString());
@@ -58,22 +58,22 @@ namespace EasuySecureModbus_Demo
 
 
             // Second attempt to check session caching
-            modbusClient.Connect();
+            //modbusClient.Connect();
 
-            if (modbusClient.Connected == false)
-            {
-                Console.WriteLine("Connection could not be established ");
-                Console.WriteLine("Press any key to continue . . . ");
-                Console.ReadKey(true);
-                return;
-            }
+            //if (modbusClient.Connected == false)
+            //{
+            //    Console.WriteLine("Connection could not be established ");
+            //    Console.WriteLine("Press any key to continue . . . ");
+            //    Console.ReadKey(true);
+            //    return;
+            //}
 
-            readCoils = modbusClient.ReadCoils(0, 2);
-            // Console Output 2
-            for (int i = 0; i < readCoils.Length; i++)
-                Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
+            //readCoils = modbusClient.ReadCoils(0, 2);
+            //// Console Output 2
+            //for (int i = 0; i < readCoils.Length; i++)
+            //    Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
 
-            modbusClient.Disconnect();
+            //modbusClient.Disconnect();
 
             Console.Write("Press any key to continue . . . ");
             Console.ReadKey(true);

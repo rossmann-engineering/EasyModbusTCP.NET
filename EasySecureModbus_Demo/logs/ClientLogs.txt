@@ -1366,3 +1366,33 @@
 23.10.2021 20:09:41.88 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
 23.10.2021 20:09:41.88 Send MocbusTCP-Data: 00-02-00-00-00-06-01-01-00-09-00-02
 23.10.2021 20:09:41.88 FunctionCodeNotSupportedException Throwed
+26.10.2021 23:44:26.29 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:44:26.66 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+26.10.2021 23:44:26.66 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+26.10.2021 23:44:26.94 FunctionCodeNotSupportedException Throwed
+26.10.2021 23:45:29.36 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:45:29.57 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+26.10.2021 23:45:29.57 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+26.10.2021 23:45:29.71 FunctionCodeNotSupportedException Throwed
+26.10.2021 23:47:31.79 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:47:40.42 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:47:40.63 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+26.10.2021 23:47:40.63 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+26.10.2021 23:47:40.81 FunctionCodeNotSupportedException Throwed
+26.10.2021 23:48:26.83 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:48:27.03 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+26.10.2021 23:48:27.03 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+26.10.2021 23:49:53.92 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:49:54.11 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+26.10.2021 23:49:54.11 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+26.10.2021 23:50:07.32 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:50:07.46 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+26.10.2021 23:50:07.46 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+26.10.2021 23:50:07.46 FunctionCodeNotSupportedException Throwed
+26.10.2021 23:50:48.86 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:50:48.98 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+26.10.2021 23:50:48.99 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+26.10.2021 23:52:22.38 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+26.10.2021 23:52:22.63 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+26.10.2021 23:52:22.64 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+26.10.2021 23:52:22.83 Disconnect

@@ -104,7 +104,7 @@ namespace EasyModbusSecure
 
         private bool mutualAuthentication { get; set; }
 
-        private List<string> acceptableRoles { get; set; }
+        private List<ValueTuple<string, byte>> acceptableRoles { get; set; }
 
         public Role role { get; set; }
 
@@ -170,14 +170,14 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles)
+        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
         {
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
             this.mutualAuthentication = mutualAuthentication;
 
-            this.acceptableRoles = new List<string>();
+            this.acceptableRoles = new List<ValueTuple<string, byte>>();
             this.acceptableRoles.AddRange(acceptableRoles);            
 
             server.Start();
@@ -190,7 +190,7 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
@@ -198,7 +198,7 @@ namespace EasyModbusSecure
 
             this.mutualAuthentication = mutualAuthentication;
 
-            this.acceptableRoles = new List<string>();
+            this.acceptableRoles = new List<ValueTuple<string, byte>>();
             this.acceptableRoles.AddRange(acceptableRoles);            
 
             server.Start();
@@ -510,18 +510,33 @@ namespace EasyModbusSecure
 
 
                         roleCount++;
-                        if (!this.acceptableRoles.Contains(roleStr)) // This can be read from a database or a config file, and can include multiple roles
+                        foreach (var roleTuple in acceptableRoles)
                         {
-                            client.setRole("0");
-                            Console.WriteLine("RoleOID:  {0}", client.getRole());
-                            // Role should be equal to zero when implemented in Modbus
+                            if(!roleTuple.Item1.Equals(roleStr))
+                            {
+                                client.setRole("0");
+                                Console.WriteLine("RoleOID:  {0}", client.getRole());
+                            }
+                            else if (roleTuple.Item1.Equals(roleStr))
+                            {
+                                //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
+                                Console.WriteLine("RoleOID:  {0}", roleStr);
+                                client.setRole(roleStr);
+                            }
                         }
-                        else if (this.acceptableRoles.Contains(roleStr))
-                        {
-                            //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
-                            Console.WriteLine("RoleOID:  {0}", roleStr);
-                            client.setRole(roleStr);
-                        }
+
+                        //if (!this.acceptableRoles.Contains(roleStr)) // This can be read from a database or a config file, and can include multiple roles
+                        //{
+                        //    client.setRole("0");
+                        //    Console.WriteLine("RoleOID:  {0}", client.getRole());
+                        //    // Role should be equal to zero when implemented in Modbus
+                        //}
+                        //else if (this.acceptableRoles.Contains(roleStr))
+                        //{
+                        //    //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
+                        //    Console.WriteLine("RoleOID:  {0}", roleStr);
+                        //    client.setRole(roleStr);
+                        //}
                     }
 
                 }
@@ -680,7 +695,7 @@ namespace EasyModbusSecure
 
         private bool mutualAuthentication { get; set; }
 
-        protected List<string> acceptableRoles { get; set; }
+        protected List<ValueTuple<string, byte>> acceptableRoles { get; set; }
         protected string TcpHandlerRole
         {
             get
@@ -698,7 +713,7 @@ namespace EasyModbusSecure
             set { if (listenerThread == null) localIPAddress = value; }
         }
 
-        public ModbusSecureServer(string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles)
+        public ModbusSecureServer(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
         {
             holdingRegisters = new HoldingRegisters(this);
             inputRegisters = new InputRegisters(this);
@@ -2647,7 +2662,7 @@ namespace EasyModbusSecure
         public bool FunctionCode16AuthZDisabled { get; set; }
         public bool FunctionCode23AuthZDisabled { get; set; }
 
-        public ModbusSecureServerAuthZ(string certificate, string certificatePassword, bool mutualAuthentication, List<string> acceptableRoles) 
+        public ModbusSecureServerAuthZ(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string,byte>> acceptableRoles) 
             : base(certificate, certificatePassword, mutualAuthentication, acceptableRoles)
         {
 
@@ -2656,14 +2671,15 @@ namespace EasyModbusSecure
 
 
         #region Method CheckRoleAccess
-        private Boolean CheckRoleAccess(SslStream stream, string roleStr)
+        private Boolean CheckRoleAccess(SslStream stream, string roleStr, byte functionCode)
         {
             // TODO: Maybe Modbus functions accessiblity should be checked
-            if (!this.acceptableRoles.Contains(roleStr))
+
+            if (!this.acceptableRoles.Contains(ValueTuple.Create(roleStr, functionCode)))
             {
                 return false;
             }
-            else if (this.acceptableRoles.Contains(roleStr))
+            else if (this.acceptableRoles.Contains(ValueTuple.Create(roleStr, functionCode)))
             {
                 return true;
             }
@@ -2674,7 +2690,7 @@ namespace EasyModbusSecure
 
         public override void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {           
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode1AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode1AuthZDisabled)
             {
                 base.ReadCoils(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2688,7 +2704,7 @@ namespace EasyModbusSecure
 
         public override void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode2AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode2AuthZDisabled)
             {
                 base.ReadDiscreteInputs(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2702,7 +2718,7 @@ namespace EasyModbusSecure
 
         public override void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode3AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode3AuthZDisabled)
             {
                 base.ReadHoldingRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2716,7 +2732,7 @@ namespace EasyModbusSecure
 
         public override void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode4AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode4AuthZDisabled)
             {
                 base.ReadInputRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2730,7 +2746,7 @@ namespace EasyModbusSecure
 
         public override void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode5AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode5AuthZDisabled)
             {
                 base.WriteSingleCoil(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2744,7 +2760,7 @@ namespace EasyModbusSecure
 
         public override void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode6AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode6AuthZDisabled)
             {
                 base.WriteSingleRegister(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2758,7 +2774,7 @@ namespace EasyModbusSecure
 
         public override void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode15AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode15AuthZDisabled)
             {
                 base.WriteMultipleCoils(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2772,7 +2788,7 @@ namespace EasyModbusSecure
 
         public override void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode16AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode16AuthZDisabled)
             {
                 base.WriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
             }
@@ -2786,7 +2802,7 @@ namespace EasyModbusSecure
 
         public override void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole) && !FunctionCode23AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode23AuthZDisabled)
             {
                 base.ReadWriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
             }
