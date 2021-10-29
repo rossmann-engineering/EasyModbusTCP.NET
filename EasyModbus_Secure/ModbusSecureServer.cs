@@ -104,7 +104,7 @@ namespace EasyModbusSecure
 
         private bool mutualAuthentication { get; set; }
 
-        private List<ValueTuple<string, byte>> acceptableRoles { get; set; }
+        private List<ValueTuple<string, List<byte>>> acceptableRoles { get; set; }
 
         public Role role { get; set; }
 
@@ -171,7 +171,7 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
+        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication,  List<ValueTuple<string, List<byte>>> acceptableRoles)
         {
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
@@ -181,7 +181,7 @@ namespace EasyModbusSecure
 
             this.mutualAuthentication = mutualAuthentication;            
 
-            this.acceptableRoles = new List<ValueTuple<string, byte>>();
+            this.acceptableRoles = new List<ValueTuple<string, List<byte>>>();
             this.acceptableRoles.AddRange(acceptableRoles);
 
             server.Start();
@@ -194,7 +194,7 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, List<byte>>> acceptableRoles)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
@@ -205,7 +205,7 @@ namespace EasyModbusSecure
 
             this.mutualAuthentication = mutualAuthentication;
          
-            this.acceptableRoles = new List<ValueTuple<string, byte>>();
+            this.acceptableRoles = new List<ValueTuple<string, List<byte>>>();
             this.acceptableRoles.AddRange(acceptableRoles);
 
             server.Start();
@@ -698,7 +698,7 @@ namespace EasyModbusSecure
 
         private bool mutualAuthentication { get; set; }
 
-        protected List<ValueTuple<string, byte>> acceptableRoles { get; set; }
+        protected List<ValueTuple<string, List<byte>>> acceptableRoles { get; set; }
         protected string TcpHandlerRole
         {
             get
@@ -716,7 +716,7 @@ namespace EasyModbusSecure
             set { if (listenerThread == null) localIPAddress = value; }
         }
 
-        public ModbusSecureServer(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
+        public ModbusSecureServer(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, List<byte>>> acceptableRoles)
         {
             holdingRegisters = new HoldingRegisters(this);
             inputRegisters = new InputRegisters(this);
@@ -2665,7 +2665,7 @@ namespace EasyModbusSecure
         public bool FunctionCode16AuthZDisabled { get; set; }
         public bool FunctionCode23AuthZDisabled { get; set; }
 
-        public ModbusSecureServerAuthZ(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
+        public ModbusSecureServerAuthZ(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, List<byte>>> acceptableRoles)
             : base(certificate, certificatePassword, mutualAuthentication, acceptableRoles)
         {
 
@@ -2678,13 +2678,21 @@ namespace EasyModbusSecure
         {
             // TODO: Maybe Modbus functions accessiblity should be checked
 
-            if (!this.acceptableRoles.Contains(ValueTuple.Create(roleStr, functionCode)))
+            //if (!this.acceptableRoles.Contains(ValueTuple.Create(roleStr, functionCode)))
+            //{
+            //    return false;
+            //}
+            //else if (this.acceptableRoles.Contains(ValueTuple.Create(roleStr, functionCode)))
+            //{
+            //    return true;
+            //}
+
+            foreach (var roleTuple in acceptableRoles)
             {
-                return false;
-            }
-            else if (this.acceptableRoles.Contains(ValueTuple.Create(roleStr, functionCode)))
-            {
-                return true;
+                if(roleTuple.Item1.Equals(roleStr) && roleTuple.Item2.Contains(functionCode))
+                {
+                    return true;
+                }
             }
 
             return false;

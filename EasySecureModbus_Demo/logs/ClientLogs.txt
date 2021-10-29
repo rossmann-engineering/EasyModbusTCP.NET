@@ -1446,3 +1446,44 @@
 28.10.2021 21:28:14.28 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
 28.10.2021 21:28:14.47 Disconnect
 28.10.2021 21:28:17.75 Destructor called - automatically disconnect
+28.10.2021 21:36:12.35 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:36:12.52 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:36:12.52 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:36:12.62 FunctionCodeNotSupportedException Throwed
+28.10.2021 21:41:58.99 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:41:59.17 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:41:59.17 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:41:59.27 Disconnect
+28.10.2021 21:42:09.27 Destructor called - automatically disconnect
+28.10.2021 21:42:19.75 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:42:19.93 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:42:19.94 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:42:20.07 FunctionCodeNotSupportedException Throwed
+28.10.2021 21:42:49.61 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:42:49.78 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:42:49.78 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:42:49.91 Disconnect
+28.10.2021 21:42:52.85 Destructor called - automatically disconnect
+28.10.2021 21:44:46.43 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:44:46.60 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:44:46.60 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:44:46.72 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+28.10.2021 21:44:46.72 Send ModbusTCP-Data: 00-02-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+28.10.2021 21:44:46.72 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+28.10.2021 21:44:46.72 Send MocbusTCP-Data: 00-03-00-00-00-06-01-01-00-00-00-02
+28.10.2021 21:44:46.72 Disconnect
+28.10.2021 21:46:20.64 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:46:20.82 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:46:20.82 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:46:20.95 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+28.10.2021 21:46:20.95 Send ModbusTCP-Data: 00-02-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+28.10.2021 21:46:20.95 FunctionCodeNotSupportedException Throwed
+28.10.2021 21:46:38.83 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:46:38.99 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:46:38.99 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:46:39.11 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+28.10.2021 21:46:39.11 Send ModbusTCP-Data: 00-02-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+28.10.2021 21:46:39.12 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+28.10.2021 21:46:39.12 Send MocbusTCP-Data: 00-03-00-00-00-06-01-01-00-00-00-02
+28.10.2021 21:46:39.12 Disconnect
+28.10.2021 21:46:40.21 Destructor called - automatically disconnect
