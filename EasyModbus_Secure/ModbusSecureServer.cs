@@ -46,7 +46,7 @@ namespace EasyModbusSecure
     /// </summary>
     public class ModbusSecureProtocol
     {
-    	public enum ProtocolType { ModbusTCP = 0, ModbusUDP = 1, ModbusRTU = 2};
+        public enum ProtocolType { ModbusTCP = 0, ModbusUDP = 1, ModbusRTU = 2 };
         public DateTime timeStamp;
         public bool request;
         public bool response;
@@ -67,12 +67,12 @@ namespace EasyModbusSecure
         public UInt16[] receiveCoilValues;
         public UInt16[] receiveRegisterValues;
         public Int16[] sendRegisterValues;
-        public bool[] sendCoilValues;    
+        public bool[] sendCoilValues;
         public UInt16 crc;
     }
-#endregion
+    #endregion
 
-#region structs
+    #region structs
     struct NetworkConnectionParameter
     {
         public SslStream stream;            //For TCP-Connection only
@@ -80,9 +80,9 @@ namespace EasyModbusSecure
         public int portIn;                  //For UDP-Connection only
         public IPAddress ipAddressIn;       //For UDP-Connection only
     }
-#endregion
+    #endregion
 
-#region TCPHandler class
+    #region TCPHandler class
     internal class TCPHandler
     {
         public delegate void DataChanged(object networkConnectionParameter);
@@ -97,7 +97,7 @@ namespace EasyModbusSecure
         private List<Client> tcpClientLastRequestList = new List<Client>();
 
         public int NumberOfConnectedClients { get; set; }
-        
+
         public string ipAddress = null;
 
         private X509Certificate2 serverCertificate;
@@ -145,7 +145,7 @@ namespace EasyModbusSecure
             // Display the properties of the client's certificate.
             X509Certificate remoteCertificate = stream.RemoteCertificate;
 
-           
+
 
             if (stream.RemoteCertificate != null)
             {
@@ -161,7 +161,8 @@ namespace EasyModbusSecure
         }
 
         /// When making a server TCP listen socket, will listen to this IP address.
-        public IPAddress LocalIPAddress {
+        public IPAddress LocalIPAddress
+        {
             get { return localIPAddress; }
         }
         private IPAddress localIPAddress = IPAddress.Loopback; //Change that back to .Any
@@ -175,14 +176,17 @@ namespace EasyModbusSecure
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
-            this.mutualAuthentication = mutualAuthentication;
+            // By default everyone is denied access
+            this.role = new Role("0");
+
+            this.mutualAuthentication = mutualAuthentication;            
 
             this.acceptableRoles = new List<ValueTuple<string, byte>>();
-            this.acceptableRoles.AddRange(acceptableRoles);            
+            this.acceptableRoles.AddRange(acceptableRoles);
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
-            
+
         }
 
         /// <summary>
@@ -196,10 +200,13 @@ namespace EasyModbusSecure
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
 
-            this.mutualAuthentication = mutualAuthentication;
+            // By default everyone is denied access
+            this.role = new Role("0");
 
+            this.mutualAuthentication = mutualAuthentication;
+         
             this.acceptableRoles = new List<ValueTuple<string, byte>>();
-            this.acceptableRoles.AddRange(acceptableRoles);            
+            this.acceptableRoles.AddRange(acceptableRoles);
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
@@ -219,7 +226,7 @@ namespace EasyModbusSecure
 
             Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
 
-            // Do not allow this client to communicate with unauthenticated servers.
+            // Do not allow this sever to communicate with unauthenticated clients.
             return false;
         }
 
@@ -256,7 +263,7 @@ namespace EasyModbusSecure
                     try
                     {
                         sslStream.AuthenticateAsServer(serverCertificate, true, SslProtocols.Tls12, true);
-                        
+
                         if (sslStream.RemoteCertificate == null)
                         {
                             Console.WriteLine("Client did not send back a certificate");
@@ -264,7 +271,7 @@ namespace EasyModbusSecure
                             //tcpClient.Close();
 
                             throw new AuthenticationException();
-                        }                        
+                        }
 
                         // Display the properties and settings for the authenticated stream.
                         DisplaySecurityLevel(sslStream);
@@ -327,7 +334,7 @@ namespace EasyModbusSecure
                         {
                             Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
                         }
-                      
+
                         sslStream.Close();
                         tcpClient.Close();
                         return;
@@ -431,7 +438,7 @@ namespace EasyModbusSecure
             }
             catch (Exception) { }
             server.Stop();
-            
+
         }
 
         public void DisplayCertificateInformation(SslStream stream, Client client)
@@ -453,8 +460,8 @@ namespace EasyModbusSecure
             }
 
             // Display the properties of the client's certificate.
-            X509Certificate remoteCertificateX509 = stream.RemoteCertificate;    
-            
+            X509Certificate remoteCertificateX509 = stream.RemoteCertificate;
+
             if (remoteCertificateX509 != null)
             {
                 X509Certificate2 remoteCertificateX5092 = new X509Certificate2(remoteCertificateX509);
@@ -462,7 +469,7 @@ namespace EasyModbusSecure
                 Console.WriteLine("Remote cert was issued to {0} and is valid from {1} until {2}.",
                     remoteCertificateX5092.Subject,
                     remoteCertificateX5092.GetEffectiveDateString(),
-                    remoteCertificateX5092.GetExpirationDateString());               
+                    remoteCertificateX5092.GetExpirationDateString());
             }
             else
             {
@@ -512,17 +519,23 @@ namespace EasyModbusSecure
                         roleCount++;
                         foreach (var roleTuple in acceptableRoles)
                         {
-                            if(!roleTuple.Item1.Equals(roleStr))
+                            if (roleTuple.Item1.Equals(roleStr))
                             {
-                                client.setRole("0");
-                                Console.WriteLine("RoleOID:  {0}", client.getRole());
-                            }
-                            else if (roleTuple.Item1.Equals(roleStr))
-                            {
-                                //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
-                                Console.WriteLine("RoleOID:  {0}", roleStr);
                                 client.setRole(roleStr);
+                                Console.WriteLine("RoleOID:  {0}", client.getRole());
+                                break;
                             }
+                            //if (acceptableRoles[i].Item1.Equals(roleStr))
+                            //{
+                            //    client.setRole(roleStr);
+                            //    Console.WriteLine("RoleOID:  {0}", client.getRole());
+                            //}
+
+                            //if(i==acceptableRoles.Count && client.getRole().Equals("0"))
+                            //{
+                            //    client.setRole("0");
+                            //    Console.WriteLine("RoleOID:  {0}", client.getRole());
+                            //}
                         }
 
                         //if (!this.acceptableRoles.Contains(roleStr)) // This can be read from a database or a config file, and can include multiple roles
@@ -565,7 +578,8 @@ namespace EasyModbusSecure
 
             public Client(TcpClient tcpClient, bool mutualAuthentication)
             {
-                this.role = null;
+                // By default everyone is denied access
+                this.role = new Role("0");
                 this.tcpClient = tcpClient;
                 int bufferSize = tcpClient.ReceiveBufferSize;
                 buffer = new byte[bufferSize];
@@ -600,7 +614,7 @@ namespace EasyModbusSecure
                     {
                         if (mutualAuthentication)
                         {
-                            stream = new SslStream(tcpClient.GetStream(), false, new RemoteCertificateValidationCallback(ValidateClientCertificate), null);                            
+                            stream = new SslStream(tcpClient.GetStream(), false, new RemoteCertificateValidationCallback(ValidateClientCertificate), null);
                             return stream;
                         }
                         else
@@ -639,7 +653,7 @@ namespace EasyModbusSecure
     }
     #endregion
 
-   
+
 
     /// <summary>
     /// Modbus TCP Server.
@@ -649,10 +663,10 @@ namespace EasyModbusSecure
         private bool debug = false;
         Int32 port = 802;
         ModbusSecureProtocol receiveData;
-        ModbusSecureProtocol sendData =  new ModbusSecureProtocol();
+        ModbusSecureProtocol sendData = new ModbusSecureProtocol();
         Byte[] bytes = new Byte[2100];
         //public Int16[] _holdingRegisters = new Int16[65535];
-        public HoldingRegisters holdingRegisters;      
+        public HoldingRegisters holdingRegisters;
         public InputRegisters inputRegisters;
         public Coils coils;
         public DiscreteInputs discreteInputs;
@@ -673,7 +687,7 @@ namespace EasyModbusSecure
         Thread listenerThread;
         Thread clientConnectionThread;
         private ModbusSecureProtocol[] modbusLogData = new ModbusSecureProtocol[100];
-        public bool FunctionCode1Disabled {get; set;}
+        public bool FunctionCode1Disabled { get; set; }
         public bool FunctionCode2Disabled { get; set; }
         public bool FunctionCode3Disabled { get; set; }
         public bool FunctionCode4Disabled { get; set; }
@@ -681,7 +695,7 @@ namespace EasyModbusSecure
         public bool FunctionCode6Disabled { get; set; }
         public bool FunctionCode15Disabled { get; set; }
         public bool FunctionCode16Disabled { get; set; }
-        public bool FunctionCode23Disabled { get; set; }        
+        public bool FunctionCode23Disabled { get; set; }
 
         public bool PortChanged { get; set; }
         object lockCoils = new object();
@@ -746,24 +760,24 @@ namespace EasyModbusSecure
 
         public void Listen()
         {
-            
+
             listenerThread = new Thread(ListenerThread);
             listenerThread.Start();
         }
 
         public void StopListening()
         {
-        	if (SerialFlag & (serialport != null))
-        	{
-        		if (serialport.IsOpen)
-        			serialport.Close();
+            if (SerialFlag & (serialport != null))
+            {
+                if (serialport.IsOpen)
+                    serialport.Close();
                 shouldStop = true;
             }
             try
             {
                 tcpHandler.Disconnect();
                 listenerThread.Abort();
-                
+
             }
             catch (Exception) { }
             listenerThread.Join();
@@ -774,7 +788,7 @@ namespace EasyModbusSecure
             }
             catch (Exception) { }
         }
-        
+
         private void ListenerThread()
         {
             if (!udpFlag & !serialFlag)
@@ -787,7 +801,7 @@ namespace EasyModbusSecure
                     }
                     catch (Exception) { }
                 }
-                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles);             
+                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles);
                 if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 //tcpHandler.CheckRoleInformation(tcpHandler.)
@@ -810,43 +824,43 @@ namespace EasyModbusSecure
                 }
             }
             else
-               while (!shouldStop)
-               {
-            	if (udpFlag)
-            	{
-                    if (udpClient == null | PortChanged)
+                while (!shouldStop)
+                {
+                    if (udpFlag)
                     {
-                        IPEndPoint localEndoint = new IPEndPoint(LocalIPAddress, port);
-                        udpClient = new UdpClient(localEndoint);
-                        if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
-                        udpClient.Client.ReceiveTimeout = 1000;
-                        iPEndPoint = new IPEndPoint(IPAddress.Any, port);
-                        PortChanged = false;                      
+                        if (udpClient == null | PortChanged)
+                        {
+                            IPEndPoint localEndoint = new IPEndPoint(LocalIPAddress, port);
+                            udpClient = new UdpClient(localEndoint);
+                            if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
+                            udpClient.Client.ReceiveTimeout = 1000;
+                            iPEndPoint = new IPEndPoint(IPAddress.Any, port);
+                            PortChanged = false;
+                        }
+                        if (tcpHandler != null)
+                            tcpHandler.Disconnect();
+                        try
+                        {
+                            bytes = udpClient.Receive(ref iPEndPoint);
+                            portIn = iPEndPoint.Port;
+                            NetworkConnectionParameter networkConnectionParameter = new NetworkConnectionParameter();
+                            networkConnectionParameter.bytes = bytes;
+                            ipAddressIn = iPEndPoint.Address;
+                            networkConnectionParameter.portIn = portIn;
+                            networkConnectionParameter.ipAddressIn = ipAddressIn;
+                            ParameterizedThreadStart pts = new ParameterizedThreadStart(this.ProcessReceivedData);
+                            Thread processDataThread = new Thread(pts);
+                            processDataThread.Start(networkConnectionParameter);
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
-                    if (tcpHandler != null)
-                        tcpHandler.Disconnect();
-                    try
-                    {                       
-                        bytes = udpClient.Receive(ref iPEndPoint);
-                        portIn = iPEndPoint.Port;
-                        NetworkConnectionParameter networkConnectionParameter = new NetworkConnectionParameter();
-                        networkConnectionParameter.bytes = bytes;
-                        ipAddressIn = iPEndPoint.Address;
-                        networkConnectionParameter.portIn = portIn;
-                        networkConnectionParameter.ipAddressIn = ipAddressIn;
-                        ParameterizedThreadStart pts = new ParameterizedThreadStart(this.ProcessReceivedData);
-                        Thread processDataThread = new Thread(pts);
-                        processDataThread.Start(networkConnectionParameter);
-                    }
-                    catch (Exception)
-                    {                       
-                    }    
-            	}
 
                 }
         }
-    
-		#region SerialHandler
+
+        #region SerialHandler
         private bool dataReceived = false;
         private byte[] readBuffer = new byte[2094];
         private DateTime lastReceive;
@@ -855,7 +869,7 @@ namespace EasyModbusSecure
                         SerialDataReceivedEventArgs e)
         {
             int silence = 4000 / baudrate;
-            if ((DateTime.Now.Ticks - lastReceive.Ticks) > TimeSpan.TicksPerMillisecond*silence)
+            if ((DateTime.Now.Ticks - lastReceive.Ticks) > TimeSpan.TicksPerMillisecond * silence)
                 nextSign = 0;
 
 
@@ -865,30 +879,30 @@ namespace EasyModbusSecure
             byte[] rxbytearray = new byte[numbytes];
 
             sp.Read(rxbytearray, 0, numbytes);
-            
-            Array.Copy(rxbytearray, 0,  readBuffer, nextSign, rxbytearray.Length);
-            lastReceive= DateTime.Now;
-            nextSign = numbytes+ nextSign;
+
+            Array.Copy(rxbytearray, 0, readBuffer, nextSign, rxbytearray.Length);
+            lastReceive = DateTime.Now;
+            nextSign = numbytes + nextSign;
             if (ModbusSecureClient.DetectValidModbusFrame(readBuffer, nextSign))
             {
-                
-                dataReceived = true;
-                nextSign= 0;
 
-                    NetworkConnectionParameter networkConnectionParameter = new NetworkConnectionParameter();
-                    networkConnectionParameter.bytes = readBuffer;
-                    ParameterizedThreadStart pts = new ParameterizedThreadStart(this.ProcessReceivedData);
-                    Thread processDataThread = new Thread(pts);
-                    processDataThread.Start(networkConnectionParameter);
-                    dataReceived = false;
-                
+                dataReceived = true;
+                nextSign = 0;
+
+                NetworkConnectionParameter networkConnectionParameter = new NetworkConnectionParameter();
+                networkConnectionParameter.bytes = readBuffer;
+                ParameterizedThreadStart pts = new ParameterizedThreadStart(this.ProcessReceivedData);
+                Thread processDataThread = new Thread(pts);
+                processDataThread.Start(networkConnectionParameter);
+                dataReceived = false;
+
             }
             else
                 dataReceived = false;
         }
-		#endregion
- 
-		#region Method numberOfClientsChanged
+        #endregion
+
+        #region Method numberOfClientsChanged
         private void numberOfClientsChanged()
         {
             numberOfConnections = tcpHandler.NumberOfConnectedClients;
@@ -1187,7 +1201,7 @@ namespace EasyModbusSecure
         }
         #endregion
 
-        public virtual void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1222,10 +1236,10 @@ namespace EasyModbusSecure
                 Byte[] data;
 
                 if (sendData.exceptionCode > 0)
-                	data = new byte[9 + 2*Convert.ToInt32(serialFlag)];
+                    data = new byte[9 + 2 * Convert.ToInt32(serialFlag)];
                 else
-                   	data = new byte[9 + sendData.byteCount+ 2*Convert.ToInt32(serialFlag)];
-              
+                    data = new byte[9 + sendData.byteCount + 2 * Convert.ToInt32(serialFlag)];
+
                 Byte[] byteData = new byte[2];
 
                 sendData.length = (byte)(data.Length - 6);
@@ -1312,10 +1326,10 @@ namespace EasyModbusSecure
                     }
                 }
                 catch (Exception) { }
-            }  
+            }
         }
 
-        public virtual void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1434,14 +1448,14 @@ namespace EasyModbusSecure
                     else
                     {
                         stream.Write(data, 0, data.Length);
-                        if(debug) StoreLogData.Instance.Store("Send Data: " + BitConverter.ToString(data), System.DateTime.Now);
+                        if (debug) StoreLogData.Instance.Store("Send Data: " + BitConverter.ToString(data), System.DateTime.Now);
                     }
                 }
                 catch (Exception) { }
             }
         }
 
-        public virtual void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1455,7 +1469,7 @@ namespace EasyModbusSecure
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 3;
             }
-            if (((receiveData.startingAdress + 1 + receiveData.quantity) > 65535)  | (receiveData.startingAdress < 0))   //Invalid Starting adress or Starting address + quantity
+            if (((receiveData.startingAdress + 1 + receiveData.quantity) > 65535) | (receiveData.startingAdress < 0))   //Invalid Starting adress or Starting address + quantity
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 2;
@@ -1467,11 +1481,11 @@ namespace EasyModbusSecure
                 lock (lockHoldingRegisters)
                     Buffer.BlockCopy(holdingRegisters.localArray, receiveData.startingAdress * 2 + 2, sendData.sendRegisterValues, 0, receiveData.quantity * 2);
             }
-                if (sendData.exceptionCode > 0)
-                    sendData.length = 0x03;
-                else
-                    sendData.length = (ushort)(0x03 + sendData.byteCount);
-            
+            if (sendData.exceptionCode > 0)
+                sendData.length = 0x03;
+            else
+                sendData.length = (ushort)(0x03 + sendData.byteCount);
+
             if (true)
             {
                 Byte[] data;
@@ -1512,7 +1526,7 @@ namespace EasyModbusSecure
                     data[8] = sendData.exceptionCode;
                     sendData.sendRegisterValues = null;
                 }
-   
+
 
                 if (sendData.sendRegisterValues != null)
                     for (int i = 0; i < (sendData.byteCount / 2); i++)
@@ -1554,10 +1568,10 @@ namespace EasyModbusSecure
                     }
                 }
                 catch (Exception) { }
-            }       
+            }
         }
 
-        public virtual void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1571,7 +1585,7 @@ namespace EasyModbusSecure
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 3;
             }
-            if (((receiveData.startingAdress + 1 + receiveData.quantity) > 65535)  | (receiveData.startingAdress < 0))   //Invalid Starting adress or Starting address + quantity
+            if (((receiveData.startingAdress + 1 + receiveData.quantity) > 65535) | (receiveData.startingAdress < 0))   //Invalid Starting adress or Starting address + quantity
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 2;
@@ -1582,11 +1596,11 @@ namespace EasyModbusSecure
                 sendData.sendRegisterValues = new Int16[receiveData.quantity];
                 Buffer.BlockCopy(inputRegisters.localArray, receiveData.startingAdress * 2 + 2, sendData.sendRegisterValues, 0, receiveData.quantity * 2);
             }
-                if (sendData.exceptionCode > 0)
-                    sendData.length = 0x03;
-                else
-                    sendData.length = (ushort)(0x03 + sendData.byteCount);
-            
+            if (sendData.exceptionCode > 0)
+                sendData.length = 0x03;
+            else
+                sendData.length = (ushort)(0x03 + sendData.byteCount);
+
             if (true)
             {
                 Byte[] data;
@@ -1621,7 +1635,7 @@ namespace EasyModbusSecure
                 //ByteCount
                 data[8] = sendData.byteCount;
 
-                
+
                 if (sendData.exceptionCode > 0)
                 {
                     data[7] = sendData.errorCode;
@@ -1674,7 +1688,7 @@ namespace EasyModbusSecure
             }
         }
 
-        public virtual void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1690,7 +1704,7 @@ namespace EasyModbusSecure
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 3;
             }
-            if (((receiveData.startingAdress + 1) > 65535)  | (receiveData.startingAdress < 0))    //Invalid Starting adress or Starting address + quantity
+            if (((receiveData.startingAdress + 1) > 65535) | (receiveData.startingAdress < 0))    //Invalid Starting adress or Starting address + quantity
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 2;
@@ -1708,11 +1722,11 @@ namespace EasyModbusSecure
                         coils[receiveData.startingAdress + 1] = false;
                 }
             }
-                if (sendData.exceptionCode > 0)
-                    sendData.length = 0x03;
-                else
-                    sendData.length = 0x06;
-            
+            if (sendData.exceptionCode > 0)
+                sendData.length = 0x03;
+            else
+                sendData.length = 0x06;
+
             if (true)
             {
                 Byte[] data;
@@ -1799,11 +1813,11 @@ namespace EasyModbusSecure
                 }
                 catch (Exception) { }
                 if (CoilsChanged != null)
-                    CoilsChanged(receiveData.startingAdress+1, 1);
+                    CoilsChanged(receiveData.startingAdress + 1, 1);
             }
         }
 
-        public virtual void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1814,13 +1828,13 @@ namespace EasyModbusSecure
             sendData.functionCode = receiveData.functionCode;
             sendData.startingAdress = receiveData.startingAdress;
             sendData.receiveRegisterValues = receiveData.receiveRegisterValues;
-           
+
             if ((receiveData.receiveRegisterValues[0] < 0x0000) | (receiveData.receiveRegisterValues[0] > 0xFFFF))  //Invalid Value
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 3;
             }
-            if (((receiveData.startingAdress + 1) > 65535)  | (receiveData.startingAdress < 0))    //Invalid Starting adress or Starting address + quantity
+            if (((receiveData.startingAdress + 1) > 65535) | (receiveData.startingAdress < 0))    //Invalid Starting adress or Starting address + quantity
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 2;
@@ -1830,11 +1844,11 @@ namespace EasyModbusSecure
                 lock (lockHoldingRegisters)
                     holdingRegisters[receiveData.startingAdress + 1] = unchecked((short)receiveData.receiveRegisterValues[0]);
             }
-                if (sendData.exceptionCode > 0)
-                    sendData.length = 0x03;
-                else
-                    sendData.length = 0x06;
-            
+            if (sendData.exceptionCode > 0)
+                sendData.length = 0x03;
+            else
+                sendData.length = 0x06;
+
             if (true)
             {
                 Byte[] data;
@@ -1922,11 +1936,11 @@ namespace EasyModbusSecure
                 }
                 catch (Exception) { }
                 if (HoldingRegistersChanged != null)
-                    HoldingRegistersChanged(receiveData.startingAdress+1, 1);
+                    HoldingRegistersChanged(receiveData.startingAdress + 1, 1);
             }
         }
 
-        public virtual void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -1937,13 +1951,13 @@ namespace EasyModbusSecure
             sendData.functionCode = receiveData.functionCode;
             sendData.startingAdress = receiveData.startingAdress;
             sendData.quantity = receiveData.quantity;
-            
+
             if ((receiveData.quantity == 0x0000) | (receiveData.quantity > 0x07B0))  //Invalid Quantity
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 3;
             }
-            if ((((int)receiveData.startingAdress + 1 + (int)receiveData.quantity) > 65535)  | (receiveData.startingAdress < 0))    //Invalid Starting adress or Starting address + quantity
+            if ((((int)receiveData.startingAdress + 1 + (int)receiveData.quantity) > 65535) | (receiveData.startingAdress < 0))    //Invalid Starting adress or Starting address + quantity
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 2;
@@ -1954,20 +1968,20 @@ namespace EasyModbusSecure
                     for (int i = 0; i < receiveData.quantity; i++)
                     {
                         int shift = i % 16;
-                    /*                if ((i == receiveData.quantity - 1) & (receiveData.quantity % 2 != 0))
-                                    {
-                                        if (shift < 8)
-                                            shift = shift + 8;
-                                        else
-                                            shift = shift - 8;
-                                    }*/
+                        /*                if ((i == receiveData.quantity - 1) & (receiveData.quantity % 2 != 0))
+                                        {
+                                            if (shift < 8)
+                                                shift = shift + 8;
+                                            else
+                                                shift = shift - 8;
+                                        }*/
                         int mask = 0x1;
                         mask = mask << (shift);
                         if ((receiveData.receiveCoilValues[i / 16] & (ushort)mask) == 0)
-                        
+
                             coils[receiveData.startingAdress + i + 1] = false;
                         else
-                        
+
                             coils[receiveData.startingAdress + i + 1] = true;
 
                     }
@@ -2062,11 +2076,11 @@ namespace EasyModbusSecure
                 }
                 catch (Exception) { }
                 if (CoilsChanged != null)
-                    CoilsChanged(receiveData.startingAdress+1, receiveData.quantity);
+                    CoilsChanged(receiveData.startingAdress + 1, receiveData.quantity);
             }
         }
 
-        public virtual void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -2083,7 +2097,7 @@ namespace EasyModbusSecure
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 3;
             }
-            if ((((int)receiveData.startingAdress + 1 + (int)receiveData.quantity) > 65535)  | (receiveData.startingAdress < 0))   //Invalid Starting adress or Starting address + quantity
+            if ((((int)receiveData.startingAdress + 1 + (int)receiveData.quantity) > 65535) | (receiveData.startingAdress < 0))   //Invalid Starting adress or Starting address + quantity
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 2;
@@ -2183,14 +2197,14 @@ namespace EasyModbusSecure
                         stream.Write(data, 0, data.Length);
                         if (debug) StoreLogData.Instance.Store("Send Data: " + BitConverter.ToString(data), System.DateTime.Now);
                     }
-                    }
+                }
                 catch (Exception) { }
                 if (HoldingRegistersChanged != null)
-                    HoldingRegistersChanged(receiveData.startingAdress+1, receiveData.quantity);
+                    HoldingRegistersChanged(receiveData.startingAdress + 1, receiveData.quantity);
             }
         }
 
-        public virtual void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        public virtual void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -2317,11 +2331,11 @@ namespace EasyModbusSecure
                 }
                 catch (Exception) { }
                 if (HoldingRegistersChanged != null)
-                    HoldingRegistersChanged(receiveData.startingAddressWrite+1, receiveData.quantityWrite);
+                    HoldingRegistersChanged(receiveData.startingAddressWrite + 1, receiveData.quantityWrite);
             }
         }
 
-        protected void sendException(int errorCode, int exceptionCode, ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData,SslStream stream, int portIn, IPAddress ipAddressIn)
+        protected void sendException(int errorCode, int exceptionCode, ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             sendData.response = true;
 
@@ -2332,46 +2346,46 @@ namespace EasyModbusSecure
             sendData.errorCode = (byte)errorCode;
             sendData.exceptionCode = (byte)exceptionCode;
 
-             if (sendData.exceptionCode > 0)
+            if (sendData.exceptionCode > 0)
                 sendData.length = 0x03;
             else
                 sendData.length = (ushort)(0x03 + sendData.byteCount);
 
-             if (true)
-             {
-                 Byte[] data;
-                 if (sendData.exceptionCode > 0)
-                     data = new byte[9 + 2 * Convert.ToInt32(serialFlag)];
-                 else
-                     data = new byte[9 + sendData.byteCount + 2 * Convert.ToInt32(serialFlag)];
-                 Byte[] byteData = new byte[2];
-                 sendData.length = (byte)(data.Length - 6);
+            if (true)
+            {
+                Byte[] data;
+                if (sendData.exceptionCode > 0)
+                    data = new byte[9 + 2 * Convert.ToInt32(serialFlag)];
+                else
+                    data = new byte[9 + sendData.byteCount + 2 * Convert.ToInt32(serialFlag)];
+                Byte[] byteData = new byte[2];
+                sendData.length = (byte)(data.Length - 6);
 
-                 //Send Transaction identifier
-                 byteData = BitConverter.GetBytes((int)sendData.transactionIdentifier);
-                 data[0] = byteData[1];
-                 data[1] = byteData[0];
+                //Send Transaction identifier
+                byteData = BitConverter.GetBytes((int)sendData.transactionIdentifier);
+                data[0] = byteData[1];
+                data[1] = byteData[0];
 
-                 //Send Protocol identifier
-                 byteData = BitConverter.GetBytes((int)sendData.protocolIdentifier);
-                 data[2] = byteData[1];
-                 data[3] = byteData[0];
+                //Send Protocol identifier
+                byteData = BitConverter.GetBytes((int)sendData.protocolIdentifier);
+                data[2] = byteData[1];
+                data[3] = byteData[0];
 
-                 //Send length
-                 byteData = BitConverter.GetBytes((int)sendData.length);
-                 data[4] = byteData[1];
-                 data[5] = byteData[0];
+                //Send length
+                byteData = BitConverter.GetBytes((int)sendData.length);
+                data[4] = byteData[1];
+                data[5] = byteData[0];
 
-                 //Unit Identifier
-                 data[6] = sendData.unitIdentifier;
-
-
-                 data[7] = sendData.errorCode;
-                 data[8] = sendData.exceptionCode;
+                //Unit Identifier
+                data[6] = sendData.unitIdentifier;
 
 
-                 try
-                 {
+                data[7] = sendData.errorCode;
+                data[8] = sendData.exceptionCode;
+
+
+                try
+                {
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
@@ -2401,9 +2415,9 @@ namespace EasyModbusSecure
                         stream.Write(data, 0, data.Length);
                         if (debug) StoreLogData.Instance.Store("Send Data: " + BitConverter.ToString(data), System.DateTime.Now);
                     }
-                 }
-                 catch (Exception) { }
-             }
+                }
+                catch (Exception) { }
+            }
         }
 
         private void CreateLogData(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData)
@@ -2445,7 +2459,7 @@ namespace EasyModbusSecure
             set
             {
                 port = value;
-                
+
 
             }
         }
@@ -2461,18 +2475,18 @@ namespace EasyModbusSecure
                 udpFlag = value;
             }
         }
-        
- 		public bool SerialFlag
- 		{
- 			get
- 			{
- 				return serialFlag;
- 			}
- 			set
- 			{
- 				serialFlag = value;
- 			}
- 		}
+
+        public bool SerialFlag
+        {
+            get
+            {
+                return serialFlag;
+            }
+            set
+            {
+                serialFlag = value;
+            }
+        }
 
         public int Baudrate
         {
@@ -2563,90 +2577,90 @@ namespace EasyModbusSecure
 
 
 
-    public class HoldingRegisters
-    {
-        public Int16[] localArray = new Int16[65535];
-        ModbusSecureServer ModbusSecureServer;
-     
-        public HoldingRegisters(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
+        public class HoldingRegisters
         {
-            this.ModbusSecureServer = ModbusSecureServer;
-        }
-
-        public Int16 this[int x]
-        {
-            get { return this.localArray[x]; }
-            set
-            {              
-                this.localArray[x] = value;
-                
-            }
-        }
-    }
-
-    public class InputRegisters
-    {
-        public Int16[] localArray = new Int16[65535];
+            public Int16[] localArray = new Int16[65535];
             ModbusSecureServer ModbusSecureServer;
 
-        public InputRegisters(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
-        {
-            this.ModbusSecureServer = ModbusSecureServer;
-        }
-
-        public Int16 this[int x]
-        {
-            get { return this.localArray[x]; }
-            set
+            public HoldingRegisters(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
             {
-                this.localArray[x] = value;
+                this.ModbusSecureServer = ModbusSecureServer;
+            }
 
+            public Int16 this[int x]
+            {
+                get { return this.localArray[x]; }
+                set
+                {
+                    this.localArray[x] = value;
+
+                }
             }
         }
-    }
 
-    public class Coils
-    {
-        public bool[] localArray = new bool[65535];
+        public class InputRegisters
+        {
+            public Int16[] localArray = new Int16[65535];
             ModbusSecureServer ModbusSecureServer;
 
-        public Coils(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
-        {
-            this.ModbusSecureServer = ModbusSecureServer;
-        }
-
-        public bool this[int x]
-        {
-            get { return this.localArray[x]; }
-            set
+            public InputRegisters(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
             {
-                this.localArray[x] = value;
-            
+                this.ModbusSecureServer = ModbusSecureServer;
+            }
+
+            public Int16 this[int x]
+            {
+                get { return this.localArray[x]; }
+                set
+                {
+                    this.localArray[x] = value;
+
+                }
             }
         }
-    }
 
-    public class DiscreteInputs
-    {
-        public bool[] localArray = new bool[65535];
+        public class Coils
+        {
+            public bool[] localArray = new bool[65535];
             ModbusSecureServer ModbusSecureServer;
 
-        public DiscreteInputs(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
-        {
-            this.ModbusSecureServer = ModbusSecureServer;
-        }
-
-        public bool this[int x]
-        {
-            get { return this.localArray[x]; }
-            set
+            public Coils(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
             {
-                this.localArray[x] = value;
-              
+                this.ModbusSecureServer = ModbusSecureServer;
+            }
+
+            public bool this[int x]
+            {
+                get { return this.localArray[x]; }
+                set
+                {
+                    this.localArray[x] = value;
+
+                }
             }
         }
 
-      
+        public class DiscreteInputs
+        {
+            public bool[] localArray = new bool[65535];
+            ModbusSecureServer ModbusSecureServer;
+
+            public DiscreteInputs(EasyModbusSecure.ModbusSecureServer ModbusSecureServer)
+            {
+                this.ModbusSecureServer = ModbusSecureServer;
+            }
+
+            public bool this[int x]
+            {
+                get { return this.localArray[x]; }
+                set
+                {
+                    this.localArray[x] = value;
+
+                }
+            }
+
+
         }
     }
 
@@ -2662,7 +2676,7 @@ namespace EasyModbusSecure
         public bool FunctionCode16AuthZDisabled { get; set; }
         public bool FunctionCode23AuthZDisabled { get; set; }
 
-        public ModbusSecureServerAuthZ(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string,byte>> acceptableRoles) 
+        public ModbusSecureServerAuthZ(string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, byte>> acceptableRoles)
             : base(certificate, certificatePassword, mutualAuthentication, acceptableRoles)
         {
 
@@ -2689,7 +2703,7 @@ namespace EasyModbusSecure
         #endregion
 
         public override void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {           
+        {
             if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode1AuthZDisabled)
             {
                 base.ReadCoils(receiveData, sendData, stream, portIn, ipAddressIn);
@@ -2812,8 +2826,7 @@ namespace EasyModbusSecure
                 sendData.exceptionCode = 1;
                 base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
             }
-        }       
+        }
     }
 
 }
-   

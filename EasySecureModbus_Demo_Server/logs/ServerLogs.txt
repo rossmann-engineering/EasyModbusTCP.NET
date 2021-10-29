@@ -874,3 +874,24 @@
 26.10.2021 23:52:21.05 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
 26.10.2021 23:52:22.82 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
 26.10.2021 23:52:22.83 Send Data: 00-01-00-00-00-04-01-01-01-00
+28.10.2021 20:49:18.23 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 20:49:21.07 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+28.10.2021 20:49:21.08 Send Data: 00-01-00-00-00-03-01-81-01
+28.10.2021 20:57:15.24 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 20:57:21.93 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+28.10.2021 20:57:21.94 Send Data: 00-01-00-00-00-04-01-01-01-00
+28.10.2021 21:06:25.58 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 21:06:33.29 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+28.10.2021 21:06:33.30 Send Data: 00-01-00-00-00-04-01-01-01-00
+28.10.2021 21:07:50.82 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 21:08:04.37 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 21:08:06.55 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+28.10.2021 21:08:06.56 Send Data: 00-01-00-00-00-04-01-01-01-00
+28.10.2021 21:10:19.50 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 21:10:49.26 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 21:12:59.18 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 21:13:00.74 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+28.10.2021 21:13:00.75 Send Data: 00-01-00-00-00-03-01-81-01
+28.10.2021 21:13:57.30 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+28.10.2021 21:13:59.02 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+28.10.2021 21:13:59.03 Send Data: 00-01-00-00-00-04-01-01-01-00
