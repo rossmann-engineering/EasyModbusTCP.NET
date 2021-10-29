@@ -16,8 +16,8 @@ namespace EasySecureModbus_Demo_Server
         {
             //convert that to use CLI argument
             List<ValueTuple<string, byte>> roles = new List<ValueTuple<string, byte>> 
-            { 
-                //ValueTuple.Create("Maintainer", (byte)0x01), 
+            {
+                //ValueTuple.Create("Maintainer", (byte)0x01),
                 ValueTuple.Create("Operator", (byte)0x01),
                 ValueTuple.Create("Engineer", (byte)0x01)
             };

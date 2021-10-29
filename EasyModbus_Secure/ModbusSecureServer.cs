@@ -522,34 +522,23 @@ namespace EasyModbusSecure
                             if (roleTuple.Item1.Equals(roleStr))
                             {
                                 client.setRole(roleStr);
-                                Console.WriteLine("RoleOID:  {0}", client.getRole());
-                                break;
+                                Console.WriteLine("RoleOID:  {0}", client.getRole());                               
                             }
-                            //if (acceptableRoles[i].Item1.Equals(roleStr))
-                            //{
-                            //    client.setRole(roleStr);
-                            //    Console.WriteLine("RoleOID:  {0}", client.getRole());
-                            //}
 
-                            //if(i==acceptableRoles.Count && client.getRole().Equals("0"))
+                            //if (i == acceptableRoles.Count && client.getRole().Equals("0"))
                             //{
                             //    client.setRole("0");
                             //    Console.WriteLine("RoleOID:  {0}", client.getRole());
                             //}
                         }
 
-                        //if (!this.acceptableRoles.Contains(roleStr)) // This can be read from a database or a config file, and can include multiple roles
-                        //{
-                        //    client.setRole("0");
-                        //    Console.WriteLine("RoleOID:  {0}", client.getRole());
-                        //    // Role should be equal to zero when implemented in Modbus
-                        //}
-                        //else if (this.acceptableRoles.Contains(roleStr))
-                        //{
-                        //    //Console.WriteLine("EEEEEEE {0}", asndata.Format(true));
-                        //    Console.WriteLine("RoleOID:  {0}", roleStr);
-                        //    client.setRole(roleStr);
-                        //}
+                        if (client.getRole().Equals("0"))
+                        {                            
+                            Console.WriteLine("Attempted access with role {0}, has been identified", roleStr);
+
+                            // TODO: Maybe the debug property should also be used in this class
+                            //if (debug) StoreLogData.Instance.Store($"Exception 2: {e.Message}", System.DateTime.Now);
+                        }
                     }
 
                 }

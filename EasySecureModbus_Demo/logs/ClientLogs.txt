@@ -1428,3 +1428,21 @@
 28.10.2021 21:13:58.84 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
 28.10.2021 21:13:59.03 Disconnect
 28.10.2021 21:14:00.18 Destructor called - automatically disconnect
+28.10.2021 21:16:15.93 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:16:16.10 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:16:16.10 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:16:16.23 Disconnect
+28.10.2021 21:16:17.26 Destructor called - automatically disconnect
+28.10.2021 21:16:49.71 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:16:49.88 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:16:49.88 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:16:50.00 FunctionCodeNotSupportedException Throwed
+28.10.2021 21:27:30.49 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:27:30.67 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:27:30.67 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:27:30.78 FunctionCodeNotSupportedException Throwed
+28.10.2021 21:28:14.11 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+28.10.2021 21:28:14.28 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+28.10.2021 21:28:14.28 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
+28.10.2021 21:28:14.47 Disconnect
+28.10.2021 21:28:17.75 Destructor called - automatically disconnect
