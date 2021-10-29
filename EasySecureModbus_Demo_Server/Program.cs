@@ -15,11 +15,11 @@ namespace EasySecureModbus_Demo_Server
         public void startServer(string certPass)
         {
             //convert that to use CLI argument
-            List<ValueTuple<string, byte>> roles = new List<ValueTuple<string, byte>> 
+            List<ValueTuple<string, List<byte>>> roles = new List<ValueTuple<string, List<byte>>>
             {
                 //ValueTuple.Create("Maintainer", (byte)0x01),
-                ValueTuple.Create("Operator", (byte)0x01),
-                ValueTuple.Create("Engineer", (byte)0x01)
+                ValueTuple.Create("Operator", new List<byte> { (byte)0x01, (byte)0x0F } ),
+                ValueTuple.Create("Engineer", new List<byte> { (byte)0x01 })
             };
             ModbusSecureServerAuthZ modbusServer = new ModbusSecureServerAuthZ("..\\..\\certs2\\server.pfx", certPass, true, roles);
             //ModbusSecureServer modbusServer = new ModbusSecureServer("..\\..\\certs2\\server.pfx", certPass, true, roles);

@@ -38,12 +38,12 @@ namespace EasuySecureModbus_Demo
                 Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
 
 
-            //modbusClient.WriteMultipleCoils(4, new bool[] { true, false, true, true, true, false, true, true, true, true });    //Write Coils starting with Address 1
+            modbusClient.WriteMultipleCoils(4, new bool[] { true, false, true, true, true, false, true, true, true, true });    //Write Coils starting with Address 1
 
-            //readCoils = modbusClient.ReadCoils(0, 2);
-            //// Console Output 2
-            //for (int i = 0; i < readCoils.Length; i++)
-            //    Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
+            readCoils = modbusClient.ReadCoils(0, 2);
+            // Console Output 2
+            for (int i = 0; i < readCoils.Length; i++)
+                Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
 
             //for (int i = 0; i < readHoldingRegisters.Length; i++)
             //    Console.WriteLine("Value of HoldingRegister " + (i + 1) + " " + readHoldingRegisters[i].ToString());
