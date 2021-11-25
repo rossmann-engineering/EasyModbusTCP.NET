@@ -85,6 +85,7 @@ namespace EasyModbusSecure
     #region TCPHandler class
     internal class TCPHandler
     {
+        private static bool debug = false;
         public delegate void DataChanged(object networkConnectionParameter);
         public event DataChanged dataChanged;
 
@@ -141,6 +142,7 @@ namespace EasyModbusSecure
             else
             {
                 Console.WriteLine("Local certificate is null.");
+                if (debug) StoreLogData.Instance.Store($"Local certificate is null.", System.DateTime.Now);
             }
             // Display the properties of the client's certificate.
             X509Certificate remoteCertificate = stream.RemoteCertificate;
@@ -157,6 +159,7 @@ namespace EasyModbusSecure
             else
             {
                 Console.WriteLine("Remote certificate is null.");
+                if (debug) StoreLogData.Instance.Store($"Remote certificate is null.", System.DateTime.Now);
             }
         }
 
@@ -171,7 +174,7 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication,  List<ValueTuple<string, List<byte>>> acceptableRoles)
+        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication,  List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
         {
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
@@ -184,6 +187,8 @@ namespace EasyModbusSecure
             this.acceptableRoles = new List<ValueTuple<string, List<byte>>>();
             this.acceptableRoles.AddRange(acceptableRoles);
 
+            TCPHandler.debug = debug;
+
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
 
@@ -194,7 +199,7 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, List<byte>>> acceptableRoles)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
@@ -207,6 +212,8 @@ namespace EasyModbusSecure
          
             this.acceptableRoles = new List<ValueTuple<string, List<byte>>>();
             this.acceptableRoles.AddRange(acceptableRoles);
+
+            TCPHandler.debug = debug;
 
             server.Start();
             server.BeginAcceptTcpClient(AcceptTcpClientCallback, null);
@@ -225,6 +232,7 @@ namespace EasyModbusSecure
                 return true;
 
             Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+            if (debug) StoreLogData.Instance.Store($"Certificate error: { sslPolicyErrors}", System.DateTime.Now);
 
             // Do not allow this sever to communicate with unauthenticated clients.
             return false;
@@ -267,6 +275,7 @@ namespace EasyModbusSecure
                         if (sslStream.RemoteCertificate == null)
                         {
                             Console.WriteLine("Client did not send back a certificate");
+                            if (debug) StoreLogData.Instance.Store($"Client did not send back a certificate", System.DateTime.Now);
                             //sslStream.Close();
                             //tcpClient.Close();
 
@@ -293,6 +302,7 @@ namespace EasyModbusSecure
                             Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
                         }
                         Console.WriteLine("Authentication failed - closing the connection.");
+                        if (debug) StoreLogData.Instance.Store($"Authentication failed - closing the connection.", System.DateTime.Now);
                         sslStream.Close();
                         tcpClient.Close();
                         return;
@@ -335,6 +345,9 @@ namespace EasyModbusSecure
                             Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
                         }
 
+                        Console.WriteLine("Authentication failed - closing the connection.");
+                        if (debug) StoreLogData.Instance.Store($"Authentication failed - closing the connection.", System.DateTime.Now);
+
                         sslStream.Close();
                         tcpClient.Close();
                         return;
@@ -349,6 +362,7 @@ namespace EasyModbusSecure
             {
                 // TODO: Populate that with an exception handling
                 Console.WriteLine("Exception 2: {0}", e.Message);
+                if (debug) StoreLogData.Instance.Store($"Exception occurred: {e.Message}", System.DateTime.Now);
             }
         }
 
@@ -474,6 +488,7 @@ namespace EasyModbusSecure
             else
             {
                 Console.WriteLine("Remote (client) certificate is null.");
+                if (debug) StoreLogData.Instance.Store($"Remote (client) certificate is null.", System.DateTime.Now);
             }
         }
 
@@ -497,6 +512,7 @@ namespace EasyModbusSecure
                     if (roleCount > 1)
                     {
                         Console.WriteLine("No valid role is provided - closing the connection.");
+                        if (debug) StoreLogData.Instance.Store($"No valid role is provided - closing the connection.", System.DateTime.Now);
                         throw new AuthenticationException();
                     }
 
@@ -546,11 +562,13 @@ namespace EasyModbusSecure
                 if (roleCount == 0)
                 {
                     Console.WriteLine("No role provided. Setting role to null");
+                    if (debug) StoreLogData.Instance.Store($"No role provided. Setting role to null.", System.DateTime.Now);
                 }
             }
             else
             {
                 Console.WriteLine("Remote (client) certificate is null.");
+                if (debug) StoreLogData.Instance.Store($"Remote (client) certificate is null.", System.DateTime.Now);
             }
         }
 
@@ -790,7 +808,7 @@ namespace EasyModbusSecure
                     }
                     catch (Exception) { }
                 }
-                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles);
+                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles ,debug);
                 if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 //tcpHandler.CheckRoleInformation(tcpHandler.)
