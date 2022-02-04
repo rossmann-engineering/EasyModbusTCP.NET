@@ -1498,3 +1498,6 @@
 24.11.2021 21:45:37.36 Destructor called - automatically disconnect
 24.11.2021 21:45:56.97 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
 24.11.2021 21:45:57.18 Exception: Unable to authenticate to the server
+30.11.2021 23:10:04.81 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+30.11.2021 23:10:05.09 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+30.11.2021 23:10:05.09 Send MocbusTCP-Data: 00-01-00-00-00-06-01-01-00-09-00-02
