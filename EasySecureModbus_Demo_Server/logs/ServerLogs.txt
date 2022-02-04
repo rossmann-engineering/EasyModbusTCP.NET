@@ -948,3 +948,5 @@
 24.11.2021 21:45:32.67 Send Data: 00-03-00-00-00-04-01-01-01-00
 24.11.2021 21:45:57.11 Certificate error: RemoteCertificateNotAvailable
 24.11.2021 21:45:57.14 Authentication failed - closing the connection.
+30.11.2021 23:09:59.72 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+30.11.2021 23:10:05.34 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
