@@ -28,10 +28,11 @@ namespace EasuySecureModbus_Demo
                 return;
             }
 
-            //modbusClient.WriteMultipleCoils(4, new bool[] { true, true, true, true, true, true, true, true, true, true });    //Write Coils starting with Address 5
-            //modbusClient.WriteSingleRegister(0, 5);
+            modbusClient.WriteMultipleCoils(4, new bool[] { true, true, true, true, true, true, true, true, true, true });    //Write Coils starting with Address 5
+            modbusClient.WriteSingleRegister(0, 5);
+
             bool[] readCoils = modbusClient.ReadCoils(9, 2);                        //Read 10 Coils from Server, starting with address 10
-            //int[] readHoldingRegisters = modbusClient.ReadHoldingRegisters(0, 10);    //Read 2 Holding Registers from Server, starting with Address 1
+            int[] readHoldingRegisters = modbusClient.ReadHoldingRegisters(0, 10);    //Read 2  Holding Registers from Server, starting with Address 1
 
             // Console Output
             for (int i = 0; i < readCoils.Length; i++)
@@ -45,14 +46,14 @@ namespace EasuySecureModbus_Demo
             for (int i = 0; i < readCoils.Length; i++)
                 Console.WriteLine("Value of Coil " + (9 + i + 1) + " " + readCoils[i].ToString());
 
-            //for (int i = 0; i < readHoldingRegisters.Length; i++)
-            //    Console.WriteLine("Value of HoldingRegister " + (i + 1) + " " + readHoldingRegisters[i].ToString());
+            for (int i = 0; i < readHoldingRegisters.Length; i++)
+                Console.WriteLine("Value of HoldingRegister " + (i + 1) + " " + readHoldingRegisters[i].ToString());
 
 
-            //modbusClient.WriteSingleRegister(0, 7);
-            //int [] readHoldingRegister = modbusClient.ReadHoldingRegisters(0, 1);
-            //for (int i = 0; i < readHoldingRegister.Length; i++)
-            //    Console.WriteLine("Value of HoldingRegister " + (i + 1) + " " + readHoldingRegister[i].ToString());
+            modbusClient.WriteSingleRegister(0, 7);
+            int[] readHoldingRegister = modbusClient.ReadHoldingRegisters(0, 1);
+            for (int i = 0; i < readHoldingRegister.Length; i++)
+                Console.WriteLine("Value of HoldingRegister " + (i + 1) + " " + readHoldingRegister[i].ToString());
 
             modbusClient.Disconnect();                                                //Disconnect from Server
 
