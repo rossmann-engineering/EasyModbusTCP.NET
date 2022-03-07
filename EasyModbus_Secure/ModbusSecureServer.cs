@@ -174,7 +174,7 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication,  List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
+        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication = true,  List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
         {
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
@@ -199,7 +199,7 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication, List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication = true, List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
