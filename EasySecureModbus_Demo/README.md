@@ -12,7 +12,7 @@ of the TLS Handshake.
 ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 802, "..\\..\\certs2\\client.pfx", args[0], true);
 ```
 
-Such a certificate must be issued by signed by a Trusted Third Part (TTP) and validated during the TLS handshake in order for the server to verify it..
+Such a certificate must be issued by signed by a Trusted Third Part (TTP) and validated during the TLS handshake in order for the server to verify it.
 
 If the server does not require authenticate of the client, the communication can be initiated as before.
 
@@ -20,7 +20,7 @@ If the server does not require authenticate of the client, the communication can
 ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 802);
 ```
 
-The authorization functionality is implemented with the use of RoleIDs. Each certifactes must provide one of these RoleOIDs in there extension section. After the session initiation and when the client and the
+The authorization functionality is implemented with the use of RoleIDs. Each certificate must provide one of these RoleOIDs in there extension section. After the session initiation and when the client and the
 server communicate the provided RoleOID must be check against the actions that are allowed to be performed.  The RoleOID is defined in the Modbus.org PEM as OID 1.3.6.1.4.1.50316.802.1. The RoleOID can be user
 or device specific.
 
