@@ -36,7 +36,7 @@ Modbus Function Codes an exception is raised and an "exception code 01 – Illeg
 
 A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that it uses.
 
-The same process described in [Clinet Example README](EasySecureModbus_Demo/README.md), is used to create a RootCA. Below the similar process for the Server certificates is presented.
+The same process described in [Client Example README](../EasySecureModbus_Demo/README.md), is used to create a RootCA. Below the similar process for the Server certificates is presented.
 
 ### Server certificate using the Root CA
 
