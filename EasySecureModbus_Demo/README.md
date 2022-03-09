@@ -14,19 +14,20 @@ ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 802, "..\\
 
 Such a certificate must be issued by signed by a Trusted Third Party (TTP) and validated during the TLS handshake for the server to verify it.
 
-If the server does not require to authenticate the client, the communication can be initiated as before.
+If the server does not require to authenticate the client, the communication can be initiated as before. However, the standard specifies that is **REQUIRED** for both end devices to provide 
+mutual authentication when executing the TLS Handshake to create the TLS session (R-06).
 
 ```
 ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 802);
 ```
 
-The authorization functionality is implemented with the use of RoleIDs. Each certificate must provide one of these RoleOIDs in their extension section. After the session initiation and when the client and the
-server communicate the provided RoleOID must be checked against the actions that are allowed to be performed.  The RoleOID is defined in the Modbus.org PEM as OID 1.3.6.1.4.1.50316.802.1. The RoleOID can be user
-or device-specific.
+The authorization functionality is implemented with the use of RoleIDs. Each certificate must provide one of these RoleOIDs in their extension section. Only one role is allowed per client certificate.
+After the session initiation and when the client and the server communicate, the provided RoleOID is extracted from the x.509v3 certificate and cached. For every client request it then must be checked from 
+the server against the actions that are allowed to be performed. The RoleOID is defined in the Modbus.org PEM as OID 1.3.6.1.4.1.50316.802.1. The RoleOID can be user or device-specific.
 
 ## Regarding x.509v3 certificates
 
-A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that it uses.
+A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that are used.
 
 The process used to create the certificates for the .NET 4.5 version of the library and test its functionality, is described as follows. However, this is not an exhaustive tutorial on how to perform this operation.
 The x.509v3 certificate creation process should be performed based on the needs of the organization and the devices in use.

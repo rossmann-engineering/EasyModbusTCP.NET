@@ -242,3 +242,12 @@ ModelManifest.xml
 .fake/
 
 certs/
+certs2/
+
+
+
+*.csr
+*.key
+*.pem
+*.pfx
+*.crt

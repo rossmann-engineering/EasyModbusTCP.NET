@@ -1,25 +1,25 @@
 ﻿# EasyModbusSecure - Server Example
 
-The Server performs the same functionality as in the original Modbus version. There are no no changes to the Modbus application protocol as a consequence of it being encapsulated by the secure transport.
+The Server performs the same functionality as in the original Modbus version. There are no changes to the Modbus application protocol as a consequence of it being encapsulated by a secure transport.
 The only changes concern the requirements of the Modbus/TCP Security Protocol Specification.
 
-The use of TLS provides confidentialllity to the transported data, data integrity, anti-replay protection, endpoint authentication via certificates, and authorization via information embedded in the certificate 
+The use of TLS provides confidentiality to the transported data, data integrity, anti-replay protection, endpoint authentication via certificates, and authorization via information embedded in the certificate 
 such as user and device roles.
 
-Similarly to HTTPS, the server must provide to each client a x.509v3 certificate as part of the TLS Handshake.
+Similar to HTTPS, the server must provide to each client an x.509v3 certificate as part of the TLS Handshake.
 
 ```
 ModbusSecureServerAuthZ modbusServer = new ModbusSecureServerAuthZ("..\\..\\certs2\\server.pfx", certPass, true, roles);
 ```
 
-Such a certificate must be issued by signed by a Trusted Third Part (TTP) and validated during the TLS handshake. The client should validate the provided server certificate path to a trusted root certificate.
+Such a certificate must be issued by signed by a Trusted Third Party (TTP) and validated during the TLS handshake. The client should validate the provided server certificate path to a trusted root certificate.
 
-If the server does not require authenticate of the client, the communication can be initiated by using the **false** option. Hovever the standard specifies the is **REQUIRED** for both end devices to provide 
-mutual authentication when executing the TLS Handshake to create the TLS session (R-06). Therefore it is highly recommended that the mutual authentication option to be activated all the time.
+If the server does not require to authenticate the client, the communication can be initiated by using the **false** option. However, the standard specifies that is **REQUIRED** for both end devices to provide 
+mutual authentication when executing the TLS Handshake to create the TLS session (R-06). Therefore it is highly recommended that the mutual authentication option be activated all the time.
 
-The authorization functionality is implemented with the use of RoleIDs. Each client certificate must provide one of these RoleOIDs in there extension section. That role should match the database of the server
-in order for the client to perform specific actions Roles-to-Rights Rules Database. The functionality of extracting the ASN1:UTF8String encoded RoleOID from the client certificate is performed via the use of 
-the BouncyCastle library. An example of a Roles-to-Rights Rules Database can be as follows
+The authorization functionality is implemented with the use of RoleIDs. Each client certificate must provide one of these RoleOIDs in their extension section. That role should match the  Roles-to-Rights Rules Database
+of the server in order for the client to perform specific actions. This database can be stored locally on the device or be acquired from a remote source. The functionality of extracting the ASN1:UTF8String encoded 
+RoleOID from the client certificate is performed via the use of the BouncyCastle library. An example of a Roles-to-Rights Rules Database can be as follows
 
 ```
 List<ValueTuple<string, List<byte>>> roles = new List<ValueTuple<string, List<byte>>>
@@ -34,7 +34,7 @@ Modbus Function Codes an exception is raised and an "exception code 01 – Illeg
 
 ## Regarding x.509v3 certificates
 
-A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that it uses.
+A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that are used.
 
 The same process described in [Client Example README](../EasySecureModbus_Demo/README.md), is used to create a RootCA. Below the similar process for the Server certificates is presented.
 
