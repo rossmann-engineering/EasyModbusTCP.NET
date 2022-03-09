@@ -28,7 +28,7 @@ or device-specific.
 
 A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that it uses.
 
-The process used to create the certificates for the .NET 4.5 version of the library and test its functionaliyt, is described as follows. However, this is not an exaustive tutorial on how to perform this operation.
+The process used to create the certificates for the .NET 4.5 version of the library and test its functionality, is described as follows. However, this is not an exhaustive tutorial on how to perform this operation.
 The x.509v3 certificate creation process should be performed based on the needs of the organization and the devices in use.
 
 ### Root CA Creation
@@ -51,7 +51,7 @@ The .p12 file must generated and certified:
 openssl pkcs12 -export -out ca.p12 -inkey ca.key -in ca.crt
 ```
 
-Now you have to generate a Certificate Revocation List (CRL) to be used with the CA. First we perform the configuaraion:
+Now you have to generate a Certificate Revocation List (CRL) to be used with the CA. First we perform the configuaration:
 
 ```
 openssl ca -config ca.conf -gencrl -keyfile ca.key -cert ca.crt -out root.crl.pem
@@ -117,3 +117,6 @@ DNS.0 = localhost
 ```
 
 Acks: To @ZacharyHale for his assistance to the creation process of the certificates
+
+## Notes regarding the Modbus/TCP Security Protocol Specification
+

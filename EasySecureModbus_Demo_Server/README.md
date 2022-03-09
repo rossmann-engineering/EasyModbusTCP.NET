@@ -34,4 +34,58 @@ Modbus Function Codes an exception is raised and an "exception code 01 – Illeg
 
 ## Regarding x.509v3 certificates
 
-A common method to create x.509v3 certificates is by utilizing the OpenSSL library. 
+A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that it uses.
+
+The same process described in [Clinet Example README](EasySecureModbus_Demo/README.md), is used to create a RootCA. Below the similar process for the Server certificates is presented.
+
+### Server certificate using the Root CA
+
+The Server certificate creation can once again be summarized in one bash script to speed up the setup:
+
+```
+
+#!/bin/bash
+
+set -e
+
+openssl genrsa -out server.key 4096
+
+openssl req -sha256 -new -key server.key -out server.csr -config openssl_server.cnf
+
+openssl x509 -req -days 1000 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_req -extfile openssl_server.cnf
+
+openssl x509 -in server.crt -text -noout
+
+openssl pkcs12 -export -out server.pfx -inkey server.key -in server.crt
+
+```
+
+The required **openssl_server.cnf** should include the RoleOID reference and can be structured as follows:
+
+```
+#
+# openssl_server.cnf
+#
+
+[ req ]
+prompt = no
+distinguished_name = server_distinguished_name
+
+[ server_distinguished_name ]
+# IP address or Domain of the machine
+commonName = 127.0.0.1
+stateOrProvinceName = NY
+countryName = US
+emailAddress = you@email.com
+organizationName = Here
+organizationalUnitName = Here here
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.0 = localhost
+
+```
