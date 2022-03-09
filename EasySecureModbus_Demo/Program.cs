@@ -28,6 +28,7 @@ namespace EasuySecureModbus_Demo
                 return;
             }
 
+
             modbusClient.WriteMultipleCoils(4, new bool[] { true, true, true, true, true, true, true, true, true, true });    //Write Coils starting with Address 5
             modbusClient.WriteSingleRegister(0, 5);
 
