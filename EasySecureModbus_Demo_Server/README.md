@@ -17,9 +17,10 @@ Such a certificate must be issued by signed by a Trusted Third Party (TTP) and v
 If the server does not require to authenticate the client, the communication can be initiated by using the **false** option. However, the standard specifies that is **REQUIRED** for both end devices to provide 
 mutual authentication when executing the TLS Handshake to create the TLS session (R-06). Therefore it is highly recommended that the mutual authentication option be activated all the time.
 
-The authorization functionality is implemented with the use of RoleIDs. Each client certificate must provide one of these RoleOIDs in their extension section. That role should match the  Roles-to-Rights Rules Database
-of the server in order for the client to perform specific actions. This database can be stored locally on the device or be acquired from a remote source. The functionality of extracting the ASN1:UTF8String encoded 
-RoleOID from the client certificate is performed via the use of the BouncyCastle library. An example of a Roles-to-Rights Rules Database can be as follows
+The authorization functionality is implemented with the use of RoleIDs. Each client certificate must provide one of these RoleOIDs in their extension section. Notice that if the client does not provide a Role, 
+the server sets it to NULL ("0", zero string). That role is proveides, it should match the Roles-to-Rights Rules Database of the server in order for the client to perform specific actions. This database can be
+stored locally on the device or be acquired from a remote source. The functionality of extracting the ASN1:UTF8String encoded RoleOID from the client certificate is performed via the use of the BouncyCastle library. 
+An example of a Roles-to-Rights Rules Database can be as follows
 
 ```
 List<ValueTuple<string, List<byte>>> roles = new List<ValueTuple<string, List<byte>>>
