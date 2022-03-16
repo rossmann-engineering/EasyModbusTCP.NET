@@ -90,3 +90,7 @@ subjectAltName = @alt_names
 DNS.0 = localhost
 
 ```
+
+To import all the required certificateds, the use of the Certificate Manager on Windows for the current user is needed. The server certificate should be under **Personal**. If a custom Root CA is used,
+its certificate should be under **Trusted Root Certification Authorities**. The CRL should be placed under **Intermediate Certification Authorities**.
+More information abou the Certificate Manager tool can be found [here](https://docs.microsoft.com/en-us/dotnet/framework/wcf/feature-details/how-to-view-certificates-with-the-mmc-snap-in#to-view-certificates-for-the-current-user). 
