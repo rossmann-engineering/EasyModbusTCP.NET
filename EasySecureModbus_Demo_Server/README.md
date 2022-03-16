@@ -6,10 +6,10 @@ The only changes concern the requirements of the Modbus/TCP Security Protocol Sp
 The use of TLS provides confidentiality to the transported data, data integrity, anti-replay protection, endpoint authentication via certificates, and authorization via information embedded in the certificate 
 such as user and device roles.
 
-Similar to HTTPS, the server must provide to each client an x.509v3 certificate as part of the TLS Handshake.
+Similar to HTTPS, the server must provide to each client an x.509v3 certificate (certPath) as part of the TLS Handshake along with the password as below (certPass).
 
 ```
-ModbusSecureServerAuthZ modbusServer = new ModbusSecureServerAuthZ("..\\..\\certs2\\server.pfx", certPass, true, roles);
+ModbusSecureServerAuthZ modbusServer = new ModbusSecureServerAuthZ(certPath, certPass, true, roles);
 ```
 
 Such a certificate must be issued by signed by a Trusted Third Party (TTP) and validated during the TLS handshake. The client should validate the provided server certificate path to a trusted root certificate.

@@ -5,11 +5,11 @@ The Client performs the same functionality as in the original Modbus version. Th
 The use of TLS provides confidential transport of the data, data integrity, anti-replay protection, endpoint authentication via certificates, and authorization via information embedded in the certificate 
 such as user and device roles.
 
-The additional functionality that is included concerns only the TLS operations as defined in the Modbus/TCP Security Protocol Specification. For example, the client must provide an x.509v3 certificate as part
-of the TLS Handshake.
+The additional functionality that is included concerns only the TLS operations as defined in the Modbus/TCP Security Protocol Specification. For example, the client must provide the path of a x.509v3 
+certificate as part of the TLS Handshake as well as the password for it as CLI options as below.
 
 ```
-ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 802, "..\\..\\certs2\\client.pfx", args[0], true);
+ModbusSecureClient modbusClient = new ModbusSecureClient("127.0.0.1", 802, args[0], args[1] true);
 ```
 
 Such a certificate must be issued by signed by a Trusted Third Party (TTP) and validated during the TLS handshake for the server to verify it.
