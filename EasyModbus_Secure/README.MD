@@ -3,13 +3,13 @@
 |Requirement| Description |
 | ------------- |:-------------:|
 | R-01: The TLS Protocol v1.2 as defined in [RFC5246] or newer MUST be used as the secure transport protocol to an mbaps Device.|Supported
-| R-02: Secure communications to an mbaps Device MUST use Mutual client/server authentication as provided by the TLS Handshake Protocol|Supported, see Demo Client README
+| R-02: Secure communications to an mbaps Device MUST use Mutual client/server authentication as provided by the TLS Handshake Protocol|Supported, see Demo Client README and [![name](link)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasyModbus_Secure/Specs_vs_Packet_Capture.PNG)
 | R-03: x.509v3 Certificates as defined in [RFC5280] MUST be used as mbaps device credentials for Identity/Authentication by the TLS protocol.|Supported
 | R-04: If the Authorization function is enforced it MUST use the role transferred via x.509v3 certificate extensions|Supported
 | R-05: There MUST be no change to the mbap protocol as a consequence of it being encapsulated by the secure transport|Supported
 | R-06: mbaps end devices MUST provide mutual authentication when executing the TLS Handshake Protocol to create the TLS session.|Supported
-| R-07: The TlsServer MUST send the CertificateRequest extension as part of its ServerHello message.|Supported
-| R-08: The TlsClient MUST send a ClientCertificate message upon receiving a request containing the Client Certificate Request.|Supported
+| R-07: The TlsServer MUST send the CertificateRequest extension as part of its ServerHello message.|Supported, see [![name](link)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasyModbus_Secure/Specs_vs_Packet_Capture.PNG)
+| R-08: The TlsClient MUST send a ClientCertificate message upon receiving a request containing the Client Certificate Request.|Supported, see [![name](link)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasyModbus_Secure/Specs_vs_Packet_Capture.PNG)
 | R-09: If the TlsServer does not send a CertificateRequest message, then the TlsClient MUST send a ‘fatal alert’ message to the TlsServer and terminate the connection.|Supported
 | R-10: If the TlsClient does not send a ClientCertificate message, then the TlsServer MUST send a ‘fatal alert’ message to TlsClient and terminate the connection.|Supported
 | R-11: Per RFC5246-7.2.2, the TLS connection MUST NOT be resumed after a ‘fatal alert’.|Supported
