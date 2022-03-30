@@ -21,16 +21,16 @@
 | R-16: A mbaps Server Device SHOULD provide the role-based client AuthZ as described in this section.|Supported
 | R-17: If a mbaps Server Device provides role-based client AuthZ, it MUST comply with the requirements identified in this section.|Supported
 | R-18: To provide mbaps role-based client authorization capability the following elements are REQUIRED: <ul><li>x.509v3 client domain certificate ‘Role’ extension </li><li>mbaps server AuthZ algorithm</li><li> mbaps server Roles-to-Rights Rules Database </li></ul>|Supported
-| R-19: The mbaps client device MUST be provisioned with its x.509v3 domain certificate.|Supported, see Demo Client README
-| R-20: The x.509v3 client domain certificate MUST include the Role extension.is section.|Supported, see Demo Client README
-| R-21: The Role in the X.509v3 certificate MUST use the Modbus.org PEM OID 1.3.6.1.4.1.50316.802.1|Supported, see Demo Client README
-| R-22: The Role in the x.509v3 certificate MUST use ASN1:UTF8String encoding|Supported, see Demo Client README
+| R-19: The mbaps client device MUST be provisioned with its x.509v3 domain certificate.|Supported, see Demo Client [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo/README.md)
+| R-20: The x.509v3 client domain certificate MUST include the Role extension.is section.|Supported, see Demo Client [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo/README.md)
+| R-21: The Role in the X.509v3 certificate MUST use the Modbus.org PEM OID 1.3.6.1.4.1.50316.802.1|Supported, see Demo Client [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo/README.md)
+| R-22: The Role in the x.509v3 certificate MUST use ASN1:UTF8String encoding|Supported, see Demo Client [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo/README.md)
 | R-65: There MUST only be one role defined per certificate. The entire string will be treated as one role.|Supported
-| R-23: If no Role is specified in the X.509v3 certificate, the mbaps server MUST provide a NULL role to the AuthZ algorithm.|Supported, see Demo Server README
+| R-23: If no Role is specified in the X.509v3 certificate, the mbaps server MUST provide a NULL role to the AuthZ algorithm.|Supported, see Demo Server [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo_Server/README.md)
 | R-24: The mbaps AuthZ Algorithm MUST be defined and provided by the device vendor.|Supported
 | R-25: The Roles-to-Rights Rules Database design, both syntax and semantics, MUST be defined by the device vendor.|Supported
-| R-26: The Roles-to-Rights Rules Database for a particular application MUST be configured according to the device vendor’s design, and provisioned in the mbaps Server by the end user|Supported, see Demo Server README
-| R-27: The Roles-to-Rights Rules Database for a particular application MUST be configurable by the end user.|Supported, see Demo Server README
+| R-26: The Roles-to-Rights Rules Database for a particular application MUST be configured according to the device vendor’s design, and provisioned in the mbaps Server by the end user|Supported, see Demo Server [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo_Server/README.md)
+| R-27: The Roles-to-Rights Rules Database for a particular application MUST be configurable by the end user.|Supported, see Demo Server [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo_Server/README.md)
 | R-28: The Roles-to-Rights Rules Database for a particular application MUST NOT have hardcoded default roles that are unchangeable|Supported
 | R-29: The Role values used in the x.509v3 client domain certificates MUST be consistent with the device vendor’s design of the Roles-to-Rights Rules Database.|Supported
 | R-30: The mbaps server MUST extract the client Role from the received x.509v3 client domain certificate.|Supported
