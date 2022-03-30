@@ -3,7 +3,7 @@
 |Requirement| Description |
 | ------------- |:-------------:|
 | R-01: The TLS Protocol v1.2 as defined in [RFC5246] or newer MUST be used as the secure transport protocol to an mbaps Device.|Supported
-| R-02: Secure communications to an mbaps Device MUST use Mutual client/server authentication as provided by the TLS Handshake Protocol|Supported, see Demo Client README and [![link](link)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasyModbus_Secure/Specs_vs_Packet_Capture.PNG)
+| R-02: Secure communications to an mbaps Device MUST use Mutual client/server authentication as provided by the TLS Handshake Protocol|Supported, see Demo Client [![README](README)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasySecureModbus_Demo/README.md) and [![link](link)](https://github.com/georgemakrakis/EasyModbusTCP.NET/blob/master/EasyModbus_Secure/Specs_vs_Packet_Capture.PNG)
 | R-03: x.509v3 Certificates as defined in [RFC5280] MUST be used as mbaps device credentials for Identity/Authentication by the TLS protocol.|Supported
 | R-04: If the Authorization function is enforced it MUST use the role transferred via x.509v3 certificate extensions|Supported
 | R-05: There MUST be no change to the mbap protocol as a consequence of it being encapsulated by the secure transport|Supported
