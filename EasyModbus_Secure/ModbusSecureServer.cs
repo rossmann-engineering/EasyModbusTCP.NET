@@ -317,14 +317,7 @@ namespace EasyModbusSecure
                         sslStream.AuthenticateAsServer(serverCertificate, false, SslProtocols.Tls12, true);
 
                         Console.WriteLine("NO CLIENT AUTH!!!");
-
-                        // TODO: Remove this if not needed
-                        //if (sslStream.RemoteCertificate == null)
-                        //{
-                        //    Console.WriteLine("Client did not send back a certificate");
-                        //    sslStream.Close();
-                        //    tcpClient.Close();
-                        //}
+                        if (debug) StoreLogData.Instance.Store($"Client authetication has not been enabled.", System.DateTime.Now);
 
                         // Display the properties and settings for the authenticated stream.
                         DisplaySecurityLevel(sslStream);
@@ -458,12 +451,14 @@ namespace EasyModbusSecure
 
         public void DisplayCertificateInformation(SslStream stream, Client client)
         {
+            // TODO: Maybe add logging here?
             Console.WriteLine("Certificate revocation list checked: {0}", stream.CheckCertRevocationStatus);
 
             X509Certificate localCertificateX509 = stream.LocalCertificate;
             X509Certificate2 localCertificateX5092 = new X509Certificate2(localCertificateX509);
             if (stream.LocalCertificate != null)
             {
+                // TODO: Maybe add logging here as well?
                 Console.WriteLine("Local cert was issued to {0} and is valid from {1} until {2}.",
                     localCertificateX5092.Subject,
                     localCertificateX5092.GetEffectiveDateString(),
@@ -494,8 +489,7 @@ namespace EasyModbusSecure
         }
 
         public void CheckRoleInformation(SslStream stream, Client client)
-        {
-            // Display the properties of the client's certificate.
+        {           
             X509Certificate remoteCertificateX509 = stream.RemoteCertificate;
 
             int roleCount = 0;
@@ -534,12 +528,13 @@ namespace EasyModbusSecure
 
 
                         roleCount++;
+                        // TODO: See if you can improve this process in terms of code quality
                         foreach (var roleTuple in acceptableRoles)
                         {
                             if (roleTuple.Item1.Equals(roleStr))
                             {
                                 client.setRole(roleStr);
-                                Console.WriteLine("RoleOID:  {0}", client.getRole());                               
+                                Console.WriteLine("RoleOID:  {0}", client.getRole());                     
                             }
 
                             //if (i == acceptableRoles.Count && client.getRole().Equals("0"))
@@ -552,6 +547,7 @@ namespace EasyModbusSecure
                         if (client.getRole().Equals("0"))
                         {                            
                             Console.WriteLine("Attempted access with role {0}, has been identified", roleStr);
+                            if (debug) StoreLogData.Instance.Store($"Attempted access with role {roleStr} has been identified", System.DateTime.Now);
 
                             // TODO: Maybe the debug property should also be used in this class
                             //if (debug) StoreLogData.Instance.Store($"Exception 2: {e.Message}", System.DateTime.Now);
@@ -627,7 +623,8 @@ namespace EasyModbusSecure
                         }
                         else
                         {
-                            stream = new SslStream(tcpClient.GetStream(), false);
+
+                            stream = new SslStream(tcpClient.GetStream(), false, null, null);
                             return stream;
                         }
                     }
@@ -695,6 +692,8 @@ namespace EasyModbusSecure
         Thread listenerThread;
         Thread clientConnectionThread;
         private ModbusSecureProtocol[] modbusLogData = new ModbusSecureProtocol[100];
+
+        // TODO; Can all these be items of an array or a list?
         public bool FunctionCode1Disabled { get; set; }
         public bool FunctionCode2Disabled { get; set; }
         public bool FunctionCode3Disabled { get; set; }
@@ -2718,6 +2717,7 @@ namespace EasyModbusSecure
         }
         #endregion
 
+        // TODO: Can also these be generalized?
         public override void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
             if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode1AuthZDisabled)
