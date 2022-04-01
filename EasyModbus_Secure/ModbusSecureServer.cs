@@ -227,9 +227,10 @@ namespace EasyModbusSecure
             if (sslPolicyErrors == SslPolicyErrors.None)
                 return true;
 
-            // Just for testing for the localhost domain that does not matches 127.0.0.1 with "localhost"
-            if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch)
-                return true;
+            // Just for testing for the localhost domain that does not match 127.0.0.1 with "localhost"
+            // TODO: Fix that
+            //if (sslPolicyErrors == SslPolicyErrors.RemoteCertificateNameMismatch)
+            //    return true;
 
             Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
             if (debug) StoreLogData.Instance.Store($"Certificate error: { sslPolicyErrors}", System.DateTime.Now);
