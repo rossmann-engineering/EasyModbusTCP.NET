@@ -1783,3 +1783,69 @@
 05.04.2022 20:03:09.40 Send ModbusTCP-Data: 00-08-00-00-00-06-01-03-00-00-00-01
 05.04.2022 20:03:09.41 Disconnect
 05.04.2022 20:03:11.66 Destructor called - automatically disconnect
+05.04.2022 20:08:12.06 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.04.2022 20:08:12.15 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+05.04.2022 20:08:12.15 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+05.04.2022 20:08:12.27 FC6 (Write single register to Master device), StartingAddress: 0, Value: 5
+05.04.2022 20:08:12.27 Send ModbusTCP-Data: 00-02-00-00-00-06-01-06-00-00-00-05
+05.04.2022 20:08:12.27 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+05.04.2022 20:08:12.27 Send MocbusTCP-Data: 00-03-00-00-00-06-01-01-00-09-00-02
+05.04.2022 20:08:12.28 FC3 (Read Holding Registers from Master device), StartingAddress: 0, Quantity: 10
+05.04.2022 20:08:12.28 Send ModbusTCP-Data: 00-04-00-00-00-06-01-03-00-00-00-0A
+05.04.2022 20:08:12.28 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+05.04.2022 20:08:12.28 Send ModbusTCP-Data: 00-05-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+05.04.2022 20:08:12.28 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+05.04.2022 20:08:12.28 Send MocbusTCP-Data: 00-06-00-00-00-06-01-01-00-00-00-02
+05.04.2022 20:08:12.28 FC6 (Write single register to Master device), StartingAddress: 0, Value: 7
+05.04.2022 20:08:12.28 Send ModbusTCP-Data: 00-07-00-00-00-06-01-06-00-00-00-07
+05.04.2022 20:08:12.28 FC3 (Read Holding Registers from Master device), StartingAddress: 0, Quantity: 1
+05.04.2022 20:08:12.28 Send ModbusTCP-Data: 00-08-00-00-00-06-01-03-00-00-00-01
+05.04.2022 20:08:12.28 Disconnect
+05.04.2022 20:08:17.53 Destructor called - automatically disconnect
+05.04.2022 20:31:01.11 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.04.2022 20:31:01.20 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+05.04.2022 20:31:01.20 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+05.04.2022 20:31:01.32 FC6 (Write single register to Master device), StartingAddress: 0, Value: 5
+05.04.2022 20:31:01.32 Send ModbusTCP-Data: 00-02-00-00-00-06-01-06-00-00-00-05
+05.04.2022 20:31:01.32 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+05.04.2022 20:31:01.32 Send MocbusTCP-Data: 00-03-00-00-00-06-01-01-00-09-00-02
+05.04.2022 20:31:01.33 FC3 (Read Holding Registers from Master device), StartingAddress: 0, Quantity: 10
+05.04.2022 20:31:01.33 Send ModbusTCP-Data: 00-04-00-00-00-06-01-03-00-00-00-0A
+05.04.2022 20:31:01.33 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+05.04.2022 20:31:01.33 Send ModbusTCP-Data: 00-05-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+05.04.2022 20:31:01.33 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+05.04.2022 20:31:01.33 Send MocbusTCP-Data: 00-06-00-00-00-06-01-01-00-00-00-02
+05.04.2022 20:31:01.33 FC6 (Write single register to Master device), StartingAddress: 0, Value: 7
+05.04.2022 20:31:01.33 Send ModbusTCP-Data: 00-07-00-00-00-06-01-06-00-00-00-07
+05.04.2022 20:31:01.33 FC3 (Read Holding Registers from Master device), StartingAddress: 0, Quantity: 1
+05.04.2022 20:31:01.33 Send ModbusTCP-Data: 00-08-00-00-00-06-01-03-00-00-00-01
+05.04.2022 20:31:01.33 Disconnect
+05.04.2022 20:46:49.43 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.04.2022 20:46:49.52 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+05.04.2022 20:46:49.52 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+05.04.2022 20:46:49.64 FC6 (Write single register to Master device), StartingAddress: 0, Value: 5
+05.04.2022 20:46:49.64 Send ModbusTCP-Data: 00-02-00-00-00-06-01-06-00-00-00-05
+05.04.2022 20:46:49.65 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+05.04.2022 20:46:49.65 Send MocbusTCP-Data: 00-03-00-00-00-06-01-01-00-09-00-02
+05.04.2022 20:46:49.65 FC3 (Read Holding Registers from Master device), StartingAddress: 0, Quantity: 10
+05.04.2022 20:46:49.65 Send ModbusTCP-Data: 00-04-00-00-00-06-01-03-00-00-00-0A
+05.04.2022 20:46:49.65 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True False True True True False True True True True 
+05.04.2022 20:46:49.66 Send ModbusTCP-Data: 00-05-00-00-00-09-01-0F-00-04-00-0A-02-DD-03
+05.04.2022 20:46:49.66 FC1 (Read Coils from Master device), StartingAddress: 0, Quantity: 2
+05.04.2022 20:46:49.66 Send MocbusTCP-Data: 00-06-00-00-00-06-01-01-00-00-00-02
+05.04.2022 20:46:49.66 FC6 (Write single register to Master device), StartingAddress: 0, Value: 7
+05.04.2022 20:46:49.66 Send ModbusTCP-Data: 00-07-00-00-00-06-01-06-00-00-00-07
+05.04.2022 20:46:49.66 FC3 (Read Holding Registers from Master device), StartingAddress: 0, Quantity: 1
+05.04.2022 20:46:49.66 Send ModbusTCP-Data: 00-08-00-00-00-06-01-03-00-00-00-01
+05.04.2022 20:46:49.66 Disconnect
+05.04.2022 20:46:51.59 Destructor called - automatically disconnect
+05.04.2022 20:47:12.28 Open TCP-Socket, IP-Address: 127.0.0.1, Port: 802
+05.04.2022 20:47:12.38 FC15 (Write multiple coils to Master device), StartingAddress: 4, Values: True True True True True True True True True True 
+05.04.2022 20:47:12.38 Send ModbusTCP-Data: 00-01-00-00-00-09-01-0F-00-04-00-0A-02-FF-03
+05.04.2022 20:47:12.44 FC6 (Write single register to Master device), StartingAddress: 0, Value: 5
+05.04.2022 20:47:12.44 Send ModbusTCP-Data: 00-02-00-00-00-06-01-06-00-00-00-05
+05.04.2022 20:47:12.44 FC1 (Read Coils from Master device), StartingAddress: 9, Quantity: 2
+05.04.2022 20:47:12.44 Send MocbusTCP-Data: 00-03-00-00-00-06-01-01-00-09-00-02
+05.04.2022 20:47:12.45 FC3 (Read Holding Registers from Master device), StartingAddress: 0, Quantity: 10
+05.04.2022 20:47:12.45 Send ModbusTCP-Data: 00-04-00-00-00-06-01-03-00-00-00-0A
+05.04.2022 20:47:12.45 FunctionCodeNotSupportedException Throwed

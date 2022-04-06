@@ -538,7 +538,7 @@ namespace EasyModbusSecure
 
                         roleCount++;
 
-                        if(acceptableRoles.Any(m => m.Item1.Equals(roleStr)))
+                        if(acceptableRoles.Any(roleTuple => roleTuple.Item1.Equals(roleStr)))
                         {
                             client.setRole(roleStr);
                             Console.WriteLine("RoleOID:  {0}", client.getRole());
@@ -2703,143 +2703,76 @@ namespace EasyModbusSecure
             //    return true;
             //}
 
-            foreach (var roleTuple in acceptableRoles)
+            if(acceptableRoles.Any(roleTuple => roleTuple.Item1.Equals(roleStr) && roleTuple.Item2.Contains(functionCode)))
             {
-                if(roleTuple.Item1.Equals(roleStr) && roleTuple.Item2.Contains(functionCode))
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
         #endregion
 
-        // TODO: Can also these be generalized?
-        public override void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+
+        public void HandleRoleCheck(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn, bool FunctionCodeNAuthZDisabled,
+            Action<ModbusSecureProtocol, ModbusSecureProtocol, SslStream, int, IPAddress> ModbusFunction)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode1AuthZDisabled)
+            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCodeNAuthZDisabled)
             {
-                base.ReadCoils(receiveData, sendData, stream, portIn, ipAddressIn);
+                //ModbusFunction(receiveData, sendData, stream, portIn, ipAddressIn);
+                ModbusFunction(receiveData, sendData, stream, portIn, ipAddressIn);
             }
             else
             {
                 sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
                 sendData.exceptionCode = 1;
                 base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
+                //TODO: Should this exception beeing logged as a client might try to access non-assigned functions?
             }
+        }
+
+        public override void ReadCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
+        {
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode1AuthZDisabled, base.ReadCoils);
         }
 
         public override void ReadDiscreteInputs(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
         {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode2AuthZDisabled)
-            {
-                base.ReadDiscreteInputs(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode2AuthZDisabled, base.ReadDiscreteInputs);
         }
 
         public override void ReadHoldingRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode3AuthZDisabled)
-            {
-                base.ReadHoldingRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+        {            
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode3AuthZDisabled, base.ReadHoldingRegisters);
         }
 
         public override void ReadInputRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode4AuthZDisabled)
-            {
-                base.ReadInputRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+        {            
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode4AuthZDisabled, base.ReadInputRegisters);
         }
 
         public override void WriteSingleCoil(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode5AuthZDisabled)
-            {
-                base.WriteSingleCoil(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+        {          
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode5AuthZDisabled, base.WriteSingleCoil);
         }
 
         public override void WriteSingleRegister(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode6AuthZDisabled)
-            {
-                base.WriteSingleRegister(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+        {        
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode6AuthZDisabled, base.WriteSingleRegister);
         }
 
         public override void WriteMultipleCoils(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode15AuthZDisabled)
-            {
-                base.WriteMultipleCoils(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+        {            
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode15AuthZDisabled, base.WriteMultipleCoils);
         }
 
         public override void WriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode16AuthZDisabled)
-            {
-                base.WriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+        {            
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode16AuthZDisabled, base.WriteMultipleRegisters);
         }
 
         public override void ReadWriteMultipleRegisters(ModbusSecureProtocol receiveData, ModbusSecureProtocol sendData, SslStream stream, int portIn, IPAddress ipAddressIn)
-        {
-            if (CheckRoleAccess(stream, this.TcpHandlerRole, receiveData.functionCode) && !FunctionCode23AuthZDisabled)
-            {
-                base.ReadWriteMultipleRegisters(receiveData, sendData, stream, portIn, ipAddressIn);
-            }
-            else
-            {
-                sendData.errorCode = (byte)(receiveData.functionCode + 0x80);
-                sendData.exceptionCode = 1;
-                base.sendException(sendData.errorCode, sendData.exceptionCode, receiveData, sendData, stream, portIn, ipAddressIn);
-            }
+        {           
+            HandleRoleCheck(receiveData, sendData, stream, portIn, ipAddressIn, FunctionCode23AuthZDisabled, base.ReadWriteMultipleRegisters);
         }
     }
 

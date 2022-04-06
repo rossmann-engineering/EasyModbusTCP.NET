@@ -18,8 +18,8 @@ namespace EasySecureModbus_Demo_Server
             List<ValueTuple<string, List<byte>>> roles = new List<ValueTuple<string, List<byte>>>
             {
                 //ValueTuple.Create("Maintainer", (byte)0x01),
-                //ValueTuple.Create("Operator", new List<byte> { (byte)0x01, (byte)0x0F, (byte)0x06} ),
-                ValueTuple.Create("Operator", new List<byte> { (byte)0x01, (byte)0x0F, (byte)0x06, (byte)0x03 } ),
+                ValueTuple.Create("Operator", new List<byte> { (byte)0x01, (byte)0x0F, (byte)0x06} ),
+                //ValueTuple.Create("Operator", new List<byte> { (byte)0x01, (byte)0x0F, (byte)0x06, (byte)0x03 } ),
                 ValueTuple.Create("Engineer", new List<byte> { (byte)0x01 })
             };
             ModbusSecureServerAuthZ modbusServer = new ModbusSecureServerAuthZ(certPath, certPass, true, roles);
