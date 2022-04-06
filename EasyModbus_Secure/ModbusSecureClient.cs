@@ -208,7 +208,8 @@ namespace EasyModbusSecure
             if (localCertificates != null &&
                 localCertificates.Count > 0)
             {
-                Console.WriteLine(localCertificates[0]);
+                //Console.WriteLine(localCertificates[0]);
+                // if (debug) StoreLogData.Instance.Store($"Local certificate information {localCertificates[0]}", System.DateTime.Now);
                 return localCertificates[0];
             }
             return null;
@@ -285,7 +286,7 @@ namespace EasyModbusSecure
                 stream = new SslStream(tcpClient.GetStream(),
                     false,
                     new RemoteCertificateValidationCallback(ValidateServerCertificate),
-                    null
+                    new LocalCertificateSelectionCallback(SelectLocalCertificate)
                     ); // TODO: add the option for the RemoteCertificateValidation
                 stream.ReadTimeout = connectTimeout;
                 connected = true;
@@ -389,42 +390,78 @@ namespace EasyModbusSecure
                 }
                 tcpClient.EndConnect(result);
 
-                //tcpClient = new TcpClient(ipAddress, port);
-                stream = new SslStream(tcpClient.GetStream(), false); // TODO: add the option for the RemoteCertificateValidation
+                stream = new SslStream(tcpClient.GetStream(),
+                    false,
+                    new RemoteCertificateValidationCallback(ValidateServerCertificate),
+                    new LocalCertificateSelectionCallback(SelectLocalCertificate)
+                    );
                 stream.ReadTimeout = connectTimeout;
                 connected = true;
 
-                try
+                if (mutualAuthentication)
                 {
-                    // Enforcing TLS 1.2, in case system is configured otherwise
-                    // Without Mutual Authentication 
-                    //TODO: Maybe consider adding the rest of parameters (SslProtocols etc.)
-                    //TODO: Use the local Authenticate() method for this one as well. Add some exeption handling
-                    stream.AuthenticateAsClient(ipAddress); 
-
-                    // With Mutual Authentication
-                    //stream.AuthenticateAsClient(serverName, cCollection, SslProtocols.Tls12, true);
-                }
-                catch (AuthenticationException e)
-                {
-                    Console.WriteLine("Exception: {0}", e.Message);
-                    if (e.InnerException != null)
+                    try
                     {
-                        Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                        Authentication();
                     }
-                    Console.WriteLine("Authentication failed - closing the connection.");
-                    tcpClient.Close();
-                    //Disconnect();
-                    connected = false;
-                    return;
+                    catch (AuthenticationException e)
+                    {
+                        Console.WriteLine("Exception: {0}", e.Message);
+                        if (debug) StoreLogData.Instance.Store($"Exception: {e.Message}", System.DateTime.Now);
+
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                            if (debug) StoreLogData.Instance.Store($"Inner exception: {e.InnerException.Message}", System.DateTime.Now);
+                        }
+                        Console.WriteLine("Authentication failed - closing the connection.");
+                        tcpClient.Close();
+                        //Disconnect();
+                        connected = false;
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Exception 2: {0}", e.Message);
+                        if (debug) StoreLogData.Instance.Store($"Exception 2: {e.Message}", System.DateTime.Now);
+
+                        tcpClient.Close();
+                        //Disconnect();
+                        connected = false;
+                        return;
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Console.WriteLine("Exception 2: {0}", e.Message);
-                    tcpClient.Close();
-                    //Disconnect();
-                    connected = false;
-                    return;
+                    try
+                    {
+                        Authentication();
+                    }
+                    catch (AuthenticationException e)
+                    {
+                        Console.WriteLine("Exception: {0}", e.Message);
+                        if (debug) StoreLogData.Instance.Store($"Exception: {e.Message}", System.DateTime.Now);
+
+                        if (e.InnerException != null)
+                        {
+                            Console.WriteLine("Inner exception: {0}", e.InnerException.Message);
+                            if (debug) StoreLogData.Instance.Store($"Inner exception: {e.InnerException.Message}", System.DateTime.Now);
+                        }
+                        Console.WriteLine("Authentication failed - closing the connection.");
+                        tcpClient.Close();
+                        connected = false;
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Exception 2: {0}", e.Message);
+                        if (debug) StoreLogData.Instance.Store($"Exception 2: {e.Message}", System.DateTime.Now);
+
+                        tcpClient.Close();
+                        //Disconnect();
+                        connected = false;
+                        return;
+                    }
                 }
             }
             else
