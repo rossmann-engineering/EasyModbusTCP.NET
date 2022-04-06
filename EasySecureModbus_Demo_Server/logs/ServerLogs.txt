@@ -1159,3 +1159,58 @@
 31.03.2022 21:26:20.47 Send Data: 00-07-00-00-00-06-01-06-00-00-00-07
 31.03.2022 21:26:20.47 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
 31.03.2022 21:26:20.48 Send Data: 00-08-00-00-00-05-01-03-02-00-07
+05.04.2022 19:58:32.33 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+05.04.2022 19:58:36.98 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:36.98 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+05.04.2022 19:58:36.98 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:36.99 Send Data: 00-02-00-00-00-06-01-06-00-00-00-05
+05.04.2022 19:58:36.99 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:36.99 Send Data: 00-03-00-00-00-04-01-01-01-03
+05.04.2022 19:58:36.99 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:36.99 Send Data: 00-04-00-00-00-17-01-03-14-00-05-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:36.99 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:37.00 Send Data: 00-05-00-00-00-06-01-0F-00-04-00-0A
+05.04.2022 19:58:37.00 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:37.00 Send Data: 00-06-00-00-00-04-01-01-01-00
+05.04.2022 19:58:37.00 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:37.00 Send Data: 00-07-00-00-00-06-01-06-00-00-00-07
+05.04.2022 19:58:37.00 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 19:58:37.00 Send Data: 00-08-00-00-00-05-01-03-02-00-07
+05.04.2022 20:00:41.01 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+05.04.2022 20:00:52.19 Local cert was issued to OU=CS, O=UoI, E=gmakrakis8@.uidaho.edu, C=US, S=Idaho, CN=127.0.0.1 and is valid from 9/9/2021 11:51:55 PM until 6/5/2024 11:51:55 PM
+05.04.2022 20:00:52.19 Remote cert was issued to OU=CS, O=UoI, E=makr7178@uidaho.edu, C=US, S=ID, CN=localhost2 and is valid from 9/9/2021 11:52:18 PM until 6/5/2024 11:52:18 PM
+05.04.2022 20:01:31.07 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+05.04.2022 20:01:37.89 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+05.04.2022 20:01:41.37 Local cert was issued to OU=CS, O=UoI, E=gmakrakis8@.uidaho.edu, C=US, S=Idaho, CN=127.0.0.1 and is valid from 9/9/2021 11:51:55 PM until 6/5/2024 11:51:55 PM
+05.04.2022 20:01:41.37 Remote cert was issued to OU=CS, O=UoI, E=makr7178@uidaho.edu, C=US, S=ID, CN=localhost2 and is valid from 9/9/2021 11:52:18 PM until 6/5/2024 11:52:18 PM
+05.04.2022 20:01:43.45 Attempted access with role Operator has been identified
+05.04.2022 20:01:43.46 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:01:43.46 Send Data: 00-01-00-00-00-03-01-8F-01
+05.04.2022 20:01:51.14 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+05.04.2022 20:01:53.36 Local cert was issued to OU=CS, O=UoI, E=gmakrakis8@.uidaho.edu, C=US, S=Idaho, CN=127.0.0.1 and is valid from 9/9/2021 11:51:55 PM until 6/5/2024 11:51:55 PM
+05.04.2022 20:01:53.36 Remote cert was issued to OU=CS, O=UoI, E=makr7178@uidaho.edu, C=US, S=ID, CN=localhost2 and is valid from 9/9/2021 11:52:18 PM until 6/5/2024 11:52:18 PM
+05.04.2022 20:02:53.12 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+05.04.2022 20:02:54.90 Local cert was issued to OU=CS, O=UoI, E=gmakrakis8@.uidaho.edu, C=US, S=Idaho, CN=127.0.0.1 and is valid from 9/9/2021 11:51:55 PM until 6/5/2024 11:51:55 PM
+05.04.2022 20:02:54.90 Remote cert was issued to OU=CS, O=UoI, E=makr7178@uidaho.edu, C=US, S=ID, CN=localhost2 and is valid from 9/9/2021 11:52:18 PM until 6/5/2024 11:52:18 PM
+05.04.2022 20:02:55.02 Attempted access with role Operator has been identified
+05.04.2022 20:02:55.02 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:02:55.02 Send Data: 00-01-00-00-00-03-01-8F-01
+05.04.2022 20:03:07.12 EasyModbus Server listing for incomming data at Port 802, local IP 0.0.0.0
+05.04.2022 20:03:09.33 Local cert was issued to OU=CS, O=UoI, E=gmakrakis8@.uidaho.edu, C=US, S=Idaho, CN=127.0.0.1 and is valid from 9/9/2021 11:51:55 PM until 6/5/2024 11:51:55 PM
+05.04.2022 20:03:09.33 Remote cert was issued to OU=CS, O=UoI, E=makr7178@uidaho.edu, C=US, S=ID, CN=localhost2 and is valid from 9/9/2021 11:52:18 PM until 6/5/2024 11:52:18 PM
+05.04.2022 20:03:09.39 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.39 Send Data: 00-01-00-00-00-06-01-0F-00-04-00-0A
+05.04.2022 20:03:09.39 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Send Data: 00-02-00-00-00-06-01-06-00-00-00-05
+05.04.2022 20:03:09.40 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Send Data: 00-03-00-00-00-04-01-01-01-03
+05.04.2022 20:03:09.40 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Send Data: 00-04-00-00-00-17-01-03-14-00-05-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Send Data: 00-05-00-00-00-06-01-0F-00-04-00-0A
+05.04.2022 20:03:09.40 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Send Data: 00-06-00-00-00-04-01-01-01-00
+05.04.2022 20:03:09.40 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Send Data: 00-07-00-00-00-06-01-06-00-00-00-07
+05.04.2022 20:03:09.40 Received Data: 00-00-00-00-00-00-00-00-00-00-00-00
+05.04.2022 20:03:09.40 Send Data: 00-08-00-00-00-05-01-03-02-00-07

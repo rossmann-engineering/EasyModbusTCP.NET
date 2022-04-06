@@ -174,7 +174,7 @@ namespace EasyModbusSecure
         /// Listen to all network interfaces.
         /// </summary>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(int port, string certificate, string certificatePassword, bool mutualAuthentication = true,  List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
+        public TCPHandler(int port, string certificate, string certificatePassword, List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug, bool mutualAuthentication = true)
         {
             server = new TcpListener(LocalIPAddress, port);
             serverCertificate = new X509Certificate2(certificate, certificatePassword, X509KeyStorageFlags.MachineKeySet);
@@ -199,7 +199,7 @@ namespace EasyModbusSecure
         /// </summary>
         /// <param name="localIPAddress">IP address of network interface to listen</param>
         /// <param name="port">TCP port to listen</param>
-        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, bool mutualAuthentication = true, List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug)
+        public TCPHandler(IPAddress localIPAddress, int port, string certificate, string certificatePassword, List<ValueTuple<string, List<byte>>> acceptableRoles, bool debug, bool mutualAuthentication = true)
         {
             this.localIPAddress = localIPAddress;
             server = new TcpListener(LocalIPAddress, port);
@@ -457,12 +457,16 @@ namespace EasyModbusSecure
             X509Certificate localCertificateX509 = stream.LocalCertificate;
             X509Certificate2 localCertificateX5092 = new X509Certificate2(localCertificateX509);
             if (stream.LocalCertificate != null)
-            {
-                // TODO: Maybe add logging here as well?
+            {               
                 Console.WriteLine("Local cert was issued to {0} and is valid from {1} until {2}.",
                     localCertificateX5092.Subject,
                     localCertificateX5092.GetEffectiveDateString(),
                     localCertificateX5092.GetExpirationDateString());
+
+
+                if (debug) StoreLogData.Instance.Store($"Local cert was issued to {localCertificateX5092.Subject}" +
+                    $" and is valid from {localCertificateX5092.GetEffectiveDateString()} " +
+                    $"until {localCertificateX5092.GetExpirationDateString()}", System.DateTime.Now);
             }
             else
             {
@@ -480,6 +484,11 @@ namespace EasyModbusSecure
                     remoteCertificateX5092.Subject,
                     remoteCertificateX5092.GetEffectiveDateString(),
                     remoteCertificateX5092.GetExpirationDateString());
+
+                if (debug) StoreLogData.Instance.Store($"Remote cert was issued to {remoteCertificateX5092.Subject}" +
+                   $" and is valid from {remoteCertificateX5092.GetEffectiveDateString()} " +
+                   $"until {remoteCertificateX5092.GetExpirationDateString()}", System.DateTime.Now);
+            
             }
             else
             {
@@ -528,29 +537,18 @@ namespace EasyModbusSecure
 
 
                         roleCount++;
-                        // TODO: See if you can improve this process in terms of code quality
-                        foreach (var roleTuple in acceptableRoles)
-                        {
-                            if (roleTuple.Item1.Equals(roleStr))
-                            {
-                                client.setRole(roleStr);
-                                Console.WriteLine("RoleOID:  {0}", client.getRole());                     
-                            }
 
-                            //if (i == acceptableRoles.Count && client.getRole().Equals("0"))
-                            //{
-                            //    client.setRole("0");
-                            //    Console.WriteLine("RoleOID:  {0}", client.getRole());
-                            //}
+                        if(acceptableRoles.Any(m => m.Item1.Equals(roleStr)))
+                        {
+                            client.setRole(roleStr);
+                            Console.WriteLine("RoleOID:  {0}", client.getRole());
                         }
+                        
 
                         if (client.getRole().Equals("0"))
                         {                            
                             Console.WriteLine("Attempted access with role {0}, has been identified", roleStr);
-                            if (debug) StoreLogData.Instance.Store($"Attempted access with role {roleStr} has been identified", System.DateTime.Now);
-
-                            // TODO: Maybe the debug property should also be used in this class
-                            //if (debug) StoreLogData.Instance.Store($"Exception 2: {e.Message}", System.DateTime.Now);
+                            if (debug) StoreLogData.Instance.Store($"Attempted access with role {roleStr} has been identified", System.DateTime.Now);                            
                         }
                     }
 
@@ -808,7 +806,7 @@ namespace EasyModbusSecure
                     }
                     catch (Exception) { }
                 }
-                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, mutualAuthentication, acceptableRoles ,debug);
+                tcpHandler = new TCPHandler(LocalIPAddress, port, certificate, certificatePassword, acceptableRoles ,debug, mutualAuthentication);
                 if (debug) StoreLogData.Instance.Store($"EasyModbus Server listing for incomming data at Port {port}, local IP {LocalIPAddress}", System.DateTime.Now);
                 tcpHandler.dataChanged += new TCPHandler.DataChanged(ProcessReceivedData);
                 //tcpHandler.CheckRoleInformation(tcpHandler.)
