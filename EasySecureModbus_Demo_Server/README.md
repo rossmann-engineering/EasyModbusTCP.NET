@@ -1,0 +1,96 @@
+﻿# EasyModbusSecure - Server Example
+
+The Server performs the same functionality as in the original Modbus version. There are no changes to the Modbus application protocol as a consequence of it being encapsulated by a secure transport.
+The only changes concern the requirements of the Modbus/TCP Security Protocol Specification.
+
+The use of TLS provides confidentiality to the transported data, data integrity, anti-replay protection, endpoint authentication via certificates, and authorization via information embedded in the certificate 
+such as user and device roles.
+
+Similar to HTTPS, the server must provide to each client an x.509v3 certificate (certPath) as part of the TLS Handshake along with the password as below (certPass).
+
+```
+ModbusSecureServerAuthZ modbusServer = new ModbusSecureServerAuthZ(certPath, certPass, true, roles);
+```
+
+Such a certificate must be issued by signed by a Trusted Third Party (TTP) and validated during the TLS handshake. The client should validate the provided server certificate path to a trusted root certificate.
+
+If the server does not require to authenticate the client, the communication can be initiated by using the **false** option. However, the standard specifies that is **REQUIRED** for both end devices to provide 
+mutual authentication when executing the TLS Handshake to create the TLS session (R-06). Therefore it is highly recommended that the mutual authentication option be activated all the time.
+
+The authorization functionality is implemented with the use of RoleIDs. Each client certificate must provide one of these RoleOIDs in their extension section. Notice that if the client does not provide a Role, 
+the server sets it to NULL ("0", zero string). That role is proveides, it should match the Roles-to-Rights Rules Database of the server in order for the client to perform specific actions. This database can be
+stored locally on the device or be acquired from a remote source. The functionality of extracting the ASN1:UTF8String encoded RoleOID from the client certificate is performed via the use of the BouncyCastle library. 
+An example of a Roles-to-Rights Rules Database can be as follows
+
+```
+List<ValueTuple<string, List<byte>>> roles = new List<ValueTuple<string, List<byte>>>
+{
+    ValueTuple.Create("Operator", new List<byte> { (byte)0x01, (byte)0x0F, (byte)0x06} ),
+    ValueTuple.Create("Engineer", new List<byte> { (byte)0x01 })
+};
+```
+
+Therefore the Operator can perform "Read Coils, Write Single Holding Register, Write Multiple Holding Registers",  while the Engineer can only "Read Coils". If the provided RoleOID is not matched to the 
+Modbus Function Codes an exception is raised and an "exception code 01 – Illegal Function Code" is returned to the client.
+
+## Regarding x.509v3 certificates
+
+A common method to create x.509v3 certificates is by utilizing the OpenSSL library. These certificates can then be converted into other formats that suit the operating system and the libraries that are used.
+
+The same process described in [Client Example README](../EasySecureModbus_Demo/README.md), is used to create a RootCA. Below the similar process for the Server certificates is presented.
+
+### Server certificate using the Root CA
+
+The Server certificate creation can once again be summarized in one bash script to speed up the setup:
+
+```
+
+#!/bin/bash
+
+set -e
+
+openssl genrsa -out server.key 4096
+
+openssl req -sha256 -new -key server.key -out server.csr -config openssl_server.cnf
+
+openssl x509 -req -days 1000 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_req -extfile openssl_server.cnf
+
+openssl x509 -in server.crt -text -noout
+
+openssl pkcs12 -export -out server.pfx -inkey server.key -in server.crt
+
+```
+
+The required **openssl_server.cnf** should include the RoleOID reference and can be structured as follows:
+
+```
+#
+# openssl_server.cnf
+#
+
+[ req ]
+prompt = no
+distinguished_name = server_distinguished_name
+
+[ server_distinguished_name ]
+# IP address or Domain of the machine
+commonName = 127.0.0.1
+stateOrProvinceName = NY
+countryName = US
+emailAddress = you@email.com
+organizationName = Here
+organizationalUnitName = Here here
+
+[ v3_req ]
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.0 = localhost
+
+```
+
+To import all the required certificateds, the use of the Certificate Manager on Windows for the current user is needed. The server certificate should be under **Personal**. If a custom Root CA is used,
+its certificate should be under **Trusted Root Certification Authorities**. The CRL should be placed under **Intermediate Certification Authorities**.
+More information abou the Certificate Manager tool can be found [here](https://docs.microsoft.com/en-us/dotnet/framework/wcf/feature-details/how-to-view-certificates-with-the-mmc-snap-in#to-view-certificates-for-the-current-user). 

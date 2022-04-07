@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyModbusSecure_Demo_Server", "EasyModbusSecure_Demo_Server.csproj", "{9E87DF38-4733-431C-A175-47423B37762C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E87DF38-4733-431C-A175-47423B37762C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E87DF38-4733-431C-A175-47423B37762C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E87DF38-4733-431C-A175-47423B37762C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E87DF38-4733-431C-A175-47423B37762C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A25C68A3-B869-4535-9491-0229CC9FEC3C}
+	EndGlobalSection
+EndGlobal

@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EasyModbus
+namespace EasyModbusSecure
 {
     /// <summary>
     /// Store Log-Data in a File

@@ -240,3 +240,14 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+certs/
+certs2/
+
+
+
+*.csr
+*.key
+*.pem
+*.pfx
+*.crt

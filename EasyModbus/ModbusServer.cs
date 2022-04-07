@@ -31,7 +31,7 @@ using System.Threading;
 using System.Net.NetworkInformation;
 using System.IO.Ports;
 
-namespace EasyModbus
+namespace EasyModbusSecure
 {
 #region class ModbusProtocol
     /// <summary>
@@ -896,7 +896,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1023,7 +1023,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1139,7 +1139,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1255,7 +1255,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1382,7 +1382,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1505,7 +1505,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1645,7 +1645,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1769,7 +1769,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1900,7 +1900,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -1988,7 +1988,7 @@ namespace EasyModbus
                     if (serialFlag)
                     {
                         if (!serialport.IsOpen)
-                            throw new EasyModbus.Exceptions.SerialPortNotOpenedException("serial port not opened");
+                            throw new EasyModbusSecure.Exceptions.SerialPortNotOpenedException("serial port not opened");
                         //Create CRC
                         sendData.crc = ModbusClient.calculateCRC(data, Convert.ToUInt16(data.Length - 8), 6);
                         byteData = BitConverter.GetBytes((int)sendData.crc);
@@ -2181,7 +2181,7 @@ namespace EasyModbus
         public Int16[] localArray = new Int16[65535];
         ModbusServer modbusServer;
      
-        public HoldingRegisters(EasyModbus.ModbusServer modbusServer)
+        public HoldingRegisters(EasyModbusSecure.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
@@ -2202,7 +2202,7 @@ namespace EasyModbus
         public Int16[] localArray = new Int16[65535];
         ModbusServer modbusServer;
 
-        public InputRegisters(EasyModbus.ModbusServer modbusServer)
+        public InputRegisters(EasyModbusSecure.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
@@ -2223,7 +2223,7 @@ namespace EasyModbus
         public bool[] localArray = new bool[65535];
         ModbusServer modbusServer;
 
-        public Coils(EasyModbus.ModbusServer modbusServer)
+        public Coils(EasyModbusSecure.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
@@ -2244,7 +2244,7 @@ namespace EasyModbus
         public bool[] localArray = new bool[65535];
         ModbusServer modbusServer;
 
-        public DiscreteInputs(EasyModbus.ModbusServer modbusServer)
+        public DiscreteInputs(EasyModbusSecure.ModbusServer modbusServer)
         {
             this.modbusServer = modbusServer;
         }
