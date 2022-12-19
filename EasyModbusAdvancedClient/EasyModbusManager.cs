@@ -29,6 +29,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Linq;
 using System.Xml;
+using EasyModbus;
 
 namespace EasyModbusAdvancedClient
 {
@@ -54,6 +55,19 @@ namespace EasyModbusAdvancedClient
                     throw new Exception("Duplicate connection Name detected");
                 }
             }
+
+            // create modbus client accordingly
+            if (connectionProperties.ModbusTypeProperty == ModbusType.ModbusTCP)
+            {
+                connectionProperties.modbusClient = new EasyModbus.ModbusClient();
+                connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
+            }
+            else
+            {
+                connectionProperties.modbusClient = new EasyModbus.ModbusClient(connectionProperties.ComPort);
+                connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
+            }
+
             connectionPropertiesList.Add(connectionProperties);
             if (connectionPropertiesListChanged != null)
                 connectionPropertiesListChanged(this);
@@ -81,6 +95,9 @@ namespace EasyModbusAdvancedClient
 
         public void AddFunctionProperty(FunctionProperties functionProperty, int connectionNumber)
         {
+            // create link to connection
+            functionProperty.Connection = connectionPropertiesList[connectionNumber];
+            // add to list
             connectionPropertiesList[connectionNumber].FunctionPropertiesList.Add(functionProperty);
             if (connectionPropertiesListChanged != null)
                 connectionPropertiesListChanged(this);
@@ -113,18 +130,18 @@ namespace EasyModbusAdvancedClient
                 modbusClient.Connect();
             }
 
-            switch (connectionProperties.FunctionPropertiesList[functionPropertyID].FunctionCode)
+            switch (connectionProperties.FunctionPropertiesList[functionPropertyID].FunctionCodeRead)
             {
-                case FunctionCode.ReadCoils:
+                case FunctionCodeRd.ReadCoils:
                     connectionProperties.FunctionPropertiesList[functionPropertyID].values = modbusClient.ReadCoils(connectionProperties.FunctionPropertiesList[functionPropertyID].StartingAdress, connectionProperties.FunctionPropertiesList[functionPropertyID].Quantity);
                     break;
-                case FunctionCode.ReadDiscreteInputs:
+                case FunctionCodeRd.ReadDiscreteInputs:
                     connectionProperties.FunctionPropertiesList[functionPropertyID].values = modbusClient.ReadDiscreteInputs(connectionProperties.FunctionPropertiesList[functionPropertyID].StartingAdress, connectionProperties.FunctionPropertiesList[functionPropertyID].Quantity);
                     break;
-                case FunctionCode.ReadHoldingRegisters:
+                case FunctionCodeRd.ReadHoldingRegisters:
                     connectionProperties.FunctionPropertiesList[functionPropertyID].values = modbusClient.ReadHoldingRegisters(connectionProperties.FunctionPropertiesList[functionPropertyID].StartingAdress, connectionProperties.FunctionPropertiesList[functionPropertyID].Quantity);
                     break;
-                case FunctionCode.ReadInputRegisters:
+                case FunctionCodeRd.ReadInputRegisters:
                     connectionProperties.FunctionPropertiesList[functionPropertyID].values = modbusClient.ReadInputRegisters(connectionProperties.FunctionPropertiesList[functionPropertyID].StartingAdress, connectionProperties.FunctionPropertiesList[functionPropertyID].Quantity);
                     break;
                 default: break;
@@ -144,18 +161,18 @@ namespace EasyModbusAdvancedClient
                 modbusClient.Connect();
             }
             foreach (FunctionProperties functionProperty in connectionProperties.FunctionPropertiesList)
-                switch (functionProperty.FunctionCode)
+                switch (functionProperty.FunctionCodeRead)
                 {
-                    case FunctionCode.ReadCoils:
+                    case FunctionCodeRd.ReadCoils:
                         functionProperty.values = modbusClient.ReadCoils(functionProperty.StartingAdress, functionProperty.Quantity);
                         break;
-                    case FunctionCode.ReadDiscreteInputs:
+                    case FunctionCodeRd.ReadDiscreteInputs:
                         functionProperty.values = modbusClient.ReadDiscreteInputs(functionProperty.StartingAdress, functionProperty.Quantity);
                         break;
-                    case FunctionCode.ReadHoldingRegisters:
+                    case FunctionCodeRd.ReadHoldingRegisters:
                         functionProperty.values = modbusClient.ReadHoldingRegisters(functionProperty.StartingAdress, functionProperty.Quantity);
                         break;
-                    case FunctionCode.ReadInputRegisters:
+                    case FunctionCodeRd.ReadInputRegisters:
                         functionProperty.values = modbusClient.ReadInputRegisters(functionProperty.StartingAdress, functionProperty.Quantity);
                         break;
                     default: break;
@@ -168,22 +185,22 @@ namespace EasyModbusAdvancedClient
         public event ConnectionPropertiesListChanged connectionPropertiesListChanged;
 
 
-        public static string getAddress(FunctionCode functionCode, int startingAddress, int quantity, int elementCount)
+        public static string getAddress(FunctionCodeRd functionCode, int startingAddress, int quantity, int elementCount)
         {
             string returnValue = null;
             if ((startingAddress + elementCount) <= (startingAddress + quantity))
                 switch (functionCode)
                 {
-                    case FunctionCode.ReadCoils:
+                    case FunctionCodeRd.ReadCoils:
                         returnValue = "0x" + (startingAddress + elementCount + 1).ToString();
                         break;
-                    case FunctionCode.ReadDiscreteInputs:
+                    case FunctionCodeRd.ReadDiscreteInputs:
                         returnValue = "1x" + (startingAddress + elementCount + 1).ToString();
                         break;
-                    case FunctionCode.ReadHoldingRegisters:
+                    case FunctionCodeRd.ReadHoldingRegisters:
                         returnValue = "4x" + (startingAddress + elementCount + 1).ToString();
                         break;
-                    case FunctionCode.ReadInputRegisters:
+                    case FunctionCodeRd.ReadInputRegisters:
                         returnValue = "3x" + (startingAddress + elementCount + 1).ToString();
                         break;
                     default: break;
@@ -191,71 +208,138 @@ namespace EasyModbusAdvancedClient
             return returnValue;
         }
 
+        public static int[] StrToValues(FunctionProperties functionProperties, string str)
+        {
+            int[] values = { };
+            switch (functionProperties.FunctionCodeWrite)
+            {
+                case FunctionCodeWr.WriteHoldingRegisters:
+                    int value = 0;
+                    if (Int32.TryParse(str, out value))
+                    {
+                        // add 
+                        int[] x = { value };
+                        return x;
+
+                    }
+
+                    break;
+            }
+            return values;
+        }
+
+        public FunctionProperties FindPropertyFromGrid( int gridRow)
+        {
+            foreach (ConnectionProperties connection in connectionPropertiesList)
+            {
+                foreach (FunctionProperties functionProperty in connection.FunctionPropertiesList)
+                {
+                    if (functionProperty.DataGridRow == gridRow)
+                    {
+                        return functionProperty;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public void WriteToServer(FunctionProperties prop, int[] values)
+        {
+            /*
+            string text = "";
+            text += "property " + prop.StartingAdress + "\n" + "type " + prop.FunctionCodeWrite.ToString() + "\n" + "new value: " + values.ToString() + "\n";
+            text += "connection " + prop.Connection.ConnectionName;
+            MessageBox.Show(text, "updating register");
+            */
+
+            int startingAddress = prop.StartingAdress;
+            switch(prop.FunctionCodeWrite)
+            {
+                case FunctionCodeWr.WriteHoldingRegisters:
+                                            prop.Connection.modbusClient.WriteMultipleRegisters(startingAddress, values);
+                                            break;
+
+            }
+            
+
+        }
+
         public void WriteXML(DataGridView dataGridView)
         {
             XmlDocument xmlDocument = new XmlDocument();
             XmlNode xmlRoot;
-            XmlNode xmlChild1;
-            XmlNode xmlChild2, xmlChild3;
+            XmlNode xmlNodeConnection, xmlNodeConnectionProp;
+            XmlNode xmlNodeFunctionCodes, xmlNodeFunctionCodesProp;
+            XmlNode xmlNodeDataGrid, xmlNodeDataGridLines, xmlNodeDataGridLinesProp;
             xmlRoot = xmlDocument.CreateElement("ModbusConfiguration");
             for (int i = 0; i < this.connectionPropertiesList.Count; i++)
             {
-                xmlChild1 = xmlDocument.CreateElement("connection");
-                xmlChild2 = xmlDocument.CreateElement("connectionName");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].ConnectionName;
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("ipAddress");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].ModbusTCPAddress;
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("port");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].Port.ToString();
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("cyclicFlag");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].CyclicFlag.ToString();
-                xmlChild1.AppendChild(xmlChild2);
-                xmlChild2 = xmlDocument.CreateElement("cycleTime");
-                xmlChild2.InnerText = this.connectionPropertiesList[i].CycleTime.ToString();
-                xmlChild1.AppendChild(xmlChild2);
+                xmlNodeConnection = xmlDocument.CreateElement("connection");
+                xmlNodeConnectionProp = xmlDocument.CreateElement("connectionName");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].ConnectionName;
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("ipAddress");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].ModbusTCPAddress;
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("port");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].Port.ToString();
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("cyclicFlag");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].CyclicFlag.ToString();
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
+                xmlNodeConnectionProp = xmlDocument.CreateElement("cycleTime");
+                xmlNodeConnectionProp.InnerText = this.connectionPropertiesList[i].CycleTime.ToString();
+                xmlNodeConnection.AppendChild(xmlNodeConnectionProp);
                 for (int j = 0; j < this.connectionPropertiesList[i].FunctionPropertiesList.Count; j++)
                 {
-                    xmlChild2 = xmlDocument.CreateElement("functionCodes");
-                    xmlChild3 = xmlDocument.CreateElement("functionCode");
-                    xmlChild3.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].FunctionCode.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("quantity");
-                    xmlChild3.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].Quantity.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("startingAddress");
-                    xmlChild3.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].StartingAdress.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild1.AppendChild(xmlChild2);
+                    xmlNodeFunctionCodes = xmlDocument.CreateElement("functionCodes");
+                    xmlNodeFunctionCodesProp = xmlDocument.CreateElement("functionCodeRead");
+                    xmlNodeFunctionCodesProp.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].FunctionCodeRead.ToString();
+                    xmlNodeFunctionCodes.AppendChild(xmlNodeFunctionCodesProp);
+                    xmlNodeFunctionCodesProp = xmlDocument.CreateElement("functionCodeWrite");
+                    xmlNodeFunctionCodesProp.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].FunctionCodeWrite.ToString();
+                    xmlNodeFunctionCodes.AppendChild(xmlNodeFunctionCodesProp);
+                    xmlNodeFunctionCodesProp = xmlDocument.CreateElement("quantity");
+                    xmlNodeFunctionCodesProp.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].Quantity.ToString();
+                    xmlNodeFunctionCodes.AppendChild(xmlNodeFunctionCodesProp);
+                    xmlNodeFunctionCodesProp = xmlDocument.CreateElement("startingAddress");
+                    xmlNodeFunctionCodesProp.InnerText = this.connectionPropertiesList[i].FunctionPropertiesList[j].StartingAdress.ToString();
+                    xmlNodeFunctionCodes.AppendChild(xmlNodeFunctionCodesProp);
+                    xmlNodeConnection.AppendChild(xmlNodeFunctionCodes);
                 }
-                xmlRoot.AppendChild(xmlChild1);
-                xmlChild1 = xmlDocument.CreateElement("dataGridView");
+                xmlRoot.AppendChild(xmlNodeConnection);
+                xmlNodeDataGrid = xmlDocument.CreateElement("dataGridView");
                 for (int j = 0; j < dataGridView.Rows.Count; j++)
                 {
-                    if (dataGridView[0, j].Value != null & dataGridView[1, j].Value!= null & dataGridView[2, j].Value != null & dataGridView[3, j].Value != null)
-                    xmlChild2 = xmlDocument.CreateElement("dataGridViewLines");
-                    xmlChild3 = xmlDocument.CreateElement("columnConnection");
-                    if (dataGridView[0, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[0, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("columnAddress");
-                    if (dataGridView[1, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[1, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("columnTag");
-                    if (dataGridView[2, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[2, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild3 = xmlDocument.CreateElement("columnDataType");
-                    if (dataGridView[3, j].Value != null)
-                        xmlChild3.InnerText = dataGridView[3, j].Value.ToString();
-                    xmlChild2.AppendChild(xmlChild3);
-                    xmlChild1.AppendChild(xmlChild2);
+                    if (dataGridView[0, j].Value != null & dataGridView[1, j].Value != null & dataGridView[3, j].Value != null)
+                    {
+                        xmlNodeDataGridLines = xmlDocument.CreateElement("dataGridViewLines");
 
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnConnection");
+                        xmlNodeDataGridLinesProp.InnerText = dataGridView[0, j].Value.ToString();
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnAddress");
+                        xmlNodeDataGridLinesProp.InnerText = dataGridView[1, j].Value.ToString();
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnTag");
+                        if (dataGridView[2, j].Value != null)
+                            xmlNodeDataGridLinesProp.InnerText = dataGridView[2, j].Value.ToString();
+                        else
+                            xmlNodeDataGridLinesProp.InnerText = "n.a.";
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGridLinesProp = xmlDocument.CreateElement("columnDataType");
+                        xmlNodeDataGridLinesProp.InnerText = dataGridView[3, j].Value.ToString();
+                        xmlNodeDataGridLines.AppendChild(xmlNodeDataGridLinesProp);
+
+                        xmlNodeDataGrid.AppendChild(xmlNodeDataGridLines);
+                    }
                 }
-                xmlRoot.AppendChild(xmlChild1);
+                xmlRoot.AppendChild(xmlNodeDataGrid);
+
                 xmlDocument.AppendChild(xmlRoot);
                 xmlDocument.Save("textWriter.xml");
             }
@@ -273,10 +357,15 @@ namespace EasyModbusAdvancedClient
             System.Xml.XmlDocument xmlDocument = new System.Xml.XmlDocument();
             xmlDocument.Load("textWriter.xml");
             xmlNodeList = xmlDocument.GetElementsByTagName("connection");
-            connectionPropertiesList = new List<ConnectionProperties>();
+            //connectionPropertiesList = new List<ConnectionProperties>();
+            this.connectionPropertiesList.Clear();
+            int slotId = 0;
+
             foreach (XmlNode xmlNode in xmlNodeList)
             {
                 ConnectionProperties connectionProperty = new ConnectionProperties();
+                AddConnection(connectionProperty);
+
                 connectionProperty.ConnectionName = (xmlNode["connectionName"].InnerText);
                 connectionProperty.ModbusTCPAddress = (xmlNode["ipAddress"].InnerText);
                 connectionProperty.Port = Int32.Parse(xmlNode["port"].InnerText);
@@ -287,36 +376,61 @@ namespace EasyModbusAdvancedClient
                 {
                     xmlNodeList2 = xmlNode3.ChildNodes;
                     FunctionProperties functionProperty = new FunctionProperties();
+
                     foreach (XmlNode xmlNode2 in xmlNodeList2)
                     {
-                        if (xmlNode2.Name == "functionCode")
+                        if (xmlNode2.Name == "functionCodeRead")
                             switch (xmlNode2.InnerText)
                             {
                                 case "ReadCoils":
-                                    functionProperty.FunctionCode = FunctionCode.ReadCoils;
+                                    functionProperty.FunctionCodeRead = FunctionCodeRd.ReadCoils;
                                     break;
                                 case "ReadDiscreteInputs":
-                                    functionProperty.FunctionCode = FunctionCode.ReadDiscreteInputs;
+                                    functionProperty.FunctionCodeRead = FunctionCodeRd.ReadDiscreteInputs;
                                     break;
                                 case "ReadHoldingRegisters":
-                                    functionProperty.FunctionCode = FunctionCode.ReadHoldingRegisters;
+                                    functionProperty.FunctionCodeRead = FunctionCodeRd.ReadHoldingRegisters;
                                     break;
                                 case "ReadInputRegisters":
-                                    functionProperty.FunctionCode = FunctionCode.ReadInputRegisters;
+                                    functionProperty.FunctionCodeRead = FunctionCodeRd.ReadInputRegisters;
                                     break;
                             }
+                        if (xmlNode2.Name == "functionCodeWrite")
+                        {
+                            functionProperty.FunctionCodeWrite = FunctionCodeWr.WriteNone;
+                            switch (xmlNode2.InnerText)
+                            {
+                                case "WriteCoils":
+                                    functionProperty.FunctionCodeWrite = FunctionCodeWr.WriteNone;
+                                    break;
+                                case "WriteDiscreteInputs":
+                                    functionProperty.FunctionCodeWrite = FunctionCodeWr.WriteNone;
+                                    break;
+                                case "WriteHoldingRegisters":
+                                    functionProperty.FunctionCodeWrite = FunctionCodeWr.WriteHoldingRegisters;
+                                    break;
+                                case "WriteInputRegisters":
+                                    functionProperty.FunctionCodeWrite = FunctionCodeWr.WriteNone;
+                                    break;
+                            }
+
+                        }
                         if (xmlNode2.Name == "startingAddress")
                             functionProperty.StartingAdress = Int32.Parse(xmlNode2.InnerText);
                         if (xmlNode2.Name == "quantity")
                             functionProperty.Quantity = Int32.Parse(xmlNode2.InnerText);
                     }
-                    connectionProperty.FunctionPropertiesList.Add(functionProperty);
+                    //connectionProperty.FunctionPropertiesList.Add(functionProperty);
+                    this.AddFunctionProperty(functionProperty, slotId);
+
                     xmlNode3 = xmlNode3.NextSibling;
                 }
-                connectionPropertiesList.Add(connectionProperty);
+                slotId++;
+                //this.connectionPropertiesList.Add(connectionProperty);
             }
             if (connectionPropertiesListChanged != null)
                 connectionPropertiesListChanged(this);
+
             xmlNodeList = xmlDocument.GetElementsByTagName("dataGridViewLines");
             dataGridView.Rows.Clear();
             dataGridView.AllowUserToAddRows = false;
@@ -337,37 +451,59 @@ namespace EasyModbusAdvancedClient
                 if (xmlNode["columnDataType"] != null)
                     dataGridView[3, dataGridView.Rows.Count - 1].Value = xmlNode["columnDataType"].InnerText;
             }
+
+            // trigger update of values manually
+            //this.valuesChanged(this);
+
             dataGridView.AllowUserToAddRows = true;
         }
     }
 	
 	
-	public enum FunctionCode : int
+	public enum FunctionCodeRd : int
 	{
 		ReadCoils = 1,
 		ReadDiscreteInputs = 2,
 		ReadHoldingRegisters = 3,
 		ReadInputRegisters = 4,
 	};
-	
-	
-	public class FunctionProperties
+
+    public enum FunctionCodeWr : int
+    {
+        WriteNone = 0,
+        WriteCoils = 1,
+        WriteDiscreteInputs = 2,
+        WriteHoldingRegisters = 3,
+        WriteInputRegisters = 4,
+    };
+
+
+    public class FunctionProperties
 	{
 	
-		FunctionCode funtionCode = FunctionCode.ReadCoils;
-		
-		[Browsable(true)]                       
+		FunctionCodeRd functionCodeRd = FunctionCodeRd.ReadCoils;
+        [Browsable(true)]                       
    		[Category("Function code properties")] 
-    	[Description("Function Code")]           
-   		[DisplayName("Function Code")]     
-		public FunctionCode FunctionCode
+    	[Description("Function Code Read")]           
+   		[DisplayName("Function Code Read")]     
+		public FunctionCodeRd FunctionCodeRead
 		{
-			get {return funtionCode;}
-			set {funtionCode = value;}
+			get {return functionCodeRd; }
+			set { functionCodeRd = value;}
 		}
-		
-  
-		int startingAdress = 0;
+
+        FunctionCodeWr functionCodeWr = FunctionCodeWr.WriteNone;
+        [Browsable(true)]
+        [Category("Function code properties")]
+        [Description("Function Code Write")]
+        [DisplayName("Function Code Write")]
+        public FunctionCodeWr FunctionCodeWrite
+        {
+            get { return functionCodeWr; }
+            set { functionCodeWr = value; }
+        }
+
+        int startingAdress = 0;
 		[Browsable(true)]                       
    		[Category("Function code properties")] 
     	[Description("Starting Address")]           
@@ -389,7 +525,29 @@ namespace EasyModbusAdvancedClient
 			get {return quantity;}
 			set {quantity = value;}
 		}
-		
-		public object values;
+
+        int DataGridRowIdx = -1;
+        [Browsable(false)]
+        [Category("Function code properties")]
+        [Description("Data Grid Row Idx")]
+        [DisplayName("Data Grid Row Idx")]
+        public int DataGridRow
+        {
+            get { return DataGridRowIdx; }
+            set { DataGridRowIdx = value; }
+        }
+
+        ConnectionProperties connection= null;
+        [Browsable(false)]
+        [Category("Function code properties")]
+        [Description("connection")]
+        [DisplayName("connection")]
+        public ConnectionProperties Connection
+        {
+            get { return connection; }
+            set { connection = value; }
+        }
+
+        public object values;
 }
 }

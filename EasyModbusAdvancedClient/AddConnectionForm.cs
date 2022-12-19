@@ -82,16 +82,6 @@ namespace EasyModbusAdvancedClient
                 if (!editMode)
                 {
                     easyModbusManager.AddConnection(connectionProperties);
-                    if (connectionProperties.ModbusTypeProperty == ModbusType.ModbusTCP)
-                    {
-						connectionProperties.modbusClient = new EasyModbus.ModbusClient();
-						connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
-                    }
-                    else
-                    {
-                    	connectionProperties.modbusClient = new EasyModbus.ModbusClient(connectionProperties.ComPort);
-                    	connectionProperties.modbusClient.UnitIdentifier = (byte)connectionProperties.SlaveID;
-                    }
                 }
                 else
                     easyModbusManager.EditConnection(connectionProperties, indexToEdit);
