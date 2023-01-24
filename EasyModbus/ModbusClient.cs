@@ -1191,68 +1191,69 @@ namespace EasyModbus
                         if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
                         ReceiveDataChanged(this);
             		}
+                    if (data[7] == 0x81 & data[8] == 0x01)
+                    {
+                        if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
+                        throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
+                    }
+                    if (data[7] == 0x81 & data[8] == 0x02)
+                    {
+                        if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
+                        throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
+                    }
+                    if (data[7] == 0x81 & data[8] == 0x03)
+                    {
+                        if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
+                        throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
+                    }
+                    if (data[7] == 0x81 & data[8] == 0x04)
+                    {
+                        if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
+                        throw new EasyModbus.Exceptions.ModbusException("error reading");
+                    }
+                    if (serialport != null)
+                    {
+                        crc = BitConverter.GetBytes(calculateCRC(data, (ushort)(data[8] + 3), 6));
+                        if ((crc[0] != data[data[8] + 9] | crc[1] != data[data[8] + 10]) & dataReceived)
+                        {
+                            if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
+                            if (NumberOfRetries <= countRetries)
+                            {
+                                countRetries = 0;
+                                throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
+                            }
+                            else
+                            {
+                                countRetries++;
+                                return ReadCoils(startingAddress, quantity);
+                            }
+                        }
+                        else if (!dataReceived)
+                        {
+                            if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
+                            if (NumberOfRetries <= countRetries)
+                            {
+                                countRetries = 0;
+                                throw new TimeoutException("No Response from Modbus Slave");
+                            }
+                            else
+                            {
+                                countRetries++;
+                                return ReadCoils(startingAddress, quantity);
+                            }
+                        }
+                    }
+                    response = new bool[quantity];
+                    for (int i = 0; i < quantity; i++)
+                    {
+                        int intData = data[9 + i / 8];
+                        int mask = Convert.ToInt32(Math.Pow(2, (i % 8)));
+                        response[i] = Convert.ToBoolean((intData & mask) / mask);
+                    }
+                    return (response);
                 }
 			}
-            if (data[7] == 0x81 & data[8] == 0x01)
-            {
-            	if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.FunctionCodeNotSupportedException("Function code not supported by master");
-            }
-            if (data[7] == 0x81 & data[8] == 0x02)
-           {
-            	if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
-            }
-            if (data[7] == 0x81 & data[8] == 0x03)
-            {
-            	if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.QuantityInvalidException("quantity invalid");
-            }
-            if (data[7] == 0x81 & data[8] == 0x04)
-            {
-            	if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
-                throw new EasyModbus.Exceptions.ModbusException("error reading");
-            }
-            if (serialport != null)
-            {
-            crc = BitConverter.GetBytes(calculateCRC(data, (ushort)(data[8]+3), 6));
-                if ((crc[0] != data[data[8]+9] | crc[1] != data[data[8]+10]) & dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
-                    if (NumberOfRetries <= countRetries)
-                    {
-                        countRetries = 0;
-                        throw new EasyModbus.Exceptions.CRCCheckFailedException("Response CRC check failed");
-                    }
-                    else
-                    {
-                        countRetries++;
-                        return ReadCoils(startingAddress, quantity);
-                    }
-                }
-                else if (!dataReceived)
-                {
-                	if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
-                    if (NumberOfRetries <= countRetries)
-                    {
-                        countRetries = 0;
-                        throw new TimeoutException("No Response from Modbus Slave");
-                    }
-                    else
-                    {
-                        countRetries++;
-                        return ReadCoils(startingAddress, quantity);
-                    }
-                }
-            }
-			response = new bool[quantity];
-			for (int i = 0; i < quantity; i++)
-			{
-				int intData = data[9+i/8];
-				int mask = Convert.ToInt32(Math.Pow(2, (i%8)));
-				response[i] = Convert.ToBoolean((intData & mask)/mask);
-			}   		
-    		return (response);
+            return null;
 		}
 
 
