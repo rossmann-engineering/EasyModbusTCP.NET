@@ -26,8 +26,6 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO.Ports;
 using System.Reflection;
-using System.Text;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace EasyModbus
@@ -984,8 +982,17 @@ namespace EasyModbus
                     SendDataChanged(this);
 
                 }
+                Byte[] tempdata = new Byte[2100];
                 data = new Byte[2100];
-                int NumberOfBytes = stream.Read(data, 0, data.Length);
+                int NumberOfBytes = 0;
+                DateTime dateTimeSend = DateTime.Now;
+                while ((NumberOfBytes < bytesToRead) & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
+                {
+                    int bytes = stream.Read(tempdata, 0, tempdata.Length);
+                    Array.Copy(tempdata, 0, data, NumberOfBytes, bytes);
+                    NumberOfBytes += bytes;
+                    dataReceived = true;
+                }
                 if (ReceiveDataChanged != null)
                 {
                     receiveData = new byte[NumberOfBytes];
@@ -1213,8 +1220,17 @@ namespace EasyModbus
                     SendDataChanged(this);
 
                 }
+                Byte[] tempdata = new Byte[2100];
                 data = new Byte[2100];
-                int NumberOfBytes = stream.Read(data, 0, data.Length);
+                int NumberOfBytes = 0;
+                DateTime dateTimeSend = DateTime.Now;
+                while ((NumberOfBytes < bytesToRead) & !((DateTime.Now.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * this.connectTimeout))
+                {
+                    int bytes = stream.Read(tempdata, 0, tempdata.Length);
+                    Array.Copy(tempdata, 0, data, NumberOfBytes, bytes);
+                    NumberOfBytes += bytes;
+                    dataReceived = true;
+                }
                 if (ReceiveDataChanged != null)
                 {
                     receiveData = new byte[NumberOfBytes];
