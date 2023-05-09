@@ -922,7 +922,7 @@ namespace EasyModbus
                     bytesToRead = 5 + quantity / 8;
                 else
                     bytesToRead = 6 + quantity / 8;
- //               serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -937,8 +937,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                     
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -1118,7 +1116,7 @@ namespace EasyModbus
                     bytesToRead = 5 + quantity/8;
                 else
                     bytesToRead = 6 + quantity/8;
- //               serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1133,8 +1131,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                     
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -1311,7 +1307,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 5 + 2 * quantity;
-//                serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1326,9 +1322,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                     
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
-                
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -1515,9 +1508,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 5 + 2 * quantity;
-
-
- //               serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1532,8 +1523,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                     
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -1720,7 +1709,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
- //               serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1735,8 +1724,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                    
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -1902,7 +1889,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
-//                serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, 8);
                 if (debug)
                 {
@@ -1917,8 +1904,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                     
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -2101,7 +2086,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
- //               serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, data.Length - 6);
                 if (debug)
                 {
@@ -2116,8 +2101,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                     
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -2288,7 +2271,7 @@ namespace EasyModbus
             {
                 dataReceived = false;
                 bytesToRead = 8;
-//                serialport.ReceivedBytesThreshold = bytesToRead;
+                readBuffer = new byte[256];
                 serialport.Write(data, 6, data.Length - 6);
 
                 if (debug)
@@ -2304,8 +2287,6 @@ namespace EasyModbus
             		SendDataChanged(this);
                    
                 }
-                data = new byte[2100];
-                readBuffer = new byte[256];
                 DateTime dateTimeSend = DateTime.Now;
                 byte receivedUnitIdentifier = 0xFF;
 
@@ -2495,8 +2476,8 @@ namespace EasyModbus
             if (serialport != null)
             {
                 dataReceived = false;
+                readBuffer = new byte[256];
                 bytesToRead = 5 + 2*quantityRead;
- //               serialport.ReceivedBytesThreshold = bytesToRead;
                 serialport.Write(data, 6, data.Length - 6);
                 if (debug)
                 {
