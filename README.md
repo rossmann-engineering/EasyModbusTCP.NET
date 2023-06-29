@@ -29,6 +29,27 @@ Supported Function Codes:
 Modbus TCP, Modbus UDP and Modbus RTU client/server library
 
 
+Poll主机
+2023-6-27：修复NumberOfRetries无效错误 if (NumberOfRetries > countRetries)
+2023-6-27：修复TCP连接断线无法触发ConnectedChanged的问题
+2020-8-15：增加响应延时属性ResposeDelay 事件ResposeDelayChanged
+2020-8-11：修正Modbus主机模式下退出报不能为Null异常错误 详见:~ModbusClient()
+2020-8-11：修正UDP连接connected属性一直为True的问题
+2020-8-2：规范化ReceiveDataChanged(Byte[] data) SendDataChanged(Byte[] data)回调
+2020-8-1：增加ModbusType 规范化编程
+2020-8-1：增加UDP模式发送回传（全模式支持发送、接收通信数据回传）
+2020-7-31：修正Modbus主机模式下连接超时 详见:connectTimeout 
+
+Client从机
+2023-6-29：删除numberOfClientsChanged、NumberOfConnectedClientsChanged事件
+2020-8-13：解决ModbusUDP无法二次启动问题 关闭未结束线程 listenerThread
+2020-8-2：增加ReceiveDataChanged(Byte[] data) SendDataChanged(Byte[] data)回调
+2020-8-2：解决从机模式接收数据debug信息全部为00的问题
+2020-8-1：增加ModbusType 规范化编程
+2020-8-1：解决UDP从机模式关闭后不能打开的问题
+2020-7-30：解决ModbusRTU从机模式下数据接收错误的问题 详见:SerialHandler
+
+
 Copyright (c) 2018-2020 Rossmann-Engineering
 Permission is hereby granted, free of charge, 
 to any person obtaining a copy of this software
