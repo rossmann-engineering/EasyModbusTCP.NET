@@ -67,15 +67,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvancedModbusClient.cs" />
     <Compile Include="Exceptions\Exceptions.cs" />
     <Compile Include="ModbusClient.cs" />
-    <Compile Include="ModbusServer.cs" />
+    <Compile Include="ModbusPoll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoreLogData.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
