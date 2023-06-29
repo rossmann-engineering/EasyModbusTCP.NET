@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>EasyModbusTCP</Title>
+        <TargetFrameworks>net4.0;net6.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+        <AssemblyName>EasyModbus</AssemblyName>
+        <RootNamespace>EasyModbus</RootNamespace>
+        <Authors>Stefan Roßmann</Authors>
+        <Company>Stefan Roßmann</Company>
+        <Version>5.7.0</Version>
+        <Copyright>Rossmann Engineering 2018-2020</Copyright>
+        <Description>Modbus TCP, Modbus UDP and Modbus RTU client library for .NET implementations</Description>
+        <NoWarn>1701;1702;0618;NU1803;IDE1006</NoWarn>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <DefineConstants>$(DefineConstants);COMMERCIAL</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+        <PackageReference Include="System.IO.Ports" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="ModbusClient.ConvertData.cs">
+            <DependentUpon>ModbusClient.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Properties\" />
+    </ItemGroup>
+</Project>
