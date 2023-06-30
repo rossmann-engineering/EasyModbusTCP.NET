@@ -68,6 +68,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\EasyModbus\AdvancedModbusClient.cs">
+      <Link>AdvancedModbusClient.cs</Link>
+    </Compile>
     <Compile Include="..\EasyModbus\Exceptions\Exceptions.cs">
       <Link>Exceptions\Exceptions.cs</Link>
     </Compile>
