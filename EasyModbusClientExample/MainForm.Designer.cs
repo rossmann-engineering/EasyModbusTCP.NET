@@ -23,7 +23,7 @@ namespace EasyModbusClientExample
 		private System.Windows.Forms.Button btnReadHoldingRegisters;
 		private System.Windows.Forms.Button btnReadInputRegisters;
 		private System.Windows.Forms.TextBox txtStartingAddressInput;
-		private System.Windows.Forms.Label txtStartingAddress;
+		private System.Windows.Forms.Label txtReadStartingAddress;
 		private System.Windows.Forms.Label txtNumberOfValues;
 		private System.Windows.Forms.TextBox txtNumberOfValuesInput;
 		
@@ -58,10 +58,9 @@ namespace EasyModbusClientExample
             this.btnReadHoldingRegisters = new System.Windows.Forms.Button();
             this.btnReadInputRegisters = new System.Windows.Forms.Button();
             this.txtStartingAddressInput = new System.Windows.Forms.TextBox();
-            this.txtStartingAddress = new System.Windows.Forms.Label();
+            this.txtReadStartingAddress = new System.Windows.Forms.Label();
             this.txtNumberOfValues = new System.Windows.Forms.Label();
             this.txtNumberOfValuesInput = new System.Windows.Forms.TextBox();
-            this.lsbAnswerFromServer = new System.Windows.Forms.ListBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.cbbSelctionModbus = new System.Windows.Forms.ComboBox();
             this.txtCOMPort = new System.Windows.Forms.Label();
@@ -76,10 +75,10 @@ namespace EasyModbusClientExample
             this.txtCoilValue = new System.Windows.Forms.TextBox();
             this.txtRegisterValue = new System.Windows.Forms.TextBox();
             this.lblReadOperations = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.buttonConnect = new System.Windows.Forms.Button();
+            this.buttonDisconnect = new System.Windows.Forms.Button();
+            this.labelWriteOperations = new System.Windows.Forms.Label();
+            this.txtWriteStartingAddress = new System.Windows.Forms.Label();
             this.txtStartingAddressOutput = new System.Windows.Forms.TextBox();
             this.lsbWriteToServer = new System.Windows.Forms.ListBox();
             this.lblParity = new System.Windows.Forms.Label();
@@ -89,11 +88,12 @@ namespace EasyModbusClientExample
             this.txtBaudrate = new System.Windows.Forms.TextBox();
             this.lblBaudrate = new System.Windows.Forms.Label();
             this.txtConnectedStatus = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonClearEntry = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonPrepareRegisters = new System.Windows.Forms.Button();
             this.btnPrepareCoils = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.textBoxReadResult = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,7 +115,7 @@ namespace EasyModbusClientExample
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(158, 35);
+            this.txtPort.Location = new System.Drawing.Point(35, 82);
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(73, 17);
             this.txtPort.TabIndex = 3;
@@ -123,10 +123,10 @@ namespace EasyModbusClientExample
             // 
             // txtPortInput
             // 
-            this.txtPortInput.Location = new System.Drawing.Point(158, 55);
+            this.txtPortInput.Location = new System.Drawing.Point(35, 101);
             this.txtPortInput.Name = "txtPortInput";
             this.txtPortInput.Size = new System.Drawing.Size(56, 20);
-            this.txtPortInput.TabIndex = 2;
+            this.txtPortInput.TabIndex = 3;
             this.txtPortInput.Text = "502";
             // 
             // btnReadCoils
@@ -134,7 +134,7 @@ namespace EasyModbusClientExample
             this.btnReadCoils.Location = new System.Drawing.Point(12, 176);
             this.btnReadCoils.Name = "btnReadCoils";
             this.btnReadCoils.Size = new System.Drawing.Size(161, 23);
-            this.btnReadCoils.TabIndex = 5;
+            this.btnReadCoils.TabIndex = 7;
             this.btnReadCoils.Text = "Read Coils - FC1";
             this.btnReadCoils.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReadCoils.UseVisualStyleBackColor = true;
@@ -145,7 +145,7 @@ namespace EasyModbusClientExample
             this.btnReadDiscreteInputs.Location = new System.Drawing.Point(12, 205);
             this.btnReadDiscreteInputs.Name = "btnReadDiscreteInputs";
             this.btnReadDiscreteInputs.Size = new System.Drawing.Size(161, 23);
-            this.btnReadDiscreteInputs.TabIndex = 6;
+            this.btnReadDiscreteInputs.TabIndex = 8;
             this.btnReadDiscreteInputs.Text = "Read Discrete Inputs - FC2";
             this.btnReadDiscreteInputs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReadDiscreteInputs.UseVisualStyleBackColor = true;
@@ -156,7 +156,7 @@ namespace EasyModbusClientExample
             this.btnReadHoldingRegisters.Location = new System.Drawing.Point(12, 234);
             this.btnReadHoldingRegisters.Name = "btnReadHoldingRegisters";
             this.btnReadHoldingRegisters.Size = new System.Drawing.Size(161, 23);
-            this.btnReadHoldingRegisters.TabIndex = 7;
+            this.btnReadHoldingRegisters.TabIndex = 9;
             this.btnReadHoldingRegisters.Text = "Read Holding Registers - FC3";
             this.btnReadHoldingRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReadHoldingRegisters.UseVisualStyleBackColor = true;
@@ -167,7 +167,7 @@ namespace EasyModbusClientExample
             this.btnReadInputRegisters.Location = new System.Drawing.Point(12, 263);
             this.btnReadInputRegisters.Name = "btnReadInputRegisters";
             this.btnReadInputRegisters.Size = new System.Drawing.Size(161, 23);
-            this.btnReadInputRegisters.TabIndex = 8;
+            this.btnReadInputRegisters.TabIndex = 10;
             this.btnReadInputRegisters.Text = "Read Input Registers - FC4";
             this.btnReadInputRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnReadInputRegisters.UseVisualStyleBackColor = true;
@@ -178,23 +178,23 @@ namespace EasyModbusClientExample
             this.txtStartingAddressInput.Location = new System.Drawing.Point(198, 198);
             this.txtStartingAddressInput.Name = "txtStartingAddressInput";
             this.txtStartingAddressInput.Size = new System.Drawing.Size(39, 20);
-            this.txtStartingAddressInput.TabIndex = 9;
+            this.txtStartingAddressInput.TabIndex = 11;
             this.txtStartingAddressInput.Text = "1";
             // 
-            // txtStartingAddress
+            // txtReadStartingAddress
             // 
-            this.txtStartingAddress.Location = new System.Drawing.Point(198, 178);
-            this.txtStartingAddress.Name = "txtStartingAddress";
-            this.txtStartingAddress.Size = new System.Drawing.Size(89, 17);
-            this.txtStartingAddress.TabIndex = 10;
-            this.txtStartingAddress.Text = "Starting Address";
+            this.txtReadStartingAddress.Location = new System.Drawing.Point(198, 178);
+            this.txtReadStartingAddress.Name = "txtReadStartingAddress";
+            this.txtReadStartingAddress.Size = new System.Drawing.Size(89, 17);
+            this.txtReadStartingAddress.TabIndex = 36;
+            this.txtReadStartingAddress.Text = "Starting Address";
             // 
             // txtNumberOfValues
             // 
             this.txtNumberOfValues.Location = new System.Drawing.Point(198, 233);
             this.txtNumberOfValues.Name = "txtNumberOfValues";
             this.txtNumberOfValues.Size = new System.Drawing.Size(100, 17);
-            this.txtNumberOfValues.TabIndex = 12;
+            this.txtNumberOfValues.TabIndex = 37;
             this.txtNumberOfValues.Text = "Number of Values";
             // 
             // txtNumberOfValuesInput
@@ -202,17 +202,8 @@ namespace EasyModbusClientExample
             this.txtNumberOfValuesInput.Location = new System.Drawing.Point(198, 253);
             this.txtNumberOfValuesInput.Name = "txtNumberOfValuesInput";
             this.txtNumberOfValuesInput.Size = new System.Drawing.Size(39, 20);
-            this.txtNumberOfValuesInput.TabIndex = 11;
+            this.txtNumberOfValuesInput.TabIndex = 12;
             this.txtNumberOfValuesInput.Text = "1";
-            // 
-            // lsbAnswerFromServer
-            // 
-            this.lsbAnswerFromServer.FormattingEnabled = true;
-            this.lsbAnswerFromServer.Location = new System.Drawing.Point(310, 147);
-            this.lsbAnswerFromServer.Name = "lsbAnswerFromServer";
-            this.lsbAnswerFromServer.Size = new System.Drawing.Size(188, 160);
-            this.lsbAnswerFromServer.TabIndex = 13;
-            this.lsbAnswerFromServer.DoubleClick += new System.EventHandler(this.lsbAnswerFromServer_DoubleClick);
             // 
             // linkLabel1
             // 
@@ -220,7 +211,7 @@ namespace EasyModbusClientExample
             this.linkLabel1.Location = new System.Drawing.Point(307, 6);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(165, 13);
-            this.linkLabel1.TabIndex = 16;
+            this.linkLabel1.TabIndex = 40;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "http://www.EasyModbusTCP.net";
             // 
@@ -233,16 +224,16 @@ namespace EasyModbusClientExample
             this.cbbSelctionModbus.Location = new System.Drawing.Point(34, 6);
             this.cbbSelctionModbus.Name = "cbbSelctionModbus";
             this.cbbSelctionModbus.Size = new System.Drawing.Size(180, 21);
-            this.cbbSelctionModbus.TabIndex = 17;
+            this.cbbSelctionModbus.TabIndex = 29;
             this.cbbSelctionModbus.Text = "ModbusTCP (Ethernet)";
             this.cbbSelctionModbus.SelectedIndexChanged += new System.EventHandler(this.cbbSelctionModbus_SelectedIndexChanged);
             // 
             // txtCOMPort
             // 
-            this.txtCOMPort.Location = new System.Drawing.Point(34, 35);
+            this.txtCOMPort.Location = new System.Drawing.Point(35, 35);
             this.txtCOMPort.Name = "txtCOMPort";
             this.txtCOMPort.Size = new System.Drawing.Size(100, 14);
-            this.txtCOMPort.TabIndex = 18;
+            this.txtCOMPort.TabIndex = 30;
             this.txtCOMPort.Text = "COM-Port";
             this.txtCOMPort.Visible = false;
             // 
@@ -261,7 +252,7 @@ namespace EasyModbusClientExample
             this.cbbSelectComPort.Location = new System.Drawing.Point(34, 55);
             this.cbbSelectComPort.Name = "cbbSelectComPort";
             this.cbbSelectComPort.Size = new System.Drawing.Size(121, 21);
-            this.cbbSelectComPort.TabIndex = 19;
+            this.cbbSelectComPort.TabIndex = 1;
             this.cbbSelectComPort.Visible = false;
             this.cbbSelectComPort.SelectedIndexChanged += new System.EventHandler(this.cbbSelectComPort_SelectedIndexChanged);
             // 
@@ -270,29 +261,30 @@ namespace EasyModbusClientExample
             this.txtSlaveAddress.Location = new System.Drawing.Point(158, 35);
             this.txtSlaveAddress.Name = "txtSlaveAddress";
             this.txtSlaveAddress.Size = new System.Drawing.Size(56, 19);
-            this.txtSlaveAddress.TabIndex = 20;
+            this.txtSlaveAddress.TabIndex = 31;
             this.txtSlaveAddress.Text = "Slave ID";
-            this.txtSlaveAddress.Visible = false;
             // 
             // txtSlaveAddressInput
             // 
-            this.txtSlaveAddressInput.Location = new System.Drawing.Point(158, 55);
+            this.txtSlaveAddressInput.Location = new System.Drawing.Point(161, 55);
             this.txtSlaveAddressInput.Name = "txtSlaveAddressInput";
             this.txtSlaveAddressInput.Size = new System.Drawing.Size(56, 20);
-            this.txtSlaveAddressInput.TabIndex = 21;
+            this.txtSlaveAddressInput.TabIndex = 2;
             this.txtSlaveAddressInput.Text = "1";
-            this.txtSlaveAddressInput.Visible = false;
             this.txtSlaveAddressInput.TextChanged += new System.EventHandler(this.TxtSlaveAddressInputTextChanged);
             // 
             // textBox1
             // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Location = new System.Drawing.Point(12, 506);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(641, 157);
-            this.textBox1.TabIndex = 22;
+            this.textBox1.TabIndex = 18;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // btnWriteMultipleRegisters
@@ -300,7 +292,7 @@ namespace EasyModbusClientExample
             this.btnWriteMultipleRegisters.Location = new System.Drawing.Point(12, 453);
             this.btnWriteMultipleRegisters.Name = "btnWriteMultipleRegisters";
             this.btnWriteMultipleRegisters.Size = new System.Drawing.Size(161, 23);
-            this.btnWriteMultipleRegisters.TabIndex = 30;
+            this.btnWriteMultipleRegisters.TabIndex = 16;
             this.btnWriteMultipleRegisters.Text = "Write Multiple Registers - FC16";
             this.btnWriteMultipleRegisters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnWriteMultipleRegisters.UseVisualStyleBackColor = true;
@@ -311,7 +303,7 @@ namespace EasyModbusClientExample
             this.btnWriteMultipleCoils.Location = new System.Drawing.Point(12, 424);
             this.btnWriteMultipleCoils.Name = "btnWriteMultipleCoils";
             this.btnWriteMultipleCoils.Size = new System.Drawing.Size(161, 23);
-            this.btnWriteMultipleCoils.TabIndex = 29;
+            this.btnWriteMultipleCoils.TabIndex = 15;
             this.btnWriteMultipleCoils.Text = "Write Multiple Coils - FC15";
             this.btnWriteMultipleCoils.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnWriteMultipleCoils.UseVisualStyleBackColor = true;
@@ -322,7 +314,7 @@ namespace EasyModbusClientExample
             this.btnWriteSingleRegister.Location = new System.Drawing.Point(12, 395);
             this.btnWriteSingleRegister.Name = "btnWriteSingleRegister";
             this.btnWriteSingleRegister.Size = new System.Drawing.Size(161, 23);
-            this.btnWriteSingleRegister.TabIndex = 28;
+            this.btnWriteSingleRegister.TabIndex = 14;
             this.btnWriteSingleRegister.Text = "Write Single Register - FC6";
             this.btnWriteSingleRegister.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnWriteSingleRegister.UseVisualStyleBackColor = true;
@@ -333,7 +325,7 @@ namespace EasyModbusClientExample
             this.btnWriteSingleCoil.Location = new System.Drawing.Point(12, 366);
             this.btnWriteSingleCoil.Name = "btnWriteSingleCoil";
             this.btnWriteSingleCoil.Size = new System.Drawing.Size(161, 23);
-            this.btnWriteSingleCoil.TabIndex = 27;
+            this.btnWriteSingleCoil.TabIndex = 13;
             this.btnWriteSingleCoil.Text = "Write Single Coil - FC5";
             this.btnWriteSingleCoil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnWriteSingleCoil.UseVisualStyleBackColor = true;
@@ -346,7 +338,7 @@ namespace EasyModbusClientExample
             this.txtCoilValue.Name = "txtCoilValue";
             this.txtCoilValue.ReadOnly = true;
             this.txtCoilValue.Size = new System.Drawing.Size(81, 20);
-            this.txtCoilValue.TabIndex = 31;
+            this.txtCoilValue.TabIndex = 25;
             this.txtCoilValue.Text = "FALSE";
             this.txtCoilValue.DoubleClick += new System.EventHandler(this.txtCoilValue_DoubleClick);
             // 
@@ -356,7 +348,7 @@ namespace EasyModbusClientExample
             this.txtRegisterValue.Location = new System.Drawing.Point(563, 461);
             this.txtRegisterValue.Name = "txtRegisterValue";
             this.txtRegisterValue.Size = new System.Drawing.Size(81, 20);
-            this.txtRegisterValue.TabIndex = 32;
+            this.txtRegisterValue.TabIndex = 27;
             this.txtRegisterValue.Text = "0";
             this.txtRegisterValue.TextChanged += new System.EventHandler(this.txtRegisterValue_TextChanged);
             // 
@@ -367,57 +359,57 @@ namespace EasyModbusClientExample
             this.lblReadOperations.Location = new System.Drawing.Point(19, 127);
             this.lblReadOperations.Name = "lblReadOperations";
             this.lblReadOperations.Size = new System.Drawing.Size(206, 20);
-            this.lblReadOperations.TabIndex = 37;
+            this.lblReadOperations.TabIndex = 35;
             this.lblReadOperations.Text = "Read values from Server";
             // 
-            // button3
+            // buttonConnect
             // 
-            this.button3.BackColor = System.Drawing.Color.Lime;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(310, 94);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(89, 47);
-            this.button3.TabIndex = 38;
-            this.button3.Text = "connect";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.buttonConnect.BackColor = System.Drawing.Color.Lime;
+            this.buttonConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonConnect.Location = new System.Drawing.Point(310, 94);
+            this.buttonConnect.Name = "buttonConnect";
+            this.buttonConnect.Size = new System.Drawing.Size(89, 47);
+            this.buttonConnect.TabIndex = 19;
+            this.buttonConnect.Text = "connect";
+            this.buttonConnect.UseVisualStyleBackColor = false;
+            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
             // 
-            // button4
+            // buttonDisconnect
             // 
-            this.button4.BackColor = System.Drawing.Color.Red;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(409, 94);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(89, 47);
-            this.button4.TabIndex = 39;
-            this.button4.Text = "disconnect";
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.buttonDisconnect.BackColor = System.Drawing.Color.Red;
+            this.buttonDisconnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDisconnect.Location = new System.Drawing.Point(409, 94);
+            this.buttonDisconnect.Name = "buttonDisconnect";
+            this.buttonDisconnect.Size = new System.Drawing.Size(89, 47);
+            this.buttonDisconnect.TabIndex = 20;
+            this.buttonDisconnect.Text = "disconnect";
+            this.buttonDisconnect.UseVisualStyleBackColor = false;
+            this.buttonDisconnect.Click += new System.EventHandler(this.buttonDisconnect_Click);
             // 
-            // label1
+            // labelWriteOperations
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(19, 310);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(185, 20);
-            this.label1.TabIndex = 40;
-            this.label1.Text = "Write values to Server";
+            this.labelWriteOperations.AutoSize = true;
+            this.labelWriteOperations.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWriteOperations.Location = new System.Drawing.Point(19, 310);
+            this.labelWriteOperations.Name = "labelWriteOperations";
+            this.labelWriteOperations.Size = new System.Drawing.Size(185, 20);
+            this.labelWriteOperations.TabIndex = 38;
+            this.labelWriteOperations.Text = "Write values to Server";
             // 
-            // label4
+            // txtWriteStartingAddress
             // 
-            this.label4.Location = new System.Drawing.Point(198, 395);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(89, 17);
-            this.label4.TabIndex = 42;
-            this.label4.Text = "Starting Address";
+            this.txtWriteStartingAddress.Location = new System.Drawing.Point(198, 395);
+            this.txtWriteStartingAddress.Name = "txtWriteStartingAddress";
+            this.txtWriteStartingAddress.Size = new System.Drawing.Size(89, 17);
+            this.txtWriteStartingAddress.TabIndex = 39;
+            this.txtWriteStartingAddress.Text = "Starting Address";
             // 
             // txtStartingAddressOutput
             // 
             this.txtStartingAddressOutput.Location = new System.Drawing.Point(198, 415);
             this.txtStartingAddressOutput.Name = "txtStartingAddressOutput";
             this.txtStartingAddressOutput.Size = new System.Drawing.Size(39, 20);
-            this.txtStartingAddressOutput.TabIndex = 41;
+            this.txtStartingAddressOutput.TabIndex = 17;
             this.txtStartingAddressOutput.Text = "1";
             // 
             // lsbWriteToServer
@@ -426,14 +418,14 @@ namespace EasyModbusClientExample
             this.lsbWriteToServer.Location = new System.Drawing.Point(310, 340);
             this.lsbWriteToServer.Name = "lsbWriteToServer";
             this.lsbWriteToServer.Size = new System.Drawing.Size(188, 160);
-            this.lsbWriteToServer.TabIndex = 43;
+            this.lsbWriteToServer.TabIndex = 22;
             // 
             // lblParity
             // 
             this.lblParity.Location = new System.Drawing.Point(96, 82);
             this.lblParity.Name = "lblParity";
             this.lblParity.Size = new System.Drawing.Size(56, 19);
-            this.lblParity.TabIndex = 46;
+            this.lblParity.TabIndex = 33;
             this.lblParity.Text = "Parity";
             this.lblParity.Visible = false;
             // 
@@ -442,7 +434,7 @@ namespace EasyModbusClientExample
             this.lblStopbits.Location = new System.Drawing.Point(158, 82);
             this.lblStopbits.Name = "lblStopbits";
             this.lblStopbits.Size = new System.Drawing.Size(56, 19);
-            this.lblStopbits.TabIndex = 48;
+            this.lblStopbits.TabIndex = 34;
             this.lblStopbits.Text = "Stopbits";
             this.lblStopbits.Visible = false;
             // 
@@ -456,7 +448,7 @@ namespace EasyModbusClientExample
             this.cbbParity.Location = new System.Drawing.Point(97, 101);
             this.cbbParity.Name = "cbbParity";
             this.cbbParity.Size = new System.Drawing.Size(55, 21);
-            this.cbbParity.TabIndex = 50;
+            this.cbbParity.TabIndex = 5;
             this.cbbParity.Visible = false;
             // 
             // cbbStopbits
@@ -469,15 +461,15 @@ namespace EasyModbusClientExample
             this.cbbStopbits.Location = new System.Drawing.Point(158, 101);
             this.cbbStopbits.Name = "cbbStopbits";
             this.cbbStopbits.Size = new System.Drawing.Size(55, 21);
-            this.cbbStopbits.TabIndex = 51;
+            this.cbbStopbits.TabIndex = 6;
             this.cbbStopbits.Visible = false;
             // 
             // txtBaudrate
             // 
-            this.txtBaudrate.Location = new System.Drawing.Point(35, 102);
+            this.txtBaudrate.Location = new System.Drawing.Point(38, 101);
             this.txtBaudrate.Name = "txtBaudrate";
             this.txtBaudrate.Size = new System.Drawing.Size(56, 20);
-            this.txtBaudrate.TabIndex = 53;
+            this.txtBaudrate.TabIndex = 4;
             this.txtBaudrate.Text = "9600";
             this.txtBaudrate.Visible = false;
             this.txtBaudrate.TextChanged += new System.EventHandler(this.txtBaudrate_TextChanged);
@@ -487,33 +479,34 @@ namespace EasyModbusClientExample
             this.lblBaudrate.Location = new System.Drawing.Point(35, 82);
             this.lblBaudrate.Name = "lblBaudrate";
             this.lblBaudrate.Size = new System.Drawing.Size(56, 19);
-            this.lblBaudrate.TabIndex = 52;
+            this.lblBaudrate.TabIndex = 32;
             this.lblBaudrate.Text = "Baudrate";
             this.lblBaudrate.Visible = false;
             // 
             // txtConnectedStatus
             // 
+            this.txtConnectedStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtConnectedStatus.BackColor = System.Drawing.Color.Red;
             this.txtConnectedStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
             this.txtConnectedStatus.Location = new System.Drawing.Point(3, 669);
             this.txtConnectedStatus.Name = "txtConnectedStatus";
             this.txtConnectedStatus.Size = new System.Drawing.Size(665, 32);
-            this.txtConnectedStatus.TabIndex = 54;
+            this.txtConnectedStatus.TabIndex = 41;
             this.txtConnectedStatus.Text = "Not connected to Server";
             // 
-            // button2
+            // buttonClearEntry
             // 
-            this.button2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.button2.Image = global::EasyModbusClientExample.Properties.Resources.circle_minus;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button2.Location = new System.Drawing.Point(518, 340);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(64, 52);
-            this.button2.TabIndex = 34;
-            this.button2.Text = "clear entry";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonClearEntry.Cursor = System.Windows.Forms.Cursors.Default;
+            this.buttonClearEntry.Image = global::EasyModbusClientExample.Properties.Resources.circle_minus;
+            this.buttonClearEntry.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.buttonClearEntry.Location = new System.Drawing.Point(518, 340);
+            this.buttonClearEntry.Name = "buttonClearEntry";
+            this.buttonClearEntry.Size = new System.Drawing.Size(64, 52);
+            this.buttonClearEntry.TabIndex = 23;
+            this.buttonClearEntry.Text = "clear entry";
+            this.buttonClearEntry.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.buttonClearEntry.UseVisualStyleBackColor = true;
+            this.buttonClearEntry.Click += new System.EventHandler(this.buttonClearEntry_Click);
             // 
             // btnClear
             // 
@@ -523,24 +516,24 @@ namespace EasyModbusClientExample
             this.btnClear.Location = new System.Drawing.Point(585, 340);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(64, 52);
-            this.btnClear.TabIndex = 33;
+            this.btnClear.TabIndex = 24;
             this.btnClear.Text = "clear all";
             this.btnClear.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
-            // button1
+            // buttonPrepareRegisters
             // 
-            this.button1.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(507, 457);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(146, 43);
-            this.button1.TabIndex = 26;
-            this.button1.Text = "Prepare Registers";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonPrepareRegisters.Image = global::EasyModbusClientExample.Properties.Resources.arrow_left;
+            this.buttonPrepareRegisters.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonPrepareRegisters.Location = new System.Drawing.Point(507, 457);
+            this.buttonPrepareRegisters.Name = "buttonPrepareRegisters";
+            this.buttonPrepareRegisters.Size = new System.Drawing.Size(146, 43);
+            this.buttonPrepareRegisters.TabIndex = 28;
+            this.buttonPrepareRegisters.Text = "Prepare Registers";
+            this.buttonPrepareRegisters.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.buttonPrepareRegisters.UseVisualStyleBackColor = true;
+            this.buttonPrepareRegisters.Click += new System.EventHandler(this.buttonPrepareRegisters_Click);
             // 
             // btnPrepareCoils
             // 
@@ -549,7 +542,7 @@ namespace EasyModbusClientExample
             this.btnPrepareCoils.Location = new System.Drawing.Point(507, 408);
             this.btnPrepareCoils.Name = "btnPrepareCoils";
             this.btnPrepareCoils.Size = new System.Drawing.Size(146, 43);
-            this.btnPrepareCoils.TabIndex = 25;
+            this.btnPrepareCoils.TabIndex = 26;
             this.btnPrepareCoils.Text = "Prepare Coils";
             this.btnPrepareCoils.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.btnPrepareCoils.UseVisualStyleBackColor = true;
@@ -566,11 +559,22 @@ namespace EasyModbusClientExample
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
+            // textBoxReadResult
+            // 
+            this.textBoxReadResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxReadResult.Location = new System.Drawing.Point(310, 147);
+            this.textBoxReadResult.Multiline = true;
+            this.textBoxReadResult.Name = "textBoxReadResult";
+            this.textBoxReadResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxReadResult.Size = new System.Drawing.Size(339, 160);
+            this.textBoxReadResult.TabIndex = 21;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(669, 702);
+            this.Controls.Add(this.textBoxReadResult);
             this.Controls.Add(this.txtConnectedStatus);
             this.Controls.Add(this.txtBaudrate);
             this.Controls.Add(this.lblBaudrate);
@@ -579,13 +583,13 @@ namespace EasyModbusClientExample
             this.Controls.Add(this.lblStopbits);
             this.Controls.Add(this.lblParity);
             this.Controls.Add(this.lsbWriteToServer);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtWriteStartingAddress);
             this.Controls.Add(this.txtStartingAddressOutput);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.labelWriteOperations);
+            this.Controls.Add(this.buttonDisconnect);
+            this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.lblReadOperations);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.buttonClearEntry);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.txtRegisterValue);
             this.Controls.Add(this.txtCoilValue);
@@ -593,7 +597,7 @@ namespace EasyModbusClientExample
             this.Controls.Add(this.btnWriteMultipleCoils);
             this.Controls.Add(this.btnWriteSingleRegister);
             this.Controls.Add(this.btnWriteSingleCoil);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonPrepareRegisters);
             this.Controls.Add(this.btnPrepareCoils);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.txtSlaveAddressInput);
@@ -603,10 +607,9 @@ namespace EasyModbusClientExample
             this.Controls.Add(this.cbbSelctionModbus);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.lsbAnswerFromServer);
             this.Controls.Add(this.txtNumberOfValues);
             this.Controls.Add(this.txtNumberOfValuesInput);
-            this.Controls.Add(this.txtStartingAddress);
+            this.Controls.Add(this.txtReadStartingAddress);
             this.Controls.Add(this.txtStartingAddressInput);
             this.Controls.Add(this.btnReadInputRegisters);
             this.Controls.Add(this.btnReadHoldingRegisters);
@@ -625,8 +628,6 @@ namespace EasyModbusClientExample
             this.PerformLayout();
 
 		}
-
-        private System.Windows.Forms.ListBox lsbAnswerFromServer;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.ComboBox cbbSelctionModbus;
@@ -636,7 +637,7 @@ namespace EasyModbusClientExample
         private System.Windows.Forms.TextBox txtSlaveAddressInput;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button btnPrepareCoils;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonPrepareRegisters;
         private System.Windows.Forms.Button btnWriteMultipleRegisters;
         private System.Windows.Forms.Button btnWriteMultipleCoils;
         private System.Windows.Forms.Button btnWriteSingleRegister;
@@ -644,12 +645,12 @@ namespace EasyModbusClientExample
         private System.Windows.Forms.TextBox txtCoilValue;
         private System.Windows.Forms.TextBox txtRegisterValue;
         private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonClearEntry;
         private System.Windows.Forms.Label lblReadOperations;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button buttonConnect;
+        private System.Windows.Forms.Button buttonDisconnect;
+        private System.Windows.Forms.Label labelWriteOperations;
+        private System.Windows.Forms.Label txtWriteStartingAddress;
         private System.Windows.Forms.TextBox txtStartingAddressOutput;
         private System.Windows.Forms.ListBox lsbWriteToServer;
         private System.Windows.Forms.Label lblParity;
@@ -659,5 +660,6 @@ namespace EasyModbusClientExample
         private System.Windows.Forms.TextBox txtBaudrate;
         private System.Windows.Forms.Label lblBaudrate;
         private System.Windows.Forms.TextBox txtConnectedStatus;
+        private System.Windows.Forms.TextBox textBoxReadResult;
     }
 }

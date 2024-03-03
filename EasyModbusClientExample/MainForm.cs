@@ -24,6 +24,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -109,14 +111,10 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
                 bool[] serverResponse = modbusClient.ReadCoils(int.Parse(txtStartingAddressInput.Text)-1, int.Parse(txtNumberOfValuesInput.Text));
-                lsbAnswerFromServer.Items.Clear();
-                for (int i = 0; i < serverResponse.Length; i++)
-                {
-                    lsbAnswerFromServer.Items.Add(serverResponse[i]);
-                }
+                textBoxReadResult.Text = string.Join(Environment.NewLine, serverResponse.Select((r, index) => $"{index}\t{r}"));
             }
             catch (Exception exc)
             {
@@ -130,14 +128,10 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
                 bool[] serverResponse = modbusClient.ReadDiscreteInputs(int.Parse(txtStartingAddressInput.Text)-1, int.Parse(txtNumberOfValuesInput.Text));
-                lsbAnswerFromServer.Items.Clear();
-                for (int i = 0; i < serverResponse.Length; i++)
-                {
-                    lsbAnswerFromServer.Items.Add(serverResponse[i]);
-                }
+                textBoxReadResult.Text = string.Join(Environment.NewLine, serverResponse.Select((r, index) => $"{index}\t{r}"));
             }
             catch (Exception exc)
             {
@@ -151,18 +145,38 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
 
+                int startingAddress = int.Parse(txtStartingAddressInput.Text);
+                int[] serverResponse = modbusClient.ReadHoldingRegisters(startingAddress - 1, int.Parse(txtNumberOfValuesInput.Text));
 
-               int[] serverResponse = modbusClient.ReadHoldingRegisters(int.Parse(txtStartingAddressInput.Text)-1, int.Parse(txtNumberOfValuesInput.Text));
+                var text = new StringBuilder("Addr\tHEX\tint16\tuint16\tfloat" + Environment.NewLine);
+                text.Append(string.Join(Environment.NewLine,
+                    Enumerable.Range(0, serverResponse.Length).Select((index) =>
+                    {
+                        var r = serverResponse[index];
+                        var bytes = BitConverter.GetBytes(r);
+                        var hex = $"0x{bytes[1].ToString("X2")}{bytes[0].ToString("X2")}";
+                        var int16 = BitConverter.ToInt16(bytes, 0);
+                        var uint16 = BitConverter.ToUInt16(bytes, 0);
+                        var single = string.Empty;
 
-                lsbAnswerFromServer.Items.Clear();
-                for (int i = 0; i < serverResponse.Length; i++)
-                {
-                	lsbAnswerFromServer.Items.Add(serverResponse[i]);
-                  
-                }
+                        if (((startingAddress + index) % 2 == 1) && (index + 1 < serverResponse.Length))
+                        {
+                            var nextBytes = BitConverter.GetBytes(serverResponse[index + 1]);
+                            var data = new byte[4];
+                            data[0] = nextBytes[0];
+                            data[1] = nextBytes[1];
+                            data[2] = bytes[0];
+                            data[3] = bytes[1];
+                            single = BitConverter.ToSingle(data, 0).ToString();
+                        }
+
+                        return $"{startingAddress + index}\t{hex}\t{int16}\t{uint16}\t{single}";
+                    })
+                ));
+                textBoxReadResult.Text = text.ToString();
             }
             catch (Exception exc)
             {
@@ -176,16 +190,38 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
-                
-                int[] serverResponse = modbusClient.ReadInputRegisters(int.Parse(txtStartingAddressInput.Text)-1, int.Parse(txtNumberOfValuesInput.Text));
-  
-                lsbAnswerFromServer.Items.Clear();
-                for (int i = 0; i < serverResponse.Length; i++)
-                {
-                	lsbAnswerFromServer.Items.Add(serverResponse[i]);
-                }
+
+                int startingAddress = int.Parse(txtStartingAddressInput.Text);
+                int[] serverResponse = modbusClient.ReadInputRegisters(startingAddress - 1, int.Parse(txtNumberOfValuesInput.Text));
+
+                var text = new StringBuilder("Addr\tHEX\tint16\tuint16\tfloat" + Environment.NewLine);
+                text.Append(string.Join(Environment.NewLine,
+                    Enumerable.Range(0, serverResponse.Length).Select((index) =>
+                    {
+                        var r = serverResponse[index];
+                        var bytes = BitConverter.GetBytes(r);
+                        var hex = $"0x{bytes[1].ToString("X2")}{bytes[0].ToString("X2")}";
+                        var int16 = BitConverter.ToInt16(bytes, 0);
+                        var uint16 = BitConverter.ToUInt16(bytes, 0);
+                        var single = string.Empty;
+
+                        if (((startingAddress + index) % 2 == 1) && (index + 1 < serverResponse.Length))
+                        {
+                            var nextBytes = BitConverter.GetBytes(serverResponse[index + 1]);
+                            var data = new byte[4];
+                            data[0] = nextBytes[0];
+                            data[1] = nextBytes[1];
+                            data[2] = bytes[0];
+                            data[3] = bytes[1];
+                            single = BitConverter.ToSingle(data, 0).ToString();
+                        }
+
+                        return $"{startingAddress + index}\t{hex}\t{int16}\t{uint16}\t{single}";
+                    })
+                ));
+                textBoxReadResult.Text = text.ToString();
             }
             catch (Exception exc)
             {
@@ -212,8 +248,8 @@ namespace EasyModbusClientExample
                 txtPortInput.Visible = true;
                 txtCOMPort.Visible = false;
                 cbbSelectComPort.Visible = false;
-                txtSlaveAddress.Visible = false;
-                txtSlaveAddressInput.Visible = false;
+                txtSlaveAddress.Visible = true;
+                txtSlaveAddressInput.Visible = true;
                 lblBaudrate.Visible = false;
                 lblParity.Visible = false;
                 lblStopbits.Visible = false;
@@ -272,7 +308,7 @@ namespace EasyModbusClientExample
         {
             if (!listBoxPrepareCoils)
             {
-                lsbAnswerFromServer.Items.Clear();
+                textBoxReadResult.Text = string.Empty;
             }
             listBoxPrepareCoils = true;
             listBoxPrepareRegisters = false;
@@ -280,11 +316,11 @@ namespace EasyModbusClientExample
 
         }
         bool listBoxPrepareRegisters = false;
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonPrepareRegisters_Click(object sender, EventArgs e)
         {
             if (!listBoxPrepareRegisters)
             {
-                lsbAnswerFromServer.Items.Clear();
+                textBoxReadResult.Text = string.Empty;
             }
             listBoxPrepareRegisters = true;
             listBoxPrepareCoils = false;
@@ -297,7 +333,7 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
 
                 bool coilsToSend = false;
@@ -319,7 +355,7 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
 
                 int registerToSend = 0;
@@ -341,7 +377,7 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
 
                 bool[] coilsToSend = new bool[lsbWriteToServer.Items.Count];
@@ -367,7 +403,7 @@ namespace EasyModbusClientExample
             {
                 if (!modbusClient.Connected)
                 {
-                    button3_Click(null, null);
+                    buttonConnect_Click(null, null);
                 }
 
                 int[] registersToSend = new int[lsbWriteToServer.Items.Count];
@@ -387,16 +423,6 @@ namespace EasyModbusClientExample
             }
         }
 
-        private void lsbAnswerFromServer_DoubleClick(object sender, EventArgs e)
-        {
-            int rowindex = lsbAnswerFromServer.SelectedIndex;
-
-           
-
-
-
-        }
-
         private void txtCoilValue_DoubleClick(object sender, EventArgs e)
         {
             if (txtCoilValue.Text.Equals("FALSE"))
@@ -410,7 +436,7 @@ namespace EasyModbusClientExample
             lsbWriteToServer.Items.Clear();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonClearEntry_Click(object sender, EventArgs e)
         {
             int rowindex = lsbWriteToServer.SelectedIndex;
             if(rowindex >= 0)
@@ -432,7 +458,7 @@ namespace EasyModbusClientExample
 
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonConnect_Click(object sender, EventArgs e)
         {
             try
             {
@@ -494,7 +520,7 @@ namespace EasyModbusClientExample
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void buttonDisconnect_Click(object sender, EventArgs e)
         {
             modbusClient.Disconnect();
         }
@@ -507,6 +533,5 @@ namespace EasyModbusClientExample
 
           
         }
-
     }
 }
