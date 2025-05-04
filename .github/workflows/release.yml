@@ -10,7 +10,7 @@ permissions:
   
 jobs:
   version:
-    runs-on: self-hosted
+    runs-on: windows-latest
     outputs:
       version: ${{ steps.get-tag-version.outputs.version }}
 
@@ -25,7 +25,7 @@ jobs:
       shell: powershell
 
   build:
-    runs-on: self-hosted
+    runs-on: windows-latest
     needs: version
     
     steps:
@@ -37,6 +37,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
+    - name: Add lite-cnp NuGet Source
+      run: dotnet nuget add source https://nuget.pkg.github.com/lite-cnp/index.json --name lite-cnp --username loadbuilder --password ${{ secrets.LOADBUILDER_NUGET_PAT }} --store-password-in-clear-text
+
     - name: Restore NuGet Packages
       run: dotnet restore
 
@@ -80,7 +83,7 @@ jobs:
         retention-days: 5
 
   upload-release-assets:
-    runs-on: self-hosted
+    runs-on: windows-latest
     needs: [ version, build ]
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
