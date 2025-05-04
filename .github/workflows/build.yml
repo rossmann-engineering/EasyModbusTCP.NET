@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read # Gives permission to read/write to the repo
+  packages: read # Gives permission to read/write nuget packages
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.x.x"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add lite-cnp NuGet Source
+        run: dotnet nuget add source https://nuget.pkg.github.com/lite-cnp/index.json --name lite-cnp --username loadbuilder --password ${{ secrets.LOADBUILDER_NUGET_PAT }} --store-password-in-clear-text
+
+      - name: Restore NuGet Packages
+        run: dotnet restore
+
+      - name: Dotnet Build x86
+        id: dotnet-build-x86
+        run: dotnet build -c Release -p:Platform="x86" --no-restore
+
+      - name: Dotnet Build x64
+        id: dotnet-build-x64
+        run: dotnet build -c Release -p:Platform="x64" --no-restore
+
+      - name: Dotnet Build AnyCPU
+        id: dotnet-build-AnyCPU
+        run: dotnet build -c Release -p:Platform="Any CPU" --no-restore
+
+      - name: Dotnet Pack
+        id: dotnet-pack
+        run: dotnet pack -c Release
+
+      - name: Upload packages as Artifacts
+        id: append-pkgs
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}.nupkg
+          path: nupkg/*.nupkg
