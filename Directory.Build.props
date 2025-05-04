@@ -6,5 +6,11 @@
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/lite-cnp/ModbusTCP</RepositoryUrl>
 	</PropertyGroup>
+  
+  <PropertyGroup>
+
+    <Version>0.0.0</Version>
+    <PackageOutputPath>$(SolutionDir)nupkg</PackageOutputPath>
+  </PropertyGroup>
 
 </Project>

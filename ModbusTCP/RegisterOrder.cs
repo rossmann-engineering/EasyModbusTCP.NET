@@ -1,4 +1,4 @@
-﻿namespace EasyModbus;
+﻿namespace ModbusTCP;
 
 public enum RegisterOrder {
     LowHigh = 0,

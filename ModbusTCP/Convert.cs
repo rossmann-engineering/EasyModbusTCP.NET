@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace EasyModbus;
+namespace ModbusTCP;
 
 internal static class Convert {
 
@@ -81,7 +81,7 @@ internal static class Convert {
     /// <param name="intValue">Double value which has to be converted into two registers</param>
     /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
     /// <returns>Register values</returns>
-    public static int[] ConvertIntToRegisters(Int32 intValue, RegisterOrder registerOrder) {
+    public static int[] ConvertIntToRegisters(int intValue, RegisterOrder registerOrder) {
         int[] registerValues = ConvertIntToRegisters(intValue);
         int[] returnValue = registerValues;
         if (registerOrder == RegisterOrder.HighLow)
@@ -94,7 +94,7 @@ internal static class Convert {
     /// </summary>
     /// <param name="longValue">long value which has to be converted into four registers</param>
     /// <returns>Register values</returns>
-    public static int[] ConvertLongToRegisters(Int64 longValue) {
+    public static int[] ConvertLongToRegisters(long longValue) {
         byte[] longBytes = BitConverter.GetBytes(longValue);
         byte[] highRegisterBytes = [longBytes[6], longBytes[7], 0, 0];
         byte[] highLowRegisterBytes = [longBytes[4], longBytes[5], 0, 0];
@@ -110,7 +110,7 @@ internal static class Convert {
     /// <param name="longValue">long value which has to be converted into four registers</param>
     /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
     /// <returns>Register values</returns>
-    public static int[] ConvertLongToRegisters(Int64 longValue, RegisterOrder registerOrder) {
+    public static int[] ConvertLongToRegisters(long longValue, RegisterOrder registerOrder) {
         int[] registerValues = ConvertLongToRegisters(longValue);
         int[] returnValue = registerValues;
         if (registerOrder == RegisterOrder.HighLow)
@@ -189,7 +189,7 @@ internal static class Convert {
     /// </summary>
     /// <param name="registers">Two Register values received from Modbus</param>
     /// <returns>Connected 32 Bit Integer value</returns>
-    public static Int32 ConvertRegistersToInt(int[] registers) {
+    public static int ConvertRegistersToInt(int[] registers) {
         if (registers.Length != 2)
             throw new ArgumentException("Input Array length invalid - Array langth must be '2'");
         int highRegister = registers[1];
@@ -206,7 +206,7 @@ internal static class Convert {
     /// <param name="registers">Two Register values received from Modbus</param>
     /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
     /// <returns>Connecteds 32 Bit Integer value</returns>
-    public static Int32 ConvertRegistersToInt(int[] registers, RegisterOrder registerOrder) {
+    public static int ConvertRegistersToInt(int[] registers, RegisterOrder registerOrder) {
         int[] swappedRegisters = [registers[0], registers[1]];
         if (registerOrder == RegisterOrder.HighLow)
             swappedRegisters = [registers[1], registers[0]];
@@ -219,7 +219,7 @@ internal static class Convert {
     /// <param name="registers">four Register values received from Modbus</param>
     /// <returns>64 bit value</returns>
 
-    public static Int64 ConvertRegistersToLong(int[] registers) {
+    public static long ConvertRegistersToLong(int[] registers) {
         if (registers.Length != 4)
             throw new ArgumentException("Input Array length invalid - Array langth must be '4'");
         int highRegister = registers[3];
@@ -240,7 +240,7 @@ internal static class Convert {
     /// <param name="registers">four Register values received from Modbus</param>
     /// <param name="registerOrder">Desired Word Order (Low Register first or High Register first</param>
     /// <returns>Connected 64 Bit Integer value</returns>
-    public static Int64 ConvertRegistersToLong(int[] registers, RegisterOrder registerOrder) {
+    public static long ConvertRegistersToLong(int[] registers, RegisterOrder registerOrder) {
         if (registers.Length != 4)
             throw new ArgumentException("Input Array length invalid - Array langth must be '4'");
         int[] swappedRegisters = [registers[0], registers[1], registers[2], registers[3]];
@@ -258,7 +258,7 @@ internal static class Convert {
     /// <returns>Converted String</returns>
     public static string ConvertRegistersToString(int[] registers, int offset, int stringLength) {
         byte[] result = new byte[stringLength];
-        byte[] registerResult = new byte[2];
+        byte[] registerResult;
 
         for (int i = 0; i < stringLength / 2; i++) {
             registerResult = BitConverter.GetBytes(registers[offset + i]);
@@ -279,7 +279,7 @@ internal static class Convert {
         for (int i = 0; i < returnarray.Length; i++) {
             returnarray[i] = array[i * 2];
             if (i * 2 + 1 < array.Length) {
-                returnarray[i] = returnarray[i] | ((int)array[i * 2 + 1] << 8);
+                returnarray[i] = returnarray[i] | array[i * 2 + 1] << 8;
             }
         }
         return returnarray;

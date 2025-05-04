@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EasyModbus;
+namespace ModbusTCP;
 
 /// <summary>
 /// Application Data Unit (ADU) - As Specified in the Modbus Appliction Protocol specification V1.1b3 Page 3 (or Modbus Messaging on TCP/IP Implementation Guide Page 4)

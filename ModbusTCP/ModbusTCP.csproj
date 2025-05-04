@@ -2,8 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>net462;net9.0-windows7.0</TargetFrameworks>
-    <AssemblyName>EasyModbus</AssemblyName>
-    <RootNamespace>EasyModbus</RootNamespace>
+    <RootNamespace>ModbusTCP</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>$(RootNamespace)</PackageId>
+    <Authors>Lumentum ULC</Authors>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-windows7.0'">

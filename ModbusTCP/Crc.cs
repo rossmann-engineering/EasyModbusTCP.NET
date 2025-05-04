@@ -1,4 +1,4 @@
-﻿namespace EasyModbus {
+﻿namespace ModbusTCP {
 
     internal static class Crc {
 
@@ -59,14 +59,14 @@
 
             while (usDataLen > 0) {
                 usDataLen--;
-                if ((i + startByte) < data.Length) {
+                if (i + startByte < data.Length) {
                     uIndex = uchCRCLo ^ data[i + startByte];
                     uchCRCLo = (byte)(uchCRCHi ^ auchCRCHi[uIndex]);
                     uchCRCHi = auchCRCLo[uIndex];
                 }
                 i++;
             }
-            return (ushort)((ushort)uchCRCHi << 8 | uchCRCLo);
+            return (ushort)(uchCRCHi << 8 | uchCRCLo);
         }
     }
 }

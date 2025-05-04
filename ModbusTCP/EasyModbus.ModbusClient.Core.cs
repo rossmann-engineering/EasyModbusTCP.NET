@@ -27,11 +27,10 @@ using System.Net.Sockets;
 using System.IO.Ports;
 using Exceptions;
 
-namespace EasyModbus;
+namespace ModbusTCP;
 
 public partial class ModbusClient {
 
-    private bool debug = false;
     private TcpClient tcpClient;
     private bool udpFlag = false;
     private string ipAddress = "127.0.0.1";
@@ -80,7 +79,6 @@ public partial class ModbusClient {
     /// </summary>
     public void Connect(string ipAddress, int port) {
         if (!udpFlag) {
-            if (debug) StoreLogData.Instance.Store("Open TCP-Socket, IP-Address: " + ipAddress + ", Port: " + port, System.DateTime.Now);
             tcpClient = new TcpClient();
             var result = tcpClient.BeginConnect(ipAddress, port, null, null);
             var success = result.AsyncWaitHandle.WaitOne(connectTimeout);
@@ -106,7 +104,6 @@ public partial class ModbusClient {
     /// Close connection to Master Device.
     /// </summary>
     public void Disconnect() {
-        if (debug) StoreLogData.Instance.Store("Disconnect", DateTime.Now);
         if (serialport != null) {
             if (serialport.IsOpen & !receiveActive) {
                 serialport.Close();
@@ -129,19 +126,15 @@ public partial class ModbusClient {
     /// <param name="quantity">Number of discrete Inputs to read</param>
     /// <returns>Boolean Array which contains the discrete Inputs</returns>
     public bool[] ReadDiscreteInputs(int startingAddress, int quantity) {
-        if (debug) StoreLogData.Instance.Store("FC2 (Read Discrete Inputs from Master device), StartingAddress: " + startingAddress + ", Quantity: " + quantity, System.DateTime.Now);
         transactionIdentifierInternal++;
         if (serialport != null)
             if (!serialport.IsOpen) {
-                if (debug) StoreLogData.Instance.Store("SerialPortNotOpenedException Throwed", System.DateTime.Now);
                 throw new SerialPortNotOpenedException("serial port not opened");
             }
         if (tcpClient == null & !udpFlag & serialport == null) {
-            if (debug) StoreLogData.Instance.Store("ConnectionException Throwed", System.DateTime.Now);
             throw new ConnectionException("connection error");
         }
         if (startingAddress > 65535 | quantity > 2000) {
-            if (debug) StoreLogData.Instance.Store("ArgumentException Throwed", System.DateTime.Now);
             throw new ArgumentException("Starting address must be 0 - 65535; quantity must be 0 - 2000");
         }
 
@@ -165,11 +158,6 @@ public partial class ModbusClient {
                 bytesToRead = 6 + quantity / 8;
 
             serialport.Write(request.Payload, 6, 8);
-            if (debug) {
-                byte[] debugData = new byte[8];
-                Array.Copy(request.Payload, 6, debugData, 0, 8);
-                if (debug) StoreLogData.Instance.Store("Send Serial-Data: " + BitConverter.ToString(debugData), System.DateTime.Now);
-            }
             if (SendDataChanged != null) {
                 sendData = new byte[8];
                 Array.Copy(request.Payload, 6, sendData, 0, 8);
@@ -182,8 +170,8 @@ public partial class ModbusClient {
 
             response.UnitIdentifier = 0xFF;
 
-            while (response.UnitIdentifier != unitIdentifier & !((DateTime.UtcNow.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * connectTimeout)) {
-                while (dataReceived == false & !((DateTime.UtcNow.Ticks - dateTimeSend.Ticks) > TimeSpan.TicksPerMillisecond * connectTimeout))
+            while (response.UnitIdentifier != unitIdentifier & !(DateTime.UtcNow.Ticks - dateTimeSend.Ticks > TimeSpan.TicksPerMillisecond * connectTimeout)) {
+                while (dataReceived == false & !(DateTime.UtcNow.Ticks - dateTimeSend.Ticks > TimeSpan.TicksPerMillisecond * connectTimeout))
                     System.Threading.Thread.Sleep(1);
                 data = new byte[255];
                 Array.Copy(readBuffer, 0, data, 6, readBuffer.Length);
@@ -206,11 +194,6 @@ public partial class ModbusClient {
             }
             else {
                 stream.Write(request.Payload, 0, request.Payload.Length - 2);
-                if (debug) {
-                    byte[] debugData = new byte[data.Length - 2];
-                    Array.Copy(data, 0, debugData, 0, data.Length - 2);
-                    if (debug) StoreLogData.Instance.Store("Send ModbusTCP-Data: " + BitConverter.ToString(debugData), System.DateTime.Now);
-                }
                 if (SendDataChanged != null) {
                     sendData = new byte[data.Length - 2];
                     Array.Copy(data, 0, sendData, 0, data.Length - 2);
@@ -221,31 +204,25 @@ public partial class ModbusClient {
                 if (ReceiveDataChanged != null) {
                     receiveData = new byte[NumberOfBytes];
                     Array.Copy(data, 0, receiveData, 0, NumberOfBytes);
-                    if (debug) StoreLogData.Instance.Store("Receive ModbusTCP-Data: " + BitConverter.ToString(receiveData), System.DateTime.Now);
                     ReceiveDataChanged(this);
                 }
             }
         }
         if (data[7] == 0x82 & data[8] == 0x01) {
-            if (debug) StoreLogData.Instance.Store("FunctionCodeNotSupportedException Throwed", System.DateTime.Now);
             throw new FunctionCodeNotSupportedException("Function code not supported by master");
         }
         if (data[7] == 0x82 & data[8] == 0x02) {
-            if (debug) StoreLogData.Instance.Store("StartingAddressInvalidException Throwed", System.DateTime.Now);
             throw new StartingAddressInvalidException("Starting address invalid or starting address + quantity invalid");
         }
         if (data[7] == 0x82 & data[8] == 0x03) {
-            if (debug) StoreLogData.Instance.Store("QuantityInvalidException Throwed", System.DateTime.Now);
             throw new QuantityInvalidException("quantity invalid");
         }
         if (data[7] == 0x82 & data[8] == 0x04) {
-            if (debug) StoreLogData.Instance.Store("ModbusException Throwed", System.DateTime.Now);
             throw new ModbusException("error reading");
         }
         if (serialport != null) {
             crc = BitConverter.GetBytes(Crc.Calculate(data, (ushort)(data[8] + 3), 6));
             if ((crc[0] != data[data[8] + 9] | crc[1] != data[data[8] + 10]) & dataReceived) {
-                if (debug) StoreLogData.Instance.Store("CRCCheckFailedException Throwed", System.DateTime.Now);
                 if (NumberOfRetries <= countRetries) {
                     countRetries = 0;
                     throw new CRCCheckFailedException("Response CRC check failed");
@@ -256,7 +233,6 @@ public partial class ModbusClient {
                 }
             }
             else if (!dataReceived) {
-                if (debug) StoreLogData.Instance.Store("TimeoutException Throwed", System.DateTime.Now);
                 if (NumberOfRetries <= countRetries) {
                     countRetries = 0;
                     throw new TimeoutException("No Response from Modbus Slave");

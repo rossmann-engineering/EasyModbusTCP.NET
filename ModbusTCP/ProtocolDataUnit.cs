@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyModbus;
+namespace ModbusTCP;
 
 /// <summary>
 /// Protocol Data Unit (PDU) - As Specified in the Modbus Appliction Protocol specification V1.1b3 Page 3
@@ -27,28 +27,26 @@ class ProtocolDataUnit {
     public byte[] Data {
         //return the data in case of a request
         get {
-            Byte[] returnvalue = null;
+            byte[] returnvalue = null;
             switch (FunctionCode) {
 
                 // FC01 (0x01) "Read Coils" Page 11
                 case 1:
-                    returnvalue = new byte[]
-                       {
-                            BitConverter.GetBytes((ushort)StartingAddressRead)[1],
-                            BitConverter.GetBytes((ushort)StartingAddressRead)[0],
-                            BitConverter.GetBytes((ushort)QuantityRead)[1],
-                            BitConverter.GetBytes((ushort)QuantityRead)[0],
-                       };
+                    returnvalue =                       [
+                        BitConverter.GetBytes(StartingAddressRead)[1],
+                        BitConverter.GetBytes(StartingAddressRead)[0],
+                        BitConverter.GetBytes(QuantityRead)[1],
+                        BitConverter.GetBytes(QuantityRead)[0],
+                    ];
                     break;
                 // FC02 (0x02) "Read Discrete Inputs" Page 12
                 case 2:
-                    returnvalue = new byte[]
-                       {
-                            BitConverter.GetBytes((ushort)StartingAddressRead)[1],
-                            BitConverter.GetBytes((ushort)StartingAddressRead)[0],
-                            BitConverter.GetBytes((ushort)QuantityRead)[1],
-                            BitConverter.GetBytes((ushort)QuantityRead)[0],
-                       };
+                    returnvalue = [
+                        BitConverter.GetBytes(StartingAddressRead)[1],
+                        BitConverter.GetBytes(StartingAddressRead)[0],
+                        BitConverter.GetBytes(QuantityRead)[1],
+                        BitConverter.GetBytes(QuantityRead)[0],
+                    ];
                     break;
             }
             return returnvalue;
@@ -59,12 +57,11 @@ class ProtocolDataUnit {
                 // FC 01: Read Coils and 02 Read Discrete Inputs provide the same response
                 case 1:
                 case 2:
-                    byte byteCount = value[1];
                     RegisterDataBool = new bool[QuantityRead];
                     for (int i = 0; i < QuantityRead; i++) {
                         int intData = data[i / 8];
-                        int mask = System.Convert.ToInt32(Math.Pow(2, (i % 8)));
-                        RegisterDataBool[i] = (System.Convert.ToBoolean((intData & mask) / mask));
+                        int mask = System.Convert.ToInt32(Math.Pow(2, i % 8));
+                        RegisterDataBool[i] = System.Convert.ToBoolean((intData & mask) / mask);
                     }
                     break;
             }
