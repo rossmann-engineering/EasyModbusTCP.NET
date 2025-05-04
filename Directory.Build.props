@@ -1,0 +1,10 @@
+<Project>
+
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<LangVersion>latest</LangVersion>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/lite-cnp/ModbusTCP</RepositoryUrl>
+	</PropertyGroup>
+
+</Project>
