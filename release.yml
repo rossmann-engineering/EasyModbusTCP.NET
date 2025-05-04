@@ -1,0 +1,100 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+      
+permissions:
+  contents: write  # Gives permission to read/write to the repo
+  packages: write  # Gives permission to read/write nuget packages
+  
+jobs:
+  version:
+    runs-on: self-hosted
+    outputs:
+      version: ${{ steps.get-tag-version.outputs.version }}
+
+    steps:
+    - name: Get Tag Version
+      id: get-tag-version
+      run: |
+        $tagName = '${{ github.event.release.tag_name }}'
+        $version = $tagName -replace '^v', ''
+        Write-Output "Extracted version $version from tag"
+        Write-Output "version=$version" >> $env:GITHUB_OUTPUT
+      shell: powershell
+
+  build:
+    runs-on: self-hosted
+    needs: version
+    
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.x.x'
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Restore NuGet Packages
+      run: dotnet restore
+
+    - name: Dotnet Build x64
+      id: dotnet-build-x64
+      run: |
+        $ver = '${{ needs.version.outputs.version }}'
+        Write-Output "Building with version $ver"
+        dotnet build -c Release -p:Version=$ver -p:Platform="x64"
+   
+    - name: Dotnet Build x86
+      id: dotnet-build-x86
+      run: |
+        $ver = '${{ needs.version.outputs.version }}'
+        Write-Output "Building with version $ver"
+        dotnet build -c Release -p:Version=$ver -p:Platform="x86"
+   
+    - name: Dotnet Build AnyCPU
+      id: dotnet-build-anycpu
+      run: |
+        $ver = '${{ needs.version.outputs.version }}'
+        Write-Output "Building with version $ver"
+        dotnet build -c Release -p:Version=$ver -p:Platform="Any CPU"
+
+    - name: Dotnet Pack
+      id: dotnet-pack
+      run: |
+        $ver = '${{ needs.version.outputs.version }}'
+        Write-Output "Packing with version $ver"
+        dotnet pack -c Release -p:Version=$ver --no-restore --no-build
+
+    - name: Dotnet NuGet Push
+      id: dotnet-nuget-push
+      run: dotnet nuget push .\nupkg\*.nupkg --source "https://nuget.pkg.github.com/lite-cnp" --api-key ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload NuGet packages as build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ github.event.repository.name }}.nupkg.${{ needs.version.outputs.version }}
+        path: ./nupkg/*.nupkg
+        retention-days: 5
+
+  upload-release-assets:
+    runs-on: self-hosted
+    needs: [ version, build ]
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    steps:
+      - name: Download NugGet packages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}.nupkg.${{ needs.version.outputs.version }}
+
+      - name: Upload to release
+        shell: powershell
+        run: |
+          Get-ChildItem -Path .\nupkg\*.nupkg | ForEach-Object {
+            Write-Host "Uploading $($_.FullName) as an asset..."
+            gh release upload "${{ github.event.release.tag_name }}" "$($_.FullName)" --repo ${{ github.repository }}
+          }
