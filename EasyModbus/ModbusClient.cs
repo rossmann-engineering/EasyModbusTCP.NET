@@ -780,7 +780,16 @@ namespace EasyModbus
         	SerialPort sp = (SerialPort)sender;
             if (bytesToRead == 0)
             {
-                sp.DiscardInBuffer();
+                try
+                {
+                    if (sp.IsOpen)
+                        sp.DiscardInBuffer();
+                }
+                catch (InvalidOperationException)
+                {
+                    // The port is already closed.
+                    // Ignoring.
+                }
                 receiveActive = false;
                 serialport.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
                 return;
